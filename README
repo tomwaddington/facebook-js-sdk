@@ -1,0 +1,4 @@
+This is a quick project to make more sense of the changes to the Facebook Javascript SDK.
+
+It pulls from Facebook, formats the code through Google's closure compiler, and pushes the results to GitHub.
+
