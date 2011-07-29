@@ -1486,7 +1486,9 @@ FB.provide("UIServer", {Methods:{}, _active:{}, _defaultCb:{}, _resultToken:'"xx
 	}
 }, setActiveNode:function(a, b) {
 	FB.UIServer._active[a.id] = b;
-	b.fbCallID = a.id
+	if(a.params && a.params.display == "iframe") {
+		b.fbCallID = a.id
+	}
 }, hidden:function(a) {
 	a.className = "FB_UI_Hidden";
 	a.root = FB.Content.appendHidden("");
