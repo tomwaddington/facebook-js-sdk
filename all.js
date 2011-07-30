@@ -1358,7 +1358,7 @@ FB.provide("", {ui:function(f, b) {
 			i = h.split(",")
 		}
 		for(var e = 0;e < i.length;e++) {
-			var g = i[e].trim();
+			var g = FB.String.trim(i[e]);
 			if(g && !FB.initSitevars.iframePermissions[g]) {
 				f.display = "popup";
 				break
