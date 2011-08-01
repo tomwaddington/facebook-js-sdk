@@ -523,7 +523,11 @@ FB.provide("ApiServer", {METHODS:["get", "post", "delete", "put"], _callbacks:{}
 		var d = a;
 		a = function(f) {
 			if(f === true) {
-				FB.Auth.setSession(null, "notConnected")
+				if(FB._oauth) {
+					FB.Auth.setAuthResponse(null, "not_authorized")
+				}else {
+					FB.Auth.setSession(null, "notConnected")
+				}
 			}
 			d && d(f)
 		}
@@ -3505,7 +3509,7 @@ FB.subclass("XFBML.LoginButton", "XFBML.ButtonElement", null, {setupAndValidate:
 		return a
 	}
 	if(!this._attr.registration_url) {
-		if(FB.getSession() && this._attr.autologoutlink) {
+		if(FB.getAccessToken() && this._attr.autologoutlink) {
 			return FB.Intl._tx("Facebook Logout")
 		}else {
 			return this._getLoginText()
@@ -3517,7 +3521,7 @@ FB.subclass("XFBML.LoginButton", "XFBML.ButtonElement", null, {setupAndValidate:
 			case "notConnected":
 				return FB.Intl._tx("Register");
 			case "connected":
-				if(FB.getSession() && this._attr.autologoutlink) {
+				if(FB.getAccessToken() && this._attr.autologoutlink) {
 					return FB.Intl._tx("Facebook Logout")
 				}
 				return this._getLoginText();
@@ -3530,7 +3534,7 @@ FB.subclass("XFBML.LoginButton", "XFBML.ButtonElement", null, {setupAndValidate:
 	return this._attr.length == "short" ? FB.Intl._tx("Log In") : FB.Intl._tx("Log In with Facebook")
 }, onClick:function() {
 	if(!this._attr.registration_url) {
-		if(!FB.getSession() || !this._attr.autologoutlink) {
+		if(!FB.getAccessToken() || !this._attr.autologoutlink) {
 			FB.login(FB.bind(this._authCallback, this), {perms:this._attr.perms})
 		}else {
 			FB.logout(FB.bind(this._authCallback, this))
@@ -3546,7 +3550,7 @@ FB.subclass("XFBML.LoginButton", "XFBML.ButtonElement", null, {setupAndValidate:
 				window.top.location = this._attr.registration_url;
 				break;
 			case "connected":
-				if(!FB.getSession() || !this._attr.autologoutlink) {
+				if(!FB.getAccessToken() || !this._attr.autologoutlink) {
 					this._authCallback()
 				}else {
 					FB.logout(FB.bind(this._authCallback, this))
