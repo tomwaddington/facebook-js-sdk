@@ -240,7 +240,7 @@ FB.provide("Content", {_root:null, _hiddenRoot:null, _callbacks:{}, append:funct
 	a.submit();
 	a.parentNode.removeChild(a)
 }});
-FB.provide("Flash", {_minVersions:[[9, 0, 159, 0], [10, 0, 22, 87]], _swfPath:"swf/XdComm.swf", _callbacks:[], init:function() {
+FB.provide("Flash", {_minVersions:[[9, 0, 159, 0], [10, 0, 22, 87]], _swfPath:"swf/XdComm.swf", _callbacks:[], _names:{}, _unloadRegistered:false, init:function() {
 	if(FB.Flash._init) {
 		return
 	}
@@ -255,7 +255,22 @@ FB.provide("Flash", {_minVersions:[[9, 0, 159, 0], [10, 0, 22, 87]], _swfPath:"s
 	FB.Flash.embedSWF("XdComm", FB.getDomain("cdn") + FB.Flash._swfPath)
 }, embedSWF:function(d, e, b) {
 	var a = !!document.attachEvent, c = "<object " + 'type="application/x-shockwave-flash" ' + 'id="' + d + '" ' + (b ? 'flashvars="' + b + '" ' : "") + (a ? 'name="' + d + '" ' : "") + (a ? "" : 'data="' + e + '" ') + (a ? 'classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" ' : "") + 'allowscriptaccess="always">' + '<param name="movie" value="' + e + '"></param>' + '<param name="allowscriptaccess" value="always"></param>' + "</object>";
-	FB.Content.appendHidden(c)
+	FB.Content.appendHidden(c);
+	if(FB.UA.ie() >= 9) {
+		if(!FB.Flash._unloadRegistered) {
+			var f = function() {
+				FB.Array.forEach(FB.Flash._names, function(i, h) {
+					var g = document.getElementById(h);
+					if(g) {
+						g.removeNode(true)
+					}
+				})
+			};
+			window.attachEvent("onunload", f);
+			FB.Flash._unloadRegistered = true
+		}
+		FB.Flash._names[d] = true
+	}
 }, hasMinVersion:function() {
 	if(typeof FB.Flash._hasMinVersion === "undefined") {
 		var i, a, b, h = [];
@@ -873,7 +888,10 @@ FB.provide("Canvas", {_timer:null, _lastSize:{}, _pageInfo:{clientWidth:0, clien
 	if(typeof b != "object") {
 		b = {}
 	}
-	b = FB.copy(b || {}, FB.Canvas._computeContentSize());
+	b = b || {};
+	if(b.width == null || b.height == null) {
+		b = FB.copy(b, FB.Canvas._computeContentSize())
+	}
 	b = FB.copy(b, {frame:window.name || "iframe_canvas"});
 	if(FB.Canvas._lastSize[b.frame]) {
 		var a = FB.Canvas._lastSize[b.frame].height;
@@ -1736,7 +1754,7 @@ FB.provide("Auth", {_callbacks:[], _xdStorePath:"xd_localstorage/", staticAuthCh
 		};
 		FB.XD.handler(c, "parent", true, d);
 		setTimeout(c, 500);
-		g.postMessage(FB.JSON.stringify({method:"getItem", params:["LoginInfo_" + FB._apiKey], returnCb:d}), a)
+		g.postMessage(FB.JSON.stringify({method:"getItem", params:["LoginInfo_" + FB._apiKey, true], returnCb:d}), a)
 	}})
 }, _staticAuthHandler:function(b, d) {
 	if(d && d.data && d.data.status && d.data.status == "connected") {
@@ -2378,8 +2396,8 @@ FB.provide("XFBML", {_renderTimeout:3E4, parse:function(d, b) {
 		}
 	}
 }, _tagInfos:[{localName:"activity", className:"FB.XFBML.Activity"}, {localName:"add-profile-tab", className:"FB.XFBML.AddProfileTab"}, {localName:"add-to-profile", className:"FB.XFBML.LoginButton"}, {localName:"bookmark", className:"FB.XFBML.Bookmark"}, {localName:"comments", className:"FB.XFBML.Comments"}, {localName:"comments-count", className:"FB.XFBML.CommentsCount"}, {localName:"connect-bar", className:"FB.XFBML.ConnectBar"}, {localName:"fan", className:"FB.XFBML.Fan"}, {localName:"like", className:"FB.XFBML.Like", 
-supportsWidgetPipe:true}, {localName:"like-box", className:"FB.XFBML.LikeBox"}, {localName:"live-stream", className:"FB.XFBML.LiveStream"}, {localName:"login", className:"FB.XFBML.Login"}, {localName:"login-button", className:"FB.XFBML.LoginButton"}, {localName:"facepile", className:"FB.XFBML.Facepile"}, {localName:"friendpile", className:"FB.XFBML.Friendpile"}, {localName:"name", className:"FB.XFBML.Name"}, {localName:"profile-pic", className:"FB.XFBML.ProfilePic"}, {localName:"read", className:"FB.XFBML.Read"}, 
-{localName:"recommendations", className:"FB.XFBML.Recommendations"}, {localName:"registration", className:"FB.XFBML.Registration"}, {localName:"send", className:"FB.XFBML.Send"}, {localName:"serverfbml", className:"FB.XFBML.ServerFbml"}, {localName:"share-button", className:"FB.XFBML.ShareButton"}, {localName:"social-bar", className:"FB.XFBML.SocialBar"}], _widgetPipeEnabledTagCount:0, _widgetPipeIsEnabled:function() {
+supportsWidgetPipe:true}, {localName:"like-box", className:"FB.XFBML.LikeBox"}, {localName:"live-stream", className:"FB.XFBML.LiveStream"}, {localName:"login", className:"FB.XFBML.Login"}, {localName:"login-button", className:"FB.XFBML.LoginButton"}, {localName:"facepile", className:"FB.XFBML.Facepile"}, {localName:"friendpile", className:"FB.XFBML.Friendpile"}, {localName:"name", className:"FB.XFBML.Name"}, {localName:"profile-pic", className:"FB.XFBML.ProfilePic"}, {localName:"question", className:"FB.XFBML.Question"}, 
+{localName:"read", className:"FB.XFBML.Read"}, {localName:"recommendations", className:"FB.XFBML.Recommendations"}, {localName:"registration", className:"FB.XFBML.Registration"}, {localName:"send", className:"FB.XFBML.Send"}, {localName:"serverfbml", className:"FB.XFBML.ServerFbml"}, {localName:"share-button", className:"FB.XFBML.ShareButton"}, {localName:"social-bar", className:"FB.XFBML.SocialBar"}], _widgetPipeEnabledTagCount:0, _widgetPipeIsEnabled:function() {
 	return FB.widgetPipeEnabledApps && FB.widgetPipeEnabledApps[FB._apiKey] !== undefined
 }});
 (function() {
@@ -2849,7 +2867,7 @@ FB.subclass("XFBML.ButtonElement", "XFBML.Element", null, {_allowedSizes:["icon"
 FB.provide("Helper", {isUser:function(a) {
 	return a < 22E8 || a >= 1E14 && a <= 100099999989999
 }, getLoggedInUser:function() {
-	return FB._session ? FB._session.uid : null
+	return FB.getUserID()
 }, upperCaseFirstChar:function(a) {
 	if(a.length > 0) {
 		return a.substr(0, 1).toUpperCase() + a.substr(1)
@@ -3796,6 +3814,14 @@ FB.subclass("XFBML.ProfilePic", "XFBML.Element", null, {process:function() {
 	}))
 }});
 FB.provide("XFBML.ProfilePic", {_defPicMap:{pic:"pics/s_silhouette.jpg", pic_big:"pics/d_silhouette.gif", pic_big_with_logo:"pics/d_silhouette_logo.gif", pic_small:"pics/t_silhouette.jpg", pic_small_with_logo:"pics/t_silhouette_logo.gif", pic_square:"pics/q_silhouette.gif", pic_square_with_logo:"pics/q_silhouette_logo.gif", pic_with_logo:"pics/s_silhouette_logo.gif"}, _sizeToPicFieldMap:{n:"pic_big", normal:"pic_big", q:"pic_square", s:"pic", small:"pic", square:"pic_square", t:"pic_small", thumb:"pic_small"}});
+FB.subclass("XFBML.Question", "XFBML.IframeWidget", null, {_visibleAfter:"load", setupAndValidate:function() {
+	this._attr = {channel:this.getChannelUrl(), api_key:FB._apiKey, permalink:this.getAttribute("permalink"), width:this.getAttribute("width", 400), height:0};
+	return true
+}, getSize:function() {
+	return{width:this._attr.width, height:this._attr.height}
+}, getUrlBits:function() {
+	return{name:"question", params:this._attr}
+}});
 FB.subclass("XFBML.Read", "XFBML.IframeWidget", null, {getUrlBits:function() {
 	return{name:"read", params:this._attr}
 }, setupAndValidate:function() {
@@ -4258,8 +4284,8 @@ FB.subclass("XFBML.SocialBar", "XFBML.EdgeWidget", function(a) {
 	return true
 }});
 void 0;
-FB.provide("", {"_domain":{"api":"https://api.facebook.com/", "api_read":"https://api-read.facebook.com/", "cdn":"http://static.ak.fbcdn.net/", "graph":"https://graph.facebook.com/", "https_cdn":"https://s-static.ak.fbcdn.net/", "https_staticfb":"https://s-static.ak.facebook.com/", "https_www":"https://www.facebook.com/", "staticfb":"http://static.ak.facebook.com/", "www":"http://www.facebook.com/", "m":"http://m.facebook.com/", "https_m":"https://m.facebook.com/"}, "_locale":"en_US", "_localeIsRtl":false}, 
-true);
+FB.provide("", {"_domain":{"api":"https://api.beta.facebook.com/", "api_read":"https://api-read.beta.facebook.com/", "cdn":"http://static.beta.fbcdn.net/", "graph":"https://graph.beta.facebook.com/", "https_cdn":"https://s-static.beta.fbcdn.net/", "https_staticfb":"https://www.beta.facebook.com/", "https_www":"https://www.beta.facebook.com/", "staticfb":"http://www.beta.facebook.com/", "www":"http://www.beta.facebook.com/", "m":"http://m.beta.facebook.com/", "https_m":"https://m.beta.facebook.com/"}, 
+"_locale":"en_US", "_localeIsRtl":false}, true);
 FB.provide("Flash", {"_minVersions":[[10, 0, 22, 87]], "_swfPath":"rsrc.php/v1/yx/r/WFg56j28XFs.swf"}, true);
 FB.provide("XD", {"_xdProxyUrl":"connect/xd_proxy.php?version=3"}, true);
 FB.provide("Arbiter", {"_canvasProxyUrl":"connect/canvas_proxy.php?version=3"}, true);
