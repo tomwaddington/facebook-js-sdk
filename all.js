@@ -8,6 +8,8 @@ if(!window.FB) {
 				return FB._domain.api_read;
 			case "cdn":
 				return window.location.protocol == "https:" || FB._https ? FB._domain.https_cdn : FB._domain.cdn;
+			case "cdn_foreign":
+				return FB._domain.cdn_foreign;
 			case "https_cdn":
 				return FB._domain.https_cdn;
 			case "graph":
@@ -252,7 +254,7 @@ FB.provide("Flash", {_minVersions:[[9, 0, 159, 0], [10, 0, 22, 87]], _swfPath:"s
 		}
 		FB.Flash._callbacks = []
 	};
-	FB.Flash.embedSWF("XdComm", FB.getDomain("cdn") + FB.Flash._swfPath)
+	FB.Flash.embedSWF("XdComm", FB.getDomain("cdn_foreign") + FB.Flash._swfPath)
 }, embedSWF:function(d, e, b) {
 	var a = !!document.attachEvent, c = "<object " + 'type="application/x-shockwave-flash" ' + 'id="' + d + '" ' + (b ? 'flashvars="' + b + '" ' : "") + (a ? 'name="' + d + '" ' : "") + (a ? "" : 'data="' + e + '" ') + (a ? 'classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" ' : "") + 'allowscriptaccess="always">' + '<param name="movie" value="' + e + '"></param>' + '<param name="allowscriptaccess" value="always"></param>' + "</object>";
 	FB.Content.appendHidden(c);
@@ -4288,9 +4290,9 @@ FB.subclass("XFBML.SocialBar", "XFBML.EdgeWidget", function(a) {
 	return true
 }});
 void 0;
-FB.provide("", {"_domain":{"api":"https://api.beta.facebook.com/", "api_read":"https://api-read.beta.facebook.com/", "cdn":"http://static.beta.fbcdn.net/", "graph":"https://graph.beta.facebook.com/", "https_cdn":"https://s-static.beta.fbcdn.net/", "https_staticfb":"https://www.beta.facebook.com/", "https_www":"https://www.beta.facebook.com/", "staticfb":"http://www.beta.facebook.com/", "www":"http://www.beta.facebook.com/", "m":"http://m.beta.facebook.com/", "https_m":"https://m.beta.facebook.com/"}, 
-"_locale":"en_US", "_localeIsRtl":false}, true);
-FB.provide("Flash", {"_minVersions":[[10, 0, 22, 87]], "_swfPath":"rsrc.php/v1/yx/r/WFg56j28XFs.swf"}, true);
+FB.provide("", {"_domain":{"api":"https://api.beta.facebook.com/", "api_read":"https://api-read.beta.facebook.com/", "cdn":"http://static.beta.fbcdn.net/", "cdn_foreign":"http://connect.facebook.net/", "graph":"https://graph.beta.facebook.com/", "https_cdn":"https://s-static.beta.fbcdn.net/", "https_staticfb":"https://www.beta.facebook.com/", "https_www":"https://www.beta.facebook.com/", "staticfb":"http://www.beta.facebook.com/", "www":"http://www.beta.facebook.com/", "m":"http://m.beta.facebook.com/", 
+"https_m":"https://m.beta.facebook.com/"}, "_locale":"en_US", "_localeIsRtl":false}, true);
+FB.provide("Flash", {"_minVersions":[[10, 0, 22, 87]], "_swfPath":"rsrc.php/v1/yK/r/RIxWozDt5Qq.swf"}, true);
 FB.provide("XD", {"_xdProxyUrl":"connect/xd_proxy.php?version=3"}, true);
 FB.provide("Arbiter", {"_canvasProxyUrl":"connect/canvas_proxy.php?version=3"}, true);
 FB.provide("Auth", {"_xdStorePath":"xd_localstorage/"}, true);
