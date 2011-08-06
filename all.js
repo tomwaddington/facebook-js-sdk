@@ -539,7 +539,7 @@ FB.provide("ApiServer", {METHODS:["get", "post", "delete", "put"], _callbacks:{}
 	var b = FB.ApiServer._readOnlyCalls[c] ? "api_read" : "api";
 	FB.ApiServer.oauthRequest(b, "restserver.php", "get", e, a)
 }, oauthRequest:function(b, f, c, e, a) {
-	if(FB.getAccessToken()) {
+	if(!e.access_token && FB.getAccessToken()) {
 		e.access_token = FB.getAccessToken()
 	}
 	e.sdk = "joey";
