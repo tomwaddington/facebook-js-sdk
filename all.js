@@ -1830,7 +1830,7 @@ FB.provide("Auth", {_callbacks:[], _xdStorePath:"xd_localstorage/", staticAuthCh
 	if(!FB._oauth) {
 		throw new Error("FB.Auth.setAuthResponse only compatible with OAuth2.");
 	}
-	var d = !FB._authResponse && a, e = FB._authResponse && !a, c = FB._authResponse && a && FB._authResponse.userID != a.userID, b = d || e || c, h = g != FB._userStatus;
+	var d = !FB._userID && a, e = FB._userID && !a, c = a && FB._userID != a.userID, b = d || e || c, h = g != FB._userStatus;
 	var f = {authResponse:a, status:g};
 	FB._authResponse = a;
 	FB._userID = a && a.userID || 0;
