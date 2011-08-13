@@ -2838,8 +2838,8 @@ FB.provide("XFBML.IframeWidget", {widgetPipeIframeCount:0, masterWidgetPipeIfram
 	var a = FB.XFBML.IframeWidget._groupWidgetPipeDescriptions();
 	var c = {widget_pipe:FB.JSON.stringify(a), href:window.location, site:location.hostname, channel:FB.XFBML.IframeWidget.masterWidgetPipeIframe.getChannelUrl(), api_key:FB._apiKey, locale:FB._locale, sdk:"joey", session_key:FB._session && FB._session.session_key};
 	var b = FB.guid();
-	FB.Content.insertIframe({url:"about:blank", root:document.getElementById("fb-root") || document.body, name:b, className:"fb_hidden", onload:function() {
-		FB.Content.submitToTarget({url:FB._domain.www + "widget_pipe.php", target:b, params:c}, true)
+	FB.Content.insertIframe({url:"about:blank", root:FB.Content.appendHidden(""), name:b, onload:function() {
+		FB.Content.submitToTarget({url:FB._domain.www + "widget_pipe.php?widget_pipe=1", target:b, params:c})
 	}})
 }, _groupWidgetPipeDescriptions:function() {
 	var e = {};
