@@ -584,6 +584,9 @@ FB.provide("ApiServer", {METHODS:["get", "post", "delete", "put"], _callbacks:{}
 		}
 	}
 	FB.Flash.onReady(function() {
+		if(b === "graph") {
+			d.suppress_http_code = 1
+		}
 		var h = FB.getDomain(b) + e, f = FB.QS.encode(d);
 		if(c === "get") {
 			if(h.length + f.length > 2E3) {
