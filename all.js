@@ -1493,14 +1493,14 @@ FB.provide("UIServer", {Methods:{}, _loadedNodes:{}, _defaultCb:{}, _resultToken
 	if(FB.UA.mobile() || b.display === "touch") {
 		return"touch"
 	}
-	if(!FB._session && b.display == "dialog" && !a.loggedOutIframe) {
+	if(!FB.getAccessToken() && b.display == "dialog" && !a.loggedOutIframe) {
 		FB.log('"dialog" mode can only be used when the user is connected.');
 		return"popup"
 	}
 	if(a.connectDisplay && !FB._inCanvas) {
 		return a.connectDisplay
 	}
-	return b.display || (FB._session ? "dialog" : "popup")
+	return b.display || (FB.getAccessToken() ? "dialog" : "popup")
 }, getXdRelation:function(a) {
 	if(a === "popup" || a === "touch") {
 		return"opener"
