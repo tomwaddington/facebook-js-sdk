@@ -2,9 +2,10 @@
 require 'rubygems'
 require 'curb'
 require 'grit'
-
-{:master=>"http://connect.facebook.net/en_US/all.js", :latest=>'http://www.facebook.com/assets.php/en_US/all.js'}.each_pair do |branch, source|
+{:master=>"http://connect.facebook.net/en_US/all.js", :latest=>'http://beta.facebook.com/assets.php/en_US/all.js'}.each_pair do |branch, source|
   `git checkout #{branch}`
+  `git pull origin #{branch}`
+  
   repo = Grit::Repo.new(".")
   
   
