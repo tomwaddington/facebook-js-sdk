@@ -4339,8 +4339,8 @@ FB.subclass("XFBML.SocialBar", "XFBML.EdgeWidget", function(a) {
 	return true
 }});
 void 0;
-FB.provide("", {"_domain":{"api":"https://api.beta.facebook.com/", "api_read":"https://api-read.beta.facebook.com/", "cdn":"http://static.beta.fbcdn.net/", "cdn_foreign":"http://connect.facebook.net/", "graph":"https://graph.beta.facebook.com/", "https_cdn":"https://s-static.beta.fbcdn.net/", "https_staticfb":"https://www.beta.facebook.com/", "https_www":"https://www.beta.facebook.com/", "staticfb":"http://www.beta.facebook.com/", "www":"http://www.beta.facebook.com/", "m":"http://m.beta.facebook.com/", 
-"https_m":"https://m.beta.facebook.com/"}, "_locale":"en_US", "_localeIsRtl":false}, true);
+FB.provide("", {"_domain":{"api":"https://api.facebook.com/", "api_read":"https://api-read.facebook.com/", "cdn":"http://static.ak.fbcdn.net/", "cdn_foreign":"http://connect.facebook.net/", "graph":"https://graph.facebook.com/", "https_cdn":"https://s-static.ak.fbcdn.net/", "https_staticfb":"https://s-static.ak.facebook.com/", "https_www":"https://www.facebook.com/", "staticfb":"http://static.ak.facebook.com/", "www":"http://www.facebook.com/", "m":"http://m.facebook.com/", "https_m":"https://m.facebook.com/"}, 
+"_locale":"en_US", "_localeIsRtl":false}, true);
 FB.provide("Flash", {"_minVersions":[[10, 0, 22, 87]], "_swfPath":"rsrc.php/v1/yK/r/RIxWozDt5Qq.swf"}, true);
 FB.provide("XD", {"_xdProxyUrl":"connect/xd_proxy.php?version=3"}, true);
 FB.provide("Arbiter", {"_canvasProxyUrl":"connect/canvas_proxy.php?version=3"}, true);
