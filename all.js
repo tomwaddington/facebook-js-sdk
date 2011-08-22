@@ -851,25 +851,25 @@ FB.provide("UA", {ie:function() {
 	}
 	FB.UA._ios = b
 }});
-FB.provide("Arbiter", {_canvasProxyUrl:"connect/canvas_proxy.php", inform:function(c, e, f, b) {
+FB.provide("Arbiter", {_canvasProxyUrl:"connect/canvas_proxy.php", BEHAVIOR_EVENT:"e", BEHAVIOR_PERSISTENT:"p", BEHAVIOR_STATE:"s", inform:function(d, f, g, c, a) {
 	if(FB.Canvas.isTabIframe() || !FB._inCanvas && FB.UA.mobile() && window.postMessage) {
-		var d = FB.JSON.stringify({method:c, params:e});
+		var e = FB.JSON.stringify({method:d, params:f, behavior:a || FB.Arbiter.BEHAVIOR_PERSISTENT});
 		if(window.postMessage) {
-			FB.XD.resolveRelation(f || "parent").postMessage(d, "*");
+			FB.XD.resolveRelation(g || "parent").postMessage(e, "*");
 			return
 		}else {
 			try {
-				window.opener.postMessage(d);
+				window.opener.postMessage(e);
 				return
-			}catch(a) {
+			}catch(b) {
 			}
 		}
 	}
-	var h = FB.getDomain((b ? "https_" : "") + "staticfb") + FB.Arbiter._canvasProxyUrl + "#" + FB.QS.encode({method:c, params:FB.JSON.stringify(e || {}), relation:f});
-	var g = FB.Content.appendHidden("");
-	FB.Content.insertIframe({url:h, root:g, width:1, height:1, onload:function() {
+	var i = FB.getDomain((c ? "https_" : "") + "staticfb") + FB.Arbiter._canvasProxyUrl + "#" + FB.QS.encode({method:d, params:FB.JSON.stringify(f || {}), behavior:a || FB.Arbiter.BEHAVIOR_PERSISTENT, relation:g});
+	var h = FB.Content.appendHidden("");
+	FB.Content.insertIframe({url:i, root:h, width:1, height:1, onload:function() {
 		setTimeout(function() {
-			g.parentNode.removeChild(g)
+			h.parentNode.removeChild(h)
 		}, 10)
 	}})
 }});
@@ -933,6 +933,12 @@ FB.provide("Canvas", {_timer:null, _lastSize:{}, _pageInfo:{clientWidth:0, clien
 	FB.Canvas._passAppTtiMessage(a, "RecordIframeAppTti")
 }, stopTimer:function(a) {
 	FB.Canvas._passAppTtiMessage(a, "StopIframeAppTtiTimer")
+}, setUrlHandler:function(a) {
+	var b = FB.XD.handler(a, "top.frames[" + window.name + "]", true);
+	FB.Arbiter.inform("setUrlHandler", b);
+	FB.Event.listen(window, "load", function() {
+		FB.Arbiter.inform("setUrlHandler", b)
+	})
 }, startTimer:function() {
 	FB.Canvas._passAppTtiMessage(null, "StartIframeAppTtiTimer")
 }, _passAppTtiMessage:function(a, c) {
@@ -2706,13 +2712,13 @@ FB.subclass("XFBML.IframeWidget", "XFBML.Element", null, {_iframeName:null, _sho
 	return this._channelUrl
 }, getIframeNode:function() {
 	return this.dom.getElementsByTagName("iframe")[0]
-}, arbiterInform:function(event, a) {
+}, arbiterInform:function(event, b, a) {
 	if(!this.getIframeNode()) {
-		this.subscribe("iframe.onload", FB.bind(this.arbiterInform, this, event, a));
+		this.subscribe("iframe.onload", FB.bind(this.arbiterInform, this, event, b, a));
 		return
 	}
-	var b = 'parent.frames["' + this.getIframeNode().name + '"]';
-	FB.Arbiter.inform(event, a, b, window.location.protocol == "https:")
+	var c = 'parent.frames["' + this.getIframeNode().name + '"]';
+	FB.Arbiter.inform(event, b, c, window.location.protocol == "https:", a)
 }, process:function(a) {
 	if(this._done) {
 		if(!this._allowReProcess && !a) {
@@ -3500,7 +3506,7 @@ FB.subclass("XFBML.LikeBox", "XFBML.IframeWidget", null, {_visibleAfter:"load", 
 	FB.Helper.fireEvent("edge.remove", this)
 }});
 FB.subclass("XFBML.LiveStream", "XFBML.IframeWidget", null, {_visibleAfter:"load", setupAndValidate:function() {
-	this._attr = {height:this._getPxAttribute("height", 500), hideFriendsTab:this.getAttribute("hide-friends-tab"), redesigned:this._getBoolAttribute("redesigned-stream"), width:this._getPxAttribute("width", 400), xid:this.getAttribute("xid", "default"), always_post_to_friends:this._getBoolAttribute("always-post-to-friends", false), via_url:this.getAttribute("via_url")};
+	this._attr = {app_id:this.getAttribute("event-app-id"), height:this._getPxAttribute("height", 500), hideFriendsTab:this.getAttribute("hide-friends-tab"), redesigned:this._getBoolAttribute("redesigned-stream"), width:this._getPxAttribute("width", 400), xid:this.getAttribute("xid", "default"), always_post_to_friends:this._getBoolAttribute("always-post-to-friends", false), via_url:this.getAttribute("via_url")};
 	return true
 }, getSize:function() {
 	return{width:this._attr.width, height:this._attr.height}
@@ -3950,7 +3956,7 @@ FB.subclass("XFBML.Read", "XFBML.IframeWidget", null, {getUrlBits:function() {
 	FB.Event.listen(window, "focus", d);
 	return true
 }, getSize:function() {
-	return{height:22, width:130}
+	return{height:25, width:145}
 }, calculateVisibility:function() {
 	var b = document.documentElement.clientHeight;
 	if(!this.focused) {
@@ -3994,7 +4000,7 @@ FB.subclass("XFBML.Recommendations", "XFBML.IframeWidget", null, {_visibleAfter:
 }});
 FB.subclass("XFBML.Registration", "XFBML.IframeWidget", null, {_visibleAfter:"immediate", _baseHeight:167, _fieldHeight:28, _skinnyWidth:520, _skinnyBaseHeight:173, _skinnyFieldHeight:52, setupAndValidate:function() {
 	this._attr = {action:this.getAttribute("action"), border_color:this.getAttribute("border-color"), channel_url:this.getChannelUrl(), client_id:FB._apiKey, fb_only:this._getBoolAttribute("fb-only", false), fb_register:this._getBoolAttribute("fb-register", false), fields:this.getAttribute("fields"), height:this._getPxAttribute("height"), redirect_uri:this.getAttribute("redirect-uri", window.location.href), no_footer:this._getBoolAttribute("no-footer"), no_header:this._getBoolAttribute("no-header"), 
-	onvalidate:this.getAttribute("onvalidate"), width:this._getPxAttribute("width", 600)};
+	onvalidate:this.getAttribute("onvalidate"), width:this._getPxAttribute("width", 600), target:this.getAttribute("target")};
 	if(this._attr.onvalidate) {
 		this.subscribe("xd.validate", this.bind(function(b) {
 			var d = FB.JSON.parse(b.value);
@@ -4339,8 +4345,8 @@ FB.subclass("XFBML.SocialBar", "XFBML.EdgeWidget", function(a) {
 	return true
 }});
 void 0;
-FB.provide("", {"_domain":{"api":"https://api.facebook.com/", "api_read":"https://api-read.facebook.com/", "cdn":"http://static.ak.fbcdn.net/", "cdn_foreign":"http://connect.facebook.net/", "graph":"https://graph.facebook.com/", "https_cdn":"https://s-static.ak.fbcdn.net/", "https_staticfb":"https://s-static.ak.facebook.com/", "https_www":"https://www.facebook.com/", "staticfb":"http://static.ak.facebook.com/", "www":"http://www.facebook.com/", "m":"http://m.facebook.com/", "https_m":"https://m.facebook.com/"}, 
-"_locale":"en_US", "_localeIsRtl":false}, true);
+FB.provide("", {"_domain":{"api":"https://api.beta.facebook.com/", "api_read":"https://api-read.beta.facebook.com/", "cdn":"http://static.beta.fbcdn.net/", "cdn_foreign":"http://connect.facebook.net/", "graph":"https://graph.beta.facebook.com/", "https_cdn":"https://s-static.beta.fbcdn.net/", "https_staticfb":"https://www.beta.facebook.com/", "https_www":"https://www.beta.facebook.com/", "staticfb":"http://www.beta.facebook.com/", "www":"http://www.beta.facebook.com/", "m":"http://m.beta.facebook.com/", 
+"https_m":"https://m.beta.facebook.com/"}, "_locale":"en_US", "_localeIsRtl":false}, true);
 FB.provide("Flash", {"_minVersions":[[10, 0, 22, 87]], "_swfPath":"rsrc.php/v1/yK/r/RIxWozDt5Qq.swf"}, true);
 FB.provide("XD", {"_xdProxyUrl":"connect/xd_proxy.php?version=3"}, true);
 FB.provide("Arbiter", {"_canvasProxyUrl":"connect/canvas_proxy.php?version=3"}, true);
