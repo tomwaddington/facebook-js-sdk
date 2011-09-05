@@ -4230,8 +4230,8 @@ FB.provide("Flash", {"_minVersions":[[10, 0, 22, 87]], "_swfPath":"rsrc.php/v1/y
 FB.provide("XD", {"_xdProxyUrl":"connect/xd_proxy.php?version=3"}, true);
 FB.provide("Arbiter", {"_canvasProxyUrl":"connect/canvas_proxy.php?version=3"}, true);
 FB.provide("Auth", {"_xdStorePath":"xd_localstorage/"}, true);
-FB.initSitevars = {"parseXFBMLBeforeDomReady":false, "iframePermissions":{"read_stream":false, "manage_mailbox":false, "manage_friendlists":false, "read_mailbox":false, "publish_checkins":true, "status_update":true, "photo_upload":true, "video_upload":true, "sms":false, "create_event":true, "rsvp_event":true, "offline_access":true, "email":true, "xmpp_login":false, "create_note":true, "share_item":true, "export_stream":false, "publish_stream":true, "publish_likes":true, "ads_management":false, "contact_email":true, 
-"access_private_data":false, "read_insights":false, "read_requests":false, "read_friendlists":true, "manage_pages":false, "physical_login":false, "manage_groups":false, "read_deals":false}};
+FB.initSitevars = {"parseXFBMLBeforeDomReady":false, "computeContentSizeVersion":0, "iframePermissions":{"read_stream":false, "manage_mailbox":false, "manage_friendlists":false, "read_mailbox":false, "publish_checkins":true, "status_update":true, "photo_upload":true, "video_upload":true, "sms":false, "create_event":true, "rsvp_event":true, "offline_access":true, "email":true, "xmpp_login":false, "create_note":true, "share_item":true, "export_stream":false, "publish_stream":true, "publish_likes":true, 
+"ads_management":false, "contact_email":true, "access_private_data":false, "read_insights":false, "read_requests":false, "read_friendlists":true, "manage_pages":false, "physical_login":false, "manage_groups":false, "read_deals":false}};
 FB.widgetPipeEnabledApps = {111476658864976:1, "cca6477272fc5cb805f85a84f20fca1d":1, 179150165472010:1};
 FB.widgetPipeTagCountThreshold = 4;
 FB.provide("Canvas.EarlyFlush", {"_appIdsBlacklist":[144959615576466], "_sampleRate":500}, true);
