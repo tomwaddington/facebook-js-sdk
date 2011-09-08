@@ -1366,41 +1366,47 @@ FB.provide("Dialog", {_dialogs:null, _lastYOffset:0, _loaderEl:null, _stack:[], 
 	FB.Dialog._stack = FB.Array.filter(FB.Dialog._stack, function(b) {
 		return b != a
 	})
-}, _centerActive:function(g) {
+}, _centerActive:function(i) {
 	var b = FB.Dialog._active;
 	if(!b) {
 		return
 	}
-	var i = FB.Dom.getViewportInfo();
-	var j = parseInt(b.offsetWidth, 10);
+	var k = FB.Dom.getViewportInfo();
+	var l = parseInt(b.offsetWidth, 10);
 	var c = parseInt(b.offsetHeight, 10);
-	var d = i.scrollLeft + (i.width - j) / 2;
-	var f = (i.height - c) / 2.5;
+	var d = k.scrollLeft + (k.width - l) / 2;
+	var f = (k.height - c) / 2.5;
 	if(d < f) {
 		f = d
 	}
-	var e = i.height - c - f;
-	var h = g.scrollTop - g.offsetTop + (g.clientHeight - c) / 2;
-	if(h < f) {
-		h = f
+	var e = k.height - c - f;
+	var j = i.scrollTop - i.offsetTop + (i.clientHeight - c) / 2;
+	if(j < f) {
+		j = f
 	}else {
-		if(h > e) {
-			h = e
+		if(j > e) {
+			j = e
 		}
 	}
-	h += i.scrollTop;
+	j += k.scrollTop;
 	if(FB.UA.mobile()) {
 		var a = document.getElementsByTagName("body")[0];
 		FB.Dom.addCss(a, "fb_hidden");
 		d = 1E4;
-		h = 1E4;
+		j = 1E4;
+		var h = 100;
 		if(FB.UA.iPad()) {
-			d += (i.width - j) / 2;
-			h += (i.height - c) / 2
+			d += (k.width - l) / 2;
+			j += (k.height - c) / 2;
+			h += (k.height - c) / 2
+		}
+		var g = FB.Dom.getByClass("fb_dialog_padding", b);
+		if(g.length) {
+			g[0].style.height = h + "px"
 		}
 	}
 	b.style.left = (d > 0 ? d : 0) + "px";
-	b.style.top = (h > 0 ? h : 0) + "px"
+	b.style.top = (j > 0 ? j : 0) + "px"
 }, _handleOrientationChange:function() {
 	if(FB.UA.iPad()) {
 		FB.Dialog._centerActive(FB.Canvas.getPageInfo())
@@ -1429,10 +1435,10 @@ FB.provide("Dialog", {_dialogs:null, _lastYOffset:0, _loaderEl:null, _stack:[], 
 	a += " " + (e.classes || "");
 	if(FB.UA.ie()) {
 		a += " fb_dialog_legacy";
-		FB.Array.forEach(["vert_left", "vert_right", "horiz_top", "horiz_bottom", "top_left", "top_right", "bottom_left", "bottom_right"], function(g) {
-			var h = document.createElement("span");
-			h.className = "fb_dialog_" + g;
-			d.appendChild(h)
+		FB.Array.forEach(["vert_left", "vert_right", "horiz_top", "horiz_bottom", "top_left", "top_right", "bottom_left", "bottom_right"], function(h) {
+			var i = document.createElement("span");
+			i.className = "fb_dialog_" + h;
+			d.appendChild(i)
 		})
 	}else {
 		a += FB.UA.mobile() ? " fb_dialog_mobile" : " fb_dialog_advanced"
@@ -1441,12 +1447,17 @@ FB.provide("Dialog", {_dialogs:null, _lastYOffset:0, _loaderEl:null, _stack:[], 
 		FB.Content.append(e.content, c)
 	}
 	d.className = a;
-	var f = parseInt(e.width, 10);
-	if(!isNaN(f)) {
-		d.style.width = f + "px"
+	var g = parseInt(e.width, 10);
+	if(!isNaN(g)) {
+		d.style.width = g + "px"
 	}
 	c.className = "fb_dialog_content";
 	d.appendChild(c);
+	if(FB.UA.mobile()) {
+		var f = document.createElement("div");
+		f.className = "fb_dialog_padding";
+		d.appendChild(f)
+	}
 	FB.Content.append(d);
 	if(e.visible) {
 		FB.Dialog.show(d)
