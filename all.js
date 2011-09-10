@@ -2461,6 +2461,9 @@ FB.provide("XFBML", {_renderTimeout:3E4, getElements:function(b, f, d) {
 	var a = FB.Array, e = FB.XFBML._getDomElements(b, f, d), c = FB.Dom.getByClass(f + "-" + d, b);
 	e = a.toArray(e);
 	c = a.toArray(c);
+	c = a.filter(c, function(g) {
+		return!g.hasChildNodes() || g.childNodes.length === 1 && g.childNodes[0].nodeType === 3
+	});
 	return a.merge(e, c)
 }, parse:function(d, b) {
 	d = d || document.body;
@@ -2516,7 +2519,7 @@ FB.provide("XFBML", {_renderTimeout:3E4, getElements:function(b, f, d) {
 	a = FB.XFBML.getAttr(b, a);
 	return a && FB.Array.indexOf(["true", "1", "yes", "on"], a.toLowerCase()) > -1
 }, getAttr:function(b, a) {
-	return b.getAttribute(a) || b.getAttribute(a.replace(/-/g, "_")) || b.getAttribute(a.replace(/-/g, "")) || b.getAttribute("data-" + a) || b.getAttribute("data-" + a.replace(/_/g, "-")) || b.getAttribute("data-" + a.replace(/_/g, "")) || null
+	return b.getAttribute(a) || b.getAttribute(a.replace(/_/g, "-")) || b.getAttribute(a.replace(/-/g, "_")) || b.getAttribute(a.replace(/-/g, "")) || b.getAttribute(a.replace(/_/g, "")) || b.getAttribute("data-" + a) || b.getAttribute("data-" + a.replace(/_/g, "-")) || b.getAttribute("data-" + a.replace(/-/g, "_")) || b.getAttribute("data-" + a.replace(/-/g, "")) || b.getAttribute("data-" + a.replace(/_/g, "")) || null
 }, _processElement:function(dom, tagInfo, cb) {
 	var element = dom._element;
 	if(element) {
