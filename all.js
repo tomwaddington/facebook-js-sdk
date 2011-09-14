@@ -1629,11 +1629,21 @@ FB.provide("UIServer", {Methods:{}, _loadedNodes:{}, _defaultCb:{}, _resultToken
 		return"parent.frames[" + window.name + "]"
 	}
 }, popup:function(b) {
-	var a = typeof window.screenX != "undefined" ? window.screenX : window.screenLeft, i = typeof window.screenY != "undefined" ? window.screenY : window.screenTop, g = typeof window.outerWidth != "undefined" ? window.outerWidth : document.documentElement.clientWidth, f = typeof window.outerHeight != "undefined" ? window.outerHeight : document.documentElement.clientHeight - 22, k = b.size.width, d = b.size.height, h = a < 0 ? window.screen.width + a : a, e = parseInt(h + (g - k) / 2, 10), j = parseInt(i + 
-	(f - d) / 2.5, 10), c = "width=" + k + ",height=" + d + ",left=" + e + ",top=" + j + ",scrollbars=1";
-	if(b.name && (b.name == "permissions.request" || b.name == "permissions.oauth")) {
-		c += ",location=1,toolbar=0"
+	var a = typeof window.screenX != "undefined" ? window.screenX : window.screenLeft, i = typeof window.screenY != "undefined" ? window.screenY : window.screenTop, g = typeof window.outerWidth != "undefined" ? window.outerWidth : document.documentElement.clientWidth, f = typeof window.outerHeight != "undefined" ? window.outerHeight : document.documentElement.clientHeight - 22, k = FB.UA.mobile() ? null : b.size.width, d = FB.UA.mobile() ? null : b.size.height, h = a < 0 ? window.screen.width + a : 
+	a, e = parseInt(h + (g - k) / 2, 10), j = parseInt(i + (f - d) / 2.5, 10), c = [];
+	if(k !== null) {
+		c.push("width=" + k)
 	}
+	if(d !== null) {
+		c.push("height=" + d)
+	}
+	c.push("left=" + e);
+	c.push("top=" + j);
+	c.push("scrollbars=1");
+	if(b.name == "permissions.request" || b.name == "permissions.oauth") {
+		c.push("location=1,toolbar=0")
+	}
+	c = c.join(",");
 	if(b.post) {
 		FB.UIServer.setLoadedNode(b, window.open("about:blank", b.id, c));
 		FB.Content.submitToTarget({url:b.url, target:b.id, params:b.params})
@@ -2102,7 +2112,7 @@ FB.provide("Auth", {_callbacks:[], _xdStorePath:"xd_localstorage/", staticAuthCh
 	}
 	return unescape(l)
 }});
-FB.provide("UIServer.Methods", {"permissions.request":{size:{width:627, height:326}, transform:function(a) {
+FB.provide("UIServer.Methods", {"permissions.request":{size:{width:FB.UA.mobile() ? null : 627, height:FB.UA.mobile() ? null : 326}, transform:function(a) {
 	if(!FB._apiKey) {
 		FB.log("FB.login() called before calling FB.init().");
 		return
@@ -2117,7 +2127,7 @@ FB.provide("UIServer.Methods", {"permissions.request":{size:{width:627, height:3
 	a.params.method = "permissions.request";
 	FB.copy(a.params, {fbconnect:FB._inCanvas ? 0 : 1, return_session:1, session_version:3});
 	return a
-}}, "permissions.oauth":{url:"dialog/oauth", size:{width:627, height:326}, transform:function(a) {
+}}, "permissions.oauth":{url:"dialog/oauth", size:{width:FB.UA.mobile() ? null : 627, height:FB.UA.mobile() ? null : 326}, transform:function(a) {
 	if(!FB._apiKey) {
 		FB.log("FB.login() called before FB.init().");
 		return
