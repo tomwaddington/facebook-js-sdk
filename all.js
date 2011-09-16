@@ -2295,7 +2295,7 @@ FB.provide("", {initSitevars:{}, init:function(a) {
 	FB.XD.init(a.channelUrl);
 	if(FB.UA.mobile() && FB.TemplateUI && a.useCachedDialogs !== false) {
 		FB.TemplateUI.init();
-		FB.Event.subscribe("auth.sessionChange", FB.TemplateData.update)
+		FB.Event.subscribe("auth.statusChange", FB.TemplateData.update)
 	}
 	if(a.reportTemplates) {
 		FB.reportTemplates = true
@@ -3034,7 +3034,8 @@ FB.provide("XFBML.IframeWidget", {widgetPipeIframeCount:0, masterWidgetPipeIfram
 	return e
 }});
 FB.subclass("XFBML.Activity", "XFBML.IframeWidget", null, {_visibleAfter:"load", _refreshOnAuthChange:true, setupAndValidate:function() {
-	this._attr = {border_color:this.getAttribute("border-color"), colorscheme:this.getAttribute("color-scheme"), filter:this.getAttribute("filter"), action:this.getAttribute("action"), max_age:this.getAttribute("max_age"), font:this.getAttribute("font"), header:this._getBoolAttribute("header"), height:this._getPxAttribute("height", 300), recommendations:this._getBoolAttribute("recommendations"), site:this.getAttribute("site", location.hostname), width:this._getPxAttribute("width", 300)};
+	this._attr = {border_color:this.getAttribute("border-color"), colorscheme:this.getAttribute("color-scheme"), filter:this.getAttribute("filter"), action:this.getAttribute("action"), max_age:this.getAttribute("max_age"), font:this.getAttribute("font"), linktarget:this.getAttribute("linktarget", "_blank"), header:this._getBoolAttribute("header"), height:this._getPxAttribute("height", 300), recommendations:this._getBoolAttribute("recommendations"), site:this.getAttribute("site", location.hostname), 
+	width:this._getPxAttribute("width", 300)};
 	return true
 }, getSize:function() {
 	return{width:this._attr.width, height:this._attr.height}
@@ -4043,7 +4044,7 @@ FB.subclass("XFBML.Question", "XFBML.IframeWidget", null, {_visibleAfter:"load",
 	FB.Event.fire("question.vote", this._attr.permalink, a.vote)
 }});
 FB.subclass("XFBML.Recommendations", "XFBML.IframeWidget", null, {_visibleAfter:"load", _refreshOnAuthChange:true, setupAndValidate:function() {
-	this._attr = {border_color:this.getAttribute("border-color"), colorscheme:this.getAttribute("color-scheme"), filter:this.getAttribute("filter"), font:this.getAttribute("font"), action:this.getAttribute("action"), max_age:this.getAttribute("max_age"), header:this._getBoolAttribute("header"), height:this._getPxAttribute("height", 300), site:this.getAttribute("site", location.hostname), width:this._getPxAttribute("width", 300)};
+	this._attr = {border_color:this.getAttribute("border-color"), colorscheme:this.getAttribute("color-scheme"), filter:this.getAttribute("filter"), font:this.getAttribute("font"), action:this.getAttribute("action"), linktarget:this.getAttribute("linktarget", "_blank"), max_age:this.getAttribute("max_age"), header:this._getBoolAttribute("header"), height:this._getPxAttribute("height", 300), site:this.getAttribute("site", location.hostname), width:this._getPxAttribute("width", 300)};
 	return true
 }, getSize:function() {
 	return{width:this._attr.width, height:this._attr.height}
@@ -4091,6 +4092,8 @@ FB.subclass("XFBML.Registration", "XFBML.IframeWidget", null, {_visibleAfter:"im
 	}
 }, getUrlBits:function() {
 	return{name:"registration", params:this._attr}
+}, getDefaultWebDomain:function() {
+	return"https_www"
 }, _onAuthLogin:function() {
 	if(!FB.getSession()) {
 		FB.getLoginStatus()
