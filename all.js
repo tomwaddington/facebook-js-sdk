@@ -938,37 +938,52 @@ FB.provide("Canvas", {_timer:null, _lastSize:{}, _pageInfo:{clientWidth:0, clien
 	var c = {channelUrl:b, frame:window.name};
 	FB.Arbiter.inform("getPageInfo", c, "top");
 	return FB.Canvas._pageInfo
-}, _flashClassID:"CLSID:D27CDB6E-AE6D-11CF-96B8-444553540000", _hideFlashCallback:function(f) {
+}, _flashClassID:"CLSID:D27CDB6E-AE6D-11CF-96B8-444553540000", _hideFlashCallback:function(g) {
 	var a = window.document.getElementsByTagName("object");
-	for(var d = 0;d < a.length;d++) {
-		var b = a[d];
-		if(b.type != "application/x-shockwave-flash" && b.classid.toUpperCase() != FB.Canvas._flashClassID) {
+	for(var e = 0;e < a.length;e++) {
+		var c = a[e];
+		if(c.type != "application/x-shockwave-flash" && c.classid.toUpperCase() != FB.Canvas._flashClassID) {
 			continue
 		}
-		var c = false;
-		for(var e = 0;e < b.childNodes.length;e++) {
-			if(b.childNodes[e].nodeName == "PARAM" && b.childNodes[e].name == "wmode") {
-				if(b.childNodes[e].value == "opaque" || b.childNodes[e].value == "transparent") {
-					c = true
+		var d = false;
+		for(var f = 0;f < c.childNodes.length;f++) {
+			if(c.childNodes[f].nodeName.toLowerCase() == "param" && c.childNodes[f].name == "wmode") {
+				if(c.childNodes[f].value == "opaque" || c.childNodes[f].value == "transparent") {
+					d = true
 				}
 			}
 		}
-		if(!c) {
-			var g = Math.random();
-			if(g <= 1 / 1E3) {
+		if(!d) {
+			var h = Math.random();
+			if(h <= 1 / 1E3) {
 				FB.api(FB._apiKey + "/occludespopups", "post", {})
 			}
-			if(f.state == "opened") {
-				b._old_visibility = b.style.visibility;
-				b.style.visibility = "hidden"
+			if(FB.Canvas._devHideFlashCallback) {
+				var i = 200;
+				var b = {state:g.state, elem:c};
+				setTimeout(function(j) {
+					if(j.state == "opened") {
+						j.elem.style.visibility = "hidden"
+					}else {
+						j.elem.style.visibility = ""
+					}
+				}.bind(this, b), i);
+				FB.Canvas._devHideFlashCallback(b)
 			}else {
-				if(f.state == "closed") {
-					b.style.visibility = b._old_visibility;
-					delete b._old_visibility
+				if(g.state == "opened") {
+					c._old_visibility = c.style.visibility;
+					c.style.visibility = "hidden"
+				}else {
+					if(g.state == "closed") {
+						c.style.visibility = c._old_visibility;
+						delete c._old_visibility
+					}
 				}
 			}
 		}
 	}
+}, _devHideFlashCallback:null, _setHideFlashCallback:function(a) {
+	FB.Canvas._devHideFlashCallback = a
 }, init:function() {
 	var b = FB.Dom.getViewportInfo();
 	FB.Canvas._pageInfo.clientWidth = b.width;
@@ -2438,6 +2453,7 @@ FB.provide("", {initSitevars:{}, init:function(a) {
 		}
 	}
 	if(FB._inCanvas) {
+		FB.Canvas._setHideFlashCallback(a.hideFlashCallback);
 		FB.Canvas.init()
 	}
 	FB.Event.subscribe("xfbml.parse", function() {
@@ -2482,9 +2498,6 @@ FB.provide("Canvas.Prefetcher", {_sampleRate:0, _appIdsBlacklist:[], _links:[], 
 	if(!FB._inCanvas || !FB._apiKey || !FB.Canvas.Prefetcher._sampleRate) {
 		return
 	}
-	if(window.name.indexOf("_fb_https") > -1) {
-		return
-	}
 	var a = Math.random();
 	if(a > 1 / FB.Canvas.Prefetcher._sampleRate) {
 		return
@@ -2508,7 +2521,7 @@ FB.provide("Canvas.Prefetcher", {_sampleRate:0, _appIdsBlacklist:[], _links:[], 
 		})
 	}
 	var a = FB.JSON.stringify(FB.Canvas.Prefetcher._links);
-	FB.api(FB._apiKey + "/staticresources", "post", {urls:a});
+	FB.api(FB._apiKey + "/staticresources", "post", {urls:a, is_https:FB._https});
 	FB.Canvas.Prefetcher._links = []
 }});
 FB.provide("Canvas.EarlyFlush", {addResource:function(a) {
@@ -2946,7 +2959,7 @@ FB.provide("UIServer.Methods", {pay:{size:{width:555, height:120}, noHttps:true,
 	return false
 }}});
 FB.provide("Helper", {isUser:function(a) {
-	return a < 22E8 || a >= 1E14 && a <= 100099999989999
+	return a < 22E8 || a >= 1E14 && a <= 100099999989999 || a >= 89E12 && a <= 89999999999999
 }, getLoggedInUser:function() {
 	return FB.getUserID()
 }, upperCaseFirstChar:function(a) {
