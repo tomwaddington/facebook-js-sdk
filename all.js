@@ -947,7 +947,7 @@ FB.provide("Canvas", {_timer:null, _lastSize:{}, _pageInfo:{clientWidth:0, clien
 		}
 		var d = false;
 		for(var f = 0;f < c.childNodes.length;f++) {
-			if(c.childNodes[f].nodeName == "PARAM" && c.childNodes[f].name == "wmode") {
+			if(c.childNodes[f].nodeName.toLowerCase() == "param" && c.childNodes[f].name == "wmode") {
 				if(c.childNodes[f].value == "opaque" || c.childNodes[f].value == "transparent") {
 					d = true
 				}
@@ -2496,9 +2496,6 @@ FB.provide("Canvas.Prefetcher", {_sampleRate:0, _appIdsBlacklist:[], _links:[], 
 	FB.Canvas.Prefetcher._collectionMode = a
 }, _maybeSample:function() {
 	if(!FB._inCanvas || !FB._apiKey || !FB.Canvas.Prefetcher._sampleRate) {
-		return
-	}
-	if(window.name.indexOf("_fb_https") > -1) {
 		return
 	}
 	var a = Math.random();
