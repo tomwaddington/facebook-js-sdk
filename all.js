@@ -1663,7 +1663,7 @@ FB.provide("UIServer", {Methods:{}, _loadedNodes:{}, _defaultCb:{}, _resultToken
 	}
 	var d = f.getXdRelation || FB.UIServer.getXdRelation;
 	var i = d(a.params);
-	if(!(a.id in FB.UIServer._defaultCb) && !("next" in a.params)) {
+	if(!(a.id in FB.UIServer._defaultCb) && !("next" in a.params) && !("redirect_uri" in a.params)) {
 		a.params.next = FB.UIServer._xdResult(a.cb, a.id, i, true)
 	}
 	if(i === "parent") {
@@ -2998,7 +2998,7 @@ FB.provide("Helper", {isUser:function(a) {
 	return b[c].apply(this, a)
 }});
 FB.provide("TemplateData", {_initialized:false, _version:0, _response:null, _localStorageTimeout:60 * 60 * 24, _enabled:true, enabled:function() {
-	return FB.TemplateData._enabled && FB.TemplateData._initialized && FB.TemplateData.supportsLocalStorage() && FB._userStatus == "connected" && FB.TemplateData.getResponse()
+	return FB.TemplateData._enabled && FB.TemplateData._initialized && FB.TemplateData.supportsLocalStorage() && FB._userStatus == "connected" && FB.TemplateData.getResponse() && FB.TemplateData.getData().apprequests.template_data_enabled
 }, supportsLocalStorage:function() {
 	try {
 		return"localStorage" in window && window.localStorage !== null
@@ -4716,7 +4716,7 @@ FB.widgetPipeEnabledApps = {111476658864976:1, "cca6477272fc5cb805f85a84f20fca1d
 FB.widgetPipeTagCountThreshold = 4;
 FB.provide("Canvas.Prefetcher", {"_appIdsBlacklist":[144959615576466], "_sampleRate":500}, true);
 FB.provide("TemplateData", {"_enabled":true}, true);
-FB.provide("TemplateUI", {"_version":17}, true);
+FB.provide("TemplateUI", {"_version":18}, true);
 FB.provide("XFBML.ConnectBar", {"imgs":{"buttonUrl":"rsrc.php/v1/yY/r/h_Y6u1wrZPW.png", "missingProfileUrl":"rsrc.php/v1/yo/r/UlIqmHJn-SK.gif"}}, true);
 FB.provide("XFBML.ProfilePic", {"_defPicMap":{"pic":"rsrc.php/v1/yh/r/C5yt7Cqf3zU.jpg", "pic_big":"rsrc.php/v1/yL/r/HsTZSDw4avx.gif", "pic_big_with_logo":"rsrc.php/v1/y5/r/SRDCaeCL7hM.gif", "pic_small":"rsrc.php/v1/yi/r/odA9sNLrE86.jpg", "pic_small_with_logo":"rsrc.php/v1/yD/r/k1xiRXKnlGd.gif", "pic_square":"rsrc.php/v1/yo/r/UlIqmHJn-SK.gif", "pic_square_with_logo":"rsrc.php/v1/yX/r/9dYJBPDHXwZ.gif", "pic_with_logo":"rsrc.php/v1/yu/r/fPPR9f2FJ3t.gif"}}, true);
 if(FB.Dom && FB.Dom.addCssRules) {
