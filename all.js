@@ -941,6 +941,10 @@ FB.provide("Canvas", {_timer:null, _lastSize:{}, _pageInfo:{clientWidth:0, clien
 	var c = {channelUrl:b, frame:window.name};
 	FB.Arbiter.inform("getPageInfo", c, "top");
 	return FB.Canvas._pageInfo
+}, hideFlashElement:function(a) {
+	a.style.visibility = "hidden"
+}, showFlashElement:function(a) {
+	a.style.visibility = ""
 }, _flashClassID:"CLSID:D27CDB6E-AE6D-11CF-96B8-444553540000", _hideFlashCallback:function(g) {
 	var a = window.document.getElementsByTagName("object");
 	for(var e = 0;e < a.length;e++) {
@@ -966,9 +970,9 @@ FB.provide("Canvas", {_timer:null, _lastSize:{}, _pageInfo:{clientWidth:0, clien
 				var b = {state:g.state, elem:c};
 				setTimeout(function(j) {
 					if(j.state == "opened") {
-						j.elem.style.visibility = "hidden"
+						FB.Canvas.hideFlashElement(j.elem)
 					}else {
-						j.elem.style.visibility = ""
+						FB.Canvas.showFlashElement(j.elem)
 					}
 				}.bind(this, b), i);
 				FB.Canvas._devHideFlashCallback(b)
@@ -4718,7 +4722,7 @@ FB.subclass("XFBML.Subscribe", "XFBML.EdgeWidget", null, {setupAndValidate:funct
 void 0;
 FB.provide("", {"_domain":{"api":"https://api.beta.facebook.com/", "api_read":"https://api-read.beta.facebook.com/", "cdn":"http://static.beta.fbcdn.net/", "cdn_foreign":"http://connect.facebook.net/", "graph":"https://graph.beta.facebook.com/", "https_cdn":"https://s-static.beta.fbcdn.net/", "https_staticfb":"https://www.beta.facebook.com/", "https_www":"https://www.beta.facebook.com/", "staticfb":"http://www.beta.facebook.com/", "www":"http://www.beta.facebook.com/", "m":"http://m.beta.facebook.com/", 
 "https_m":"https://m.beta.facebook.com/"}, "_locale":"en_US", "_localeIsRtl":false}, true);
-FB.provide("Flash", {"_minVersions":[[10, 0, 22, 87], [11, 0, 0]], "_swfPath":"rsrc.php/v1/yK/r/RIxWozDt5Qq.swf"}, true);
+FB.provide("Flash", {"_minVersions":[[10, 3, 181, 34], [11, 0, 0]], "_swfPath":"rsrc.php/v1/yK/r/RIxWozDt5Qq.swf"}, true);
 FB.provide("XD", {"_xdProxyUrl":"connect/xd_proxy.php?version=3"}, true);
 FB.provide("Arbiter", {"_canvasProxyUrl":"connect/canvas_proxy.php?version=3"}, true);
 FB.provide("Auth", {"_xdStorePath":"xd_localstorage/v2"}, true);
