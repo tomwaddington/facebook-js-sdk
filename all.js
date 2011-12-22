@@ -860,7 +860,7 @@ FB.provide("UA", {ie:function() {
 	return FB.UA.mobile() && this._ios
 }, mobile:function() {
 	FB.UA._populate();
-	return!FB._inCanvas && FB.UA._enableMobile && this._mobile
+	return!FB._inCanvas && this._mobile
 }, nativeApp:function() {
 	return FB.UA.mobile() && navigator.userAgent.match(/FBAN\/\w+;/i)
 }, android:function() {
@@ -1081,39 +1081,6 @@ FB.provide("Canvas", {_timer:null, _lastSize:{}, _pageInfo:{clientWidth:0, clien
 	}
 	return{height:bottom, width:i}
 }});
-FB.provide("Intl", {_punctCharClass:"[" + ".!?" + "\u3002" + "\uff01" + "\uff1f" + "\u0964" + "\u2026" + "\u0eaf" + "\u1801" + "\u0e2f" + "\uff0e" + "]", _endsInPunct:function(a) {
-	if(typeof a != "string") {
-		return false
-	}
-	return a.match(new RegExp(FB.Intl._punctCharClass + "[" + ')"' + "'" + "\u00bb" + "\u0f3b" + "\u0f3d" + "\u2019" + "\u201d" + "\u203a" + "\u3009" + "\u300b" + "\u300d" + "\u300f" + "\u3011" + "\u3015" + "\u3017" + "\u3019" + "\u301b" + "\u301e" + "\u301f" + "\ufd3f" + "\uff07" + "\uff09" + "\uff3d" + "s" + "]*$"))
-}, _tx:function(d, a) {
-	if(a !== undefined) {
-		if(typeof a != "object") {
-			FB.log("The second arg to FB.Intl._tx() must be an Object for " + "tx(" + d + ", ...)")
-		}else {
-			var c;
-			for(var b in a) {
-				if(a.hasOwnProperty(b)) {
-					if(FB.Intl._endsInPunct(a[b])) {
-						c = new RegExp("{" + b + "}" + FB.Intl._punctCharClass + "*", "g")
-					}else {
-						c = new RegExp("{" + b + "}", "g")
-					}
-					d = d.replace(c, a[b])
-				}
-			}
-		}
-	}
-	return d
-}, tx:function(b, a) {
-	function c(e, d) {
-		void 0
-	}
-	if(!FB.Intl._stringTable) {
-		return null
-	}
-	return FBIntern.Intl._tx(FB.Intl._stringTable[b], a)
-}});
 FB.provide("String", {trim:function(a) {
 	return a.replace(/^\s*|\s*$/g, "")
 }, format:function(a) {
@@ -1155,12 +1122,13 @@ FB.provide("Dom", {containsCss:function(c, a) {
 		b.className = b.className.replace(a, "");
 		FB.Dom.removeCss(b, a)
 	}
-}, getByClass:function(b, c) {
+}, getByClass:function(b, c, g) {
 	c = c || document.body;
-	if(c.getElementsByClassName) {
-		return FB.Array.toArray(c.getElementsByClassName(b))
+	g = g || "*";
+	if(c.querySelectorAll) {
+		return FB.Array.toArray(c.querySelectorAll(g + "." + b))
 	}
-	var a = c.getElementsByTagName("*"), d = [];
+	var a = c.getElementsByTagName(g), d = [];
 	for(var e = 0, f = a.length;e < f;e++) {
 		if(this.containsCss(a[e], b)) {
 			d[d.length] = a[e]
@@ -1298,6 +1266,39 @@ FB.provide("Dom", {containsCss:function(c, a) {
 		}
 	}
 })();
+FB.provide("Intl", {_punctCharClass:"[" + ".!?" + "\u3002" + "\uff01" + "\uff1f" + "\u0964" + "\u2026" + "\u0eaf" + "\u1801" + "\u0e2f" + "\uff0e" + "]", _endsInPunct:function(a) {
+	if(typeof a != "string") {
+		return false
+	}
+	return a.match(new RegExp(FB.Intl._punctCharClass + "[" + ')"' + "'" + "\u00bb" + "\u0f3b" + "\u0f3d" + "\u2019" + "\u201d" + "\u203a" + "\u3009" + "\u300b" + "\u300d" + "\u300f" + "\u3011" + "\u3015" + "\u3017" + "\u3019" + "\u301b" + "\u301e" + "\u301f" + "\ufd3f" + "\uff07" + "\uff09" + "\uff3d" + "s" + "]*$"))
+}, _tx:function(d, a) {
+	if(a !== undefined) {
+		if(typeof a != "object") {
+			FB.log("The second arg to FB.Intl._tx() must be an Object for " + "tx(" + d + ", ...)")
+		}else {
+			var c;
+			for(var b in a) {
+				if(a.hasOwnProperty(b)) {
+					if(FB.Intl._endsInPunct(a[b])) {
+						c = new RegExp("{" + b + "}" + FB.Intl._punctCharClass + "*", "g")
+					}else {
+						c = new RegExp("{" + b + "}", "g")
+					}
+					d = d.replace(c, a[b])
+				}
+			}
+		}
+	}
+	return d
+}, tx:function(b, a) {
+	function c(e, d) {
+		void 0
+	}
+	if(!FB.Intl._stringTable) {
+		return null
+	}
+	return FBIntern.Intl._tx(FB.Intl._stringTable[b], a)
+}});
 FB.provide("", {bind:function() {
 	var a = Array.prototype.slice.call(arguments), c = a.shift(), b = a.shift();
 	return function() {
@@ -1765,7 +1766,7 @@ FB.provide("UIServer", {Methods:{}, _loadedNodes:{}, _defaultCb:{}, _resultToken
 	}
 }, setLoadedNode:function(a, b) {
 	FB.UIServer._loadedNodes[a.id] = b;
-	if(a.params) {
+	if(a.params && a.params.display != "popup") {
 		b.fbCallID = a.id
 	}
 }, getLoadedNode:function(a) {
@@ -2384,28 +2385,21 @@ FB.provide("Frictionless", {_allowedRecipients:{}, _useFrictionless:false, _upda
 		}
 	})
 }, _processRequestResponse:function(a, b) {
-	return function(e) {
-		var d = e && typeof e.frictionless_value !== "undefined";
-		var f = e && e.updated_frictionless;
-		if(FB.Frictionless._useFrictionless && (f || d)) {
-			FB.Frictionless._updateRecipients();
-			if(d) {
-				var c = [];
-				FB.Array.forEach(e.request_ids, function(g) {
-					c.push(g)
-				}, false);
-				e.request_ids = c
-			}
+	return function(c) {
+		var d = c && c.updated_frictionless;
+		if(FB.Frictionless._useFrictionless && d) {
+			FB.Frictionless._updateRecipients()
 		}
-		if(e) {
-			if(!b && e.frictionless) {
+		if(c) {
+			if(!b && c.frictionless) {
 				FB.Dialog._hideLoader();
 				FB.Dialog._restoreBodyPosition();
 				FB.Dialog._hideIPadOverlay()
 			}
-			delete e.frictionless
+			delete c.frictionless;
+			delete c.updated_frictionless
 		}
-		a && a(e)
+		a && a(c)
 	}
 }, isAllowed:function(c) {
 	if(!c) {
@@ -2433,9 +2427,6 @@ FB.provide("", {initSitevars:{}, init:function(a) {
 	FB._oauth = FB.forceOAuth || !!a.oauth;
 	if(!a.logging && window.location.toString().indexOf("fb_debug=1") < 0) {
 		FB._logging = false
-	}
-	if(FB.initSitevars.enableMobile) {
-		FB.UA._enableMobile = true
 	}
 	FB.XD.init(a.channelUrl);
 	if(FB.UA.mobile() && FB.TemplateUI && FB.TemplateData && FB.TemplateData._enabled && a.useCachedDialogs !== false) {
@@ -2577,7 +2568,10 @@ FB.provide("UIServer.Methods", {"stream.share":{size:{width:575, height:380}, ur
 	a = FB.UIServer.MobileIframableMethod.transform(a);
 	a.params.frictionless = FB.Frictionless && FB.Frictionless._useFrictionless;
 	if(a.params.frictionless) {
-		a.hideLoader = FB.Frictionless.isAllowed(a.params.to);
+		if(FB.Frictionless.isAllowed(a.params.to)) {
+			a.params.in_iframe = true;
+			a.hideLoader = true
+		}
 		a.cb = FB.Frictionless._processRequestResponse(a.cb, a.hideLoader)
 	}
 	return a
@@ -2597,7 +2591,7 @@ FB.provide("", {share:function(a) {
 }});
 FB.UIServer.Methods["auth.login"] = FB.UIServer.Methods["permissions.request"];
 FB.provide("XFBML", {_renderTimeout:3E4, getElements:function(b, f, d) {
-	var a = FB.Array, e = FB.XFBML._getDomElements(b, f, d), c = FB.Dom.getByClass(f + "-" + d, b);
+	var a = FB.Array, e = FB.XFBML._getDomElements(b, f, d), c = FB.Dom.getByClass(f + "-" + d, b, "div");
 	e = a.toArray(e);
 	c = a.toArray(c);
 	c = a.filter(c, function(g) {
@@ -4402,52 +4396,55 @@ FB.subclass("XFBML.Recommendations", "XFBML.IframeWidget", null, {_visibleAfter:
 FB.subclass("XFBML.RecommendationsBar", "XFBML.IframeWidget", null, {getUrlBits:function() {
 	return{name:"recommendations_bar", params:this._attr}
 }, setupAndValidate:function() {
-	function b(k, j) {
-		var l = 0;
-		var m = null;
-		function n() {
-			j();
-			m = null;
-			l = (new Date).getTime()
+	function b(l, k) {
+		var m = 0;
+		var n = null;
+		function o() {
+			k();
+			n = null;
+			m = (new Date).getTime()
 		}
 		return function() {
-			if(!m) {
-				var o = (new Date).getTime();
-				if(o - l < k) {
-					m = window.setTimeout(n, k - (o - l))
+			if(!n) {
+				var p = (new Date).getTime();
+				if(p - m < l) {
+					n = window.setTimeout(o, l - (p - m))
 				}else {
-					n()
+					o()
 				}
 			}
 			return true
 		}
 	}
-	function h(k) {
-		if(k.match(/^\d+(?:\.\d+)?%$/)) {
-			var j = Math.min(Math.max(parseInt(k, 10), 0), 100);
-			k = j / 100
+	function i(l) {
+		if(l.match(/^\d+(?:\.\d+)?%$/)) {
+			var k = Math.min(Math.max(parseInt(l, 10), 0), 100);
+			l = k / 100
 		}else {
-			if(k != "manual" && k != "onvisible") {
-				k = "onvisible"
+			if(l != "manual" && l != "onvisible") {
+				l = "onvisible"
 			}
 		}
-		return k
+		return l
 	}
-	function f(j) {
-		return Math.max(parseInt(j, 10) || 30, 10)
+	function g(k) {
+		return Math.max(parseInt(k, 10) || 30, 10)
 	}
-	function g(j) {
-		if(j == "left" || j == "right") {
-			return j
+	function f(k) {
+		return parseInt(k, 10) || 2
+	}
+	function h(k) {
+		if(k == "left" || k == "right") {
+			return k
 		}
 		return FB._localeIsRtl ? "left" : "right"
 	}
-	this._attr = {channel:this.getChannelUrl(), api_key:FB._apiKey, font:this.getAttribute("font"), colorscheme:this.getAttribute("colorscheme"), href:FB.URI.resolve(this.getAttribute("href")), side:g(this.getAttribute("side")), site:this.getAttribute("site"), action:this.getAttribute("action"), ref:this.getAttribute("ref"), trigger:h(this.getAttribute("trigger", "")), read_time:f(this.getAttribute("read_time"))};
+	this._attr = {channel:this.getChannelUrl(), api_key:FB._apiKey, font:this.getAttribute("font"), colorscheme:this.getAttribute("colorscheme"), href:FB.URI.resolve(this.getAttribute("href")), side:h(this.getAttribute("side")), site:this.getAttribute("site"), action:this.getAttribute("action"), ref:this.getAttribute("ref"), trigger:i(this.getAttribute("trigger", "")), read_time:g(this.getAttribute("read_time")), num_recommendations:f(this.getAttribute("num_recommendations"))};
 	FB._inPlugin = true;
 	this._showLoader = false;
 	this.subscribe("iframe.onload", FB.bind(function() {
-		var j = this.dom.children[0];
-		j.className = "fbpluginrecommendationsbar" + this._attr.side
+		var k = this.dom.children[0];
+		k.className = "fbpluginrecommendationsbar" + this._attr.side
 	}, this));
 	var a = FB.bind(function() {
 		FB.Event.unlisten(window, "scroll", a);
@@ -4460,8 +4457,8 @@ FB.subclass("XFBML.RecommendationsBar", "XFBML.IframeWidget", null, {getUrlBits:
 	FB.Event.listen(document.documentElement, "click", a);
 	FB.Event.listen(document.documentElement, "mousemove", a);
 	if(this._attr.trigger == "manual") {
-		var c = FB.bind(function(j) {
-			if(j == this._attr.href) {
+		var c = FB.bind(function(k) {
+			if(k == this._attr.href) {
 				FB.Event.unsubscribe("xfbml.recommendationsbar.read", c);
 				this.arbiterInform("platform/plugins/recommendations_bar/trigger", null, FB.Arbiter.BEHAVIOR_STATE)
 			}
@@ -4482,7 +4479,7 @@ FB.subclass("XFBML.RecommendationsBar", "XFBML.IframeWidget", null, {getUrlBits:
 		e()
 	}
 	this.visible = false;
-	var i = b(500, FB.bind(function() {
+	var j = b(500, FB.bind(function() {
 		if(!this.visible && this.calculateVisibility()) {
 			this.visible = true;
 			this.arbiterInform("platform/plugins/recommendations_bar/visible")
@@ -4494,9 +4491,9 @@ FB.subclass("XFBML.RecommendationsBar", "XFBML.IframeWidget", null, {getUrlBits:
 		}
 		return true
 	}, this));
-	FB.Event.listen(window, "scroll", i);
-	FB.Event.listen(window, "resize", i);
-	i();
+	FB.Event.listen(window, "scroll", j);
+	FB.Event.listen(window, "resize", j);
+	j();
 	this.focused = true;
 	var d = FB.bind(function() {
 		this.focused = !this.focused;
@@ -4726,13 +4723,13 @@ FB.subclass("XFBML.Subscribe", "XFBML.EdgeWidget", null, {setupAndValidate:funct
 void 0;
 FB.provide("", {"_domain":{"api":"https://api.facebook.com/", "api_read":"https://api-read.facebook.com/", "cdn":"http://static.ak.fbcdn.net/", "cdn_foreign":"http://connect.facebook.net/", "graph":"https://graph.facebook.com/", "https_cdn":"https://s-static.ak.fbcdn.net/", "https_staticfb":"https://s-static.ak.facebook.com/", "https_www":"https://www.facebook.com/", "staticfb":"http://static.ak.facebook.com/", "www":"http://www.facebook.com/", "m":"http://m.facebook.com/", "https_m":"https://m.facebook.com/"}, 
 "_locale":"en_US", "_localeIsRtl":false}, true);
-FB.provide("Flash", {"_minVersions":[[10, 3, 181, 34], [11, 0, 0]], "_swfPath":"rsrc.php/v1/yK/r/RIxWozDt5Qq.swf"}, true);
+FB.provide("Flash", {"_minVersions":[[10, 3, 181, 34], [11, 0, 0]], "_swfPath":"rsrc.php/v1/yD/r/GL74y29Am1r.swf"}, true);
 FB.provide("XD", {"_xdProxyUrl":"connect/xd_proxy.php?version=3"}, true);
 FB.provide("Arbiter", {"_canvasProxyUrl":"connect/canvas_proxy.php?version=3"}, true);
 FB.provide("Auth", {"_xdStorePath":"xd_localstorage/v2"}, true);
 FB.initSitevars = {"parseXFBMLBeforeDomReady":false, "computeContentSizeVersion":0, "enableMobile":1, "forceSecureXdProxy":1, "iframePermissions":{"read_stream":false, "manage_mailbox":false, "manage_friendlists":false, "read_mailbox":false, "publish_checkins":true, "status_update":true, "photo_upload":true, "video_upload":true, "sms":false, "create_event":true, "rsvp_event":true, "offline_access":true, "email":true, "xmpp_login":false, "create_note":true, "share_item":true, "export_stream":false, 
 "publish_stream":true, "publish_likes":true, "ads_management":false, "contact_email":true, "access_private_data":false, "read_insights":false, "read_requests":false, "read_friendlists":true, "manage_pages":false, "physical_login":false, "manage_groups":false, "read_deals":false}};
-FB.forceOAuth = false;
+FB.forceOAuth = true;
 FB.widgetPipeEnabledApps = {111476658864976:1, "cca6477272fc5cb805f85a84f20fca1d":1, 179150165472010:1};
 FB.widgetPipeTagCountThreshold = 4;
 FB.provide("Canvas.Prefetcher", {"_appIdsBlacklist":[144959615576466], "_sampleRate":500}, true);
