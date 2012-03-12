@@ -12,7 +12,7 @@ require 'grit'
   
   data = request.body_str
   
-  revision = data.to_a[0].match(/v([0-9])+/)
+  revision = data.lines.to_a[0].match(/v([0-9])+/)
   puts revision
   
   c = Curl::Easy.new("http://closure-compiler.appspot.com/compile?output_format=text")
