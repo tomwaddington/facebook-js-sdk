@@ -5410,7 +5410,7 @@ if(!FB) {
 			return d
 		}});
 		void 0;
-		__d("XDConfig", [], {"XdUrl":"connect/xd_arbiter.html?version=1", "Flash":{"path":"https://s-static.facebook.net/rsrc.php/v1/yC/r/BTx0k8OLi64.swf"}, "useCdn":true});
+		__d("XDConfig", [], {"XdUrl":"connect/xd_arbiter.html?version=1", "Flash":{"path":"https://s-static.facebook.com/rsrc.php/v1/yC/r/BTx0k8OLi64.swf"}, "useCdn":true});
 		__d("SDKConfig", [], {"legacy":1})
 	}).call(FB)
 }
