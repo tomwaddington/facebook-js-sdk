@@ -30,4 +30,7 @@ require 'grit'
   repo.add('all.js')
   repo.commit_index('Revision '+revision.to_s)
   `git push`
+  
 end
+
+`git checkout latest`
