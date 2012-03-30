@@ -19,12 +19,12 @@ if(!FB) {
 					}
 					return b
 				}
-				a(window.FB, {_apiKey:null, _authResponse:null, _userStatus:"unknown", _logging:true, _inCanvas:window.name.indexOf("iframe_canvas") > -1 || window.name.indexOf("app_runner") > -1, _https:function() {
+				a(window.FB, {_apiKey:null, _authResponse:null, _userStatus:"unknown", _logging:true, _inCanvas:/iframe_canvas|app_runner/.test(window.name), _https:function() {
 					if(location.protocol == "https:" && window == window.top) {
 						return true
 					}
-					if(/iframe_canvas|app_runner/.test(window.name)) {
-						return window.name.indexOf("_fb_https") > -1
+					if(/_fb_https?_/.test(window.name)) {
+						return window.name.indexOf("_fb_https") != -1
 					}
 				}(), onlyUseHttps:function() {
 					return FB._https === true
@@ -921,175 +921,181 @@ if(!FB) {
 			if(a.require) {
 				return
 			}
-			var b = {}, c = {}, d = {}, e = 0, f = 1, g = 2, h = "special", i = "refcount", j = "exports", k = "dependencies", l = "module", m = "waiting", n = "factory", o = undefined, p = "define", q = "global", r = "require", s = "requireLazy", t = "requireDynamic", u = "context";
-			function v(ga) {
-				if(!b[ga]) {
-					throw new Error('Requiring module "' + ga + '" that has not been loaded yet. ' + "Did you forget to run arc build?");
+			var b = {}, c = {}, d = {}, e = 0, f = 1, g = 2, h = "special", i = "refcount", j = "exports", k = "dependencies", l = "module", m = "waiting", n = "factory", o = undefined, p = "define", q = "global", r = "require", s = "requireLazy", t = "requireDynamic", u = "context", v = Object.prototype.hasOwnProperty;
+			function w(ha) {
+				if(!b[ha]) {
+					throw new Error('Requiring module "' + ha + '" that has not been loaded yet. ' + "Did you forget to run arc build?");
 				}
-				var ha = b[ga], ia, ja, ka;
-				if(ha[m] && ha[h] & g) {
-					y()
+				var ia = b[ha], ja, ka, la;
+				if(ia[m] && ia[h] & g) {
+					z()
 				}
-				if(ha[m]) {
-					ka = 'Requiring module "' + ga + '" with unresolved dependencies';
-					throw new Error(ka);
+				if(ia[m]) {
+					la = 'Requiring module "' + ha + '" with unresolved dependencies';
+					throw new Error(la);
 				}
-				if(!ha[j]) {
-					var la = ha[j] = {}, ma = ha[n];
-					if(Object.prototype.toString.call(ma) === "[object Function]") {
-						var na = [], oa = ha[k], pa = oa.length;
-						if(ha[h] & g) {
-							pa = Math.min(pa, ma.length)
+				if(!ia[j]) {
+					var ma = ia[j] = {}, na = ia[n];
+					if(Object.prototype.toString.call(na) === "[object Function]") {
+						var oa = [], pa = ia[k], qa = pa.length;
+						if(ia[h] & g) {
+							qa = Math.min(qa, na.length)
 						}
-						for(ja = 0;ja < pa;ja++) {
-							ia = oa[ja];
-							na.push(ia === l ? ha : ia === j ? la : v(ia))
+						for(ka = 0;ka < qa;ka++) {
+							ja = pa[ka];
+							oa.push(ja === l ? ia : ja === j ? ma : w(ja))
 						}
-						var qa = ma.apply(ha[u] || a, na);
-						if(qa) {
-							ha[j] = qa
+						var ra = na.apply(ia[u] || a, oa);
+						if(ra) {
+							ia[j] = ra
 						}
 					}else {
-						ha[j] = ma
+						ia[j] = na
 					}
 				}
-				if(ha[i]-- === 1) {
-					delete b[ga]
+				if(ia[i]-- === 1) {
+					delete b[ha]
 				}
-				return ha[j]
+				return ia[j]
 			}
-			function w(ga, ha, ia, ja, ka, la) {
-				if(ha === o) {
-					ha = [];
-					ia = ga;
-					ga = aa()
+			function x(ha, ia, ja, ka, la, ma) {
+				if(ia === o) {
+					ia = [];
+					ja = ha;
+					ha = ba()
 				}else {
-					if(ia === o) {
+					if(ja === o) {
+						ja = ia;
 						ia = ha;
-						ha = ga;
-						ga = aa()
+						ha = ba()
 					}
 				}
-				var ma = b[ga];
-				if(ma) {
-					if(la) {
-						ma[i] += la
+				var na = b[ha];
+				if(na) {
+					if(ma) {
+						na[i] += ma
 					}
 					return
 				}else {
-					if(!ha && !ia && la) {
-						d[ga] = (d[ga] || 0) + la;
+					if(!ia && !ja && ma) {
+						d[ha] = (d[ha] || 0) + ma;
 						return
 					}else {
-						ma = {id:ga};
-						ma[i] = (d[ga] || 0) + (la || 0);
-						delete d[ga]
+						na = {id:ha};
+						na[i] = (d[ha] || 0) + (ma || 0);
+						delete d[ha]
 					}
 				}
-				ma[n] = ia;
-				ma[k] = ha;
-				ma[u] = ka;
-				ma[h] = ja;
-				b[ga] = ma;
-				ba(ga)
+				na[n] = ja;
+				na[k] = ia;
+				na[u] = la;
+				na[h] = ka;
+				b[ha] = na;
+				ca(ha)
 			}
-			function x(ga, ha, ia) {
-				w(ga, ha, o, f, ia, 1)
+			function y(ha, ia, ja) {
+				x(ha, ia, o, f, ja, 1)
 			}
-			function y() {
-				var ga = {}, ha;
-				for(ha in c) {
-					if(b[ha] && !ga[ha] && b[ha][h] & g) {
-						z({}, ha, ga)
+			function z() {
+				var ha = {}, ia;
+				for(ia in c) {
+					if(v.call(c, ia)) {
+						if(b[ia] && !ha[ia] && b[ia][h] & g) {
+							aa({}, ia, ha)
+						}
 					}
 				}
 			}
-			function z(ga, ha, ia) {
-				ia[ha] = 1;
-				var ja = c[ha], ka;
-				if(!ja) {
+			function aa(ha, ia, ja) {
+				ja[ia] = 1;
+				var ka = c[ia], la;
+				if(!ka) {
 					return
 				}
-				ga[ha] = 1;
-				for(ka in ja) {
-					if(!b[ka][h] & g) {
-						continue
-					}
-					if(ga[ka]) {
-						delete ja[ka];
-						b[ka][m]--;
-						if(!b[ka][m]) {
-							ca(ka)
+				ha[ia] = 1;
+				for(la in ka) {
+					if(v.call(ka, la)) {
+						if(!b[la][h] & g) {
+							continue
 						}
-					}else {
-						z(ga, ka, ia)
+						if(ha[la]) {
+							delete ka[la];
+							b[la][m]--;
+							if(!b[la][m]) {
+								da(la)
+							}
+						}else {
+							aa(ha, la, ja)
+						}
 					}
 				}
-				ga[ha] = 0
+				ha[ia] = 0
 			}
-			function aa() {
+			function ba() {
 				return"__mod__" + e++
 			}
-			function ba(ga) {
-				var ha = b[ga], ia = 0;
-				for(var ja = 0;ja < ha[k].length;ja++) {
-					var ka = ha[k][ja];
-					if(!b[ka] || b[ka][m]) {
-						c[ka] || (c[ka] = {});
-						if(!c[ka][ga]) {
-							ia++
+			function ca(ha) {
+				var ia = b[ha], ja = 0;
+				for(var ka = 0;ka < ia[k].length;ka++) {
+					var la = ia[k][ka];
+					if(!b[la] || b[la][m]) {
+						c[la] || (c[la] = {});
+						if(!c[la][ha]) {
+							ja++
 						}
-						c[ka][ga] = 1
+						c[la][ha] = 1
 					}
 				}
-				ha[m] = ia;
-				if(!ia) {
-					ca(ga)
+				ia[m] = ja;
+				if(!ja) {
+					da(ha)
 				}
 			}
-			function ca(ga) {
-				var ha = b[ga];
-				if(ha[h] & f) {
-					v(ga)
+			function da(ha) {
+				var ia = b[ha];
+				if(ia[h] & f) {
+					w(ha)
 				}
-				var ia = c[ga];
-				if(ia) {
-					delete c[ga];
-					for(var ja in ia) {
-						if(!--b[ja][m]) {
-							ca(ja)
+				var ja = c[ha];
+				if(ja) {
+					delete c[ha];
+					for(var ka in ja) {
+						if(v.call(ja, ka)) {
+							if(!--b[ka][m]) {
+								da(ka)
+							}
 						}
 					}
 				}
 			}
-			function da(ga, ha) {
-				b[ga] = {id:ga};
-				b[ga][j] = ha
+			function ea(ha, ia) {
+				b[ha] = {id:ha};
+				b[ha][j] = ia
 			}
-			da(l, 0);
-			da(j, 0);
-			da(p, w);
-			da(q, a);
-			da(r, v);
-			da(t, v);
-			da(s, x);
-			w.amd = {};
-			a[p] = w;
-			a[r] = v;
-			a[t] = v;
-			a[s] = x;
-			var ea = false, fa = function(ga, ha, ia, ja) {
-				w(ga, ha, ia, ja || g);
-				if(b[ga][m] && !ea) {
-					ea = setTimeout(function() {
-						y();
-						ea = false
+			ea(l, 0);
+			ea(j, 0);
+			ea(p, x);
+			ea(q, a);
+			ea(r, w);
+			ea(t, w);
+			ea(s, y);
+			x.amd = {};
+			a[p] = x;
+			a[r] = w;
+			a[t] = w;
+			a[s] = y;
+			var fa = false, ga = function(ha, ia, ja, ka) {
+				x(ha, ia, ja, ka || g);
+				if(b[ha][m] && !fa) {
+					fa = setTimeout(function() {
+						z();
+						fa = false
 					}, 9)
 				}
 			};
-			a.__d = function(ga, ha, ia, ja) {
-				ha = [q, r, t, s, l, j].concat(ha);
-				fa(ga, ha, ia, ja)
+			a.__d = function(ha, ia, ja, ka) {
+				ia = [q, r, t, s, l, j].concat(ia);
+				ga(ha, ia, ja, ka)
 			};
 			a.__e = a.__d
 		})(this);
@@ -1195,68 +1201,78 @@ if(!FB) {
 		});
 		__d("Flash", ["ua", "copyProperties", "QueryString", "guid"], function(a, b, c, d, e, f) {
 			var g = b("ua"), h = b("copyProperties"), i = b("QueryString"), j = b("guid"), k = {}, l;
-			function m(q) {
-				var r = document.getElementById(q);
-				if(r) {
-					r.parentNode.removeChild(r)
+			function m(r) {
+				var s = document.getElementById(r);
+				if(s) {
+					s.parentNode.removeChild(s)
 				}
-				delete k[q]
+				delete k[r]
 			}
 			function n() {
-				for(var q in k) {
-					if(k.hasOwnProperty(q)) {
-						m(q)
+				for(var r in k) {
+					if(k.hasOwnProperty(r)) {
+						m(r)
 					}
 				}
 			}
-			function o(q) {
+			function o(r) {
+				return r.replace(/\d+/g, function(s) {
+					return"000".substring(s.length) + s
+				})
+			}
+			function p(r) {
 				if(!l) {
 					if(g.ie() >= 9) {
 						window.attachEvent("onunload", n)
 					}
 					l = true
 				}
-				k[q] = q
+				k[r] = r
 			}
-			var p = {embed:function(q, r, s, t) {
-				var u = j();
-				q = encodeURI(q);
-				s = h({allowscriptaccess:"always", flashvars:t, movie:q}, s || {});
-				if(typeof s.flashvars == "object") {
-					s.flashvars = i.encode(s.flashvars)
+			var q = {embed:function(r, s, t, u) {
+				var v = j();
+				r = encodeURI(r);
+				t = h({allowscriptaccess:"always", flashvars:u, movie:r}, t || {});
+				if(typeof t.flashvars == "object") {
+					t.flashvars = i.encode(t.flashvars)
 				}
-				var v = [];
-				for(var w in s) {
-					if(s.hasOwnProperty(w) && s[w]) {
-						v.push('<param name="' + encodeURI(w) + '" value="' + encodeURI(s[w]) + '">')
+				var w = [];
+				for(var x in t) {
+					if(t.hasOwnProperty(x) && t[x]) {
+						w.push('<param name="' + encodeURI(x) + '" value="' + encodeURI(t[x]) + '">')
 					}
 				}
-				var x = document.createElement("div"), y = "<object " + (g.ie() ? 'classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" ' : 'type="application/x-shockwave-flash"') + 'data="' + q + '" ' + 'id="' + u + '">' + v.join("") + "</object>";
-				x.innerHTML = y;
-				r.appendChild(x.firstChild);
-				o(u);
-				return r.firstChild
-			}, remove:m, isAvailable:function() {
-				var q = "Shockwave Flash", r = "application/x-shockwave-flash", s = "ShockwaveFlash.ShockwaveFlash", t;
-				if(navigator.plugins && typeof navigator.plugins[q] == "object") {
-					var u = navigator.plugins[q].description;
-					if(u && navigator.mimeTypes && navigator.mimeTypes[r] && navigator.mimeTypes[r].enabledPlugin) {
-						t = u.match(/\d+/g)
+				var y = document.createElement("div"), z = "<object " + (g.ie() ? 'classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" ' : 'type="application/x-shockwave-flash"') + 'data="' + r + '" ' + 'id="' + v + '">' + w.join("") + "</object>";
+				y.innerHTML = z;
+				s.appendChild(y.firstChild);
+				p(v);
+				return s.firstChild
+			}, remove:m, getVersion:function() {
+				var r = "Shockwave Flash", s = "application/x-shockwave-flash", t = "ShockwaveFlash.ShockwaveFlash", u;
+				if(navigator.plugins && typeof navigator.plugins[r] == "object") {
+					var v = navigator.plugins[r].description;
+					if(v && navigator.mimeTypes && navigator.mimeTypes[s] && navigator.mimeTypes[s].enabledPlugin) {
+						u = v.match(/\d+/g)
 					}
 				}
-				if(!t) {
+				if(!u) {
 					try {
-						t = (new ActiveXObject(s)).GetVariable("$version").match(/(\d+),(\d+),(\d+),(\d+)/);
-						t = Array.prototype.slice.call(t, 1)
-					}catch(v) {
+						u = (new ActiveXObject(t)).GetVariable("$version").match(/(\d+),(\d+),(\d+),(\d+)/);
+						u = Array.prototype.slice.call(u, 1)
+					}catch(w) {
 					}
 				}
-				if(!t) {
+				return u
+			}, checkMinVersion:function(r) {
+				var s = q.getVersion();
+				if(!s) {
 					return false
 				}
-				return true
+				return o(s.join(".")) >= o(r)
+			}, isAvailable:function() {
+				return!!q.getVersion()
 			}};
-			e.exports = p
+			e.exports = q
 		});
 		__d("DOMEventListener", [], function(a, b, c, d, e, f) {
 			var g, h;
@@ -3274,24 +3290,24 @@ if(!FB) {
 				FB.Canvas._setHideFlashCallback(a.hideFlashCallback);
 				FB.Canvas.init()
 			}
-			FB.Event.subscribe("xfbml.parse", function() {
-				FB.XFBML.IframeWidget.batchWidgetPipeRequests()
-			});
-			if(a.xfbml) {
+			if(FB.XFBML && a.xfbml) {
+				if(FB.XFBML.IframeWidget) {
+					FB.Event.subscribe("xfbml.parse", function() {
+						FB.XFBML.IframeWidget.batchWidgetPipeRequests()
+					})
+				}
 				window.setTimeout(function() {
-					if(FB.XFBML) {
-						if(FB.initSitevars.parseXFBMLBeforeDomReady) {
-							FB.XFBML.parse();
-							var d = window.setInterval(function() {
-								FB.XFBML.parse()
-							}, 100);
-							FB.Dom.ready(function() {
-								window.clearInterval(d);
-								FB.XFBML.parse()
-							})
-						}else {
-							FB.Dom.ready(FB.XFBML.parse)
-						}
+					if(FB.initSitevars.parseXFBMLBeforeDomReady) {
+						FB.XFBML.parse();
+						var d = window.setInterval(function() {
+							FB.XFBML.parse()
+						}, 100);
+						FB.Dom.ready(function() {
+							window.clearInterval(d);
+							FB.XFBML.parse()
+						})
+					}else {
+						FB.Dom.ready(FB.XFBML.parse)
 					}
 				}, 0)
 			}
@@ -5465,7 +5481,7 @@ if(!FB) {
 			return d
 		}});
 		void 0;
-		__d("XDConfig", [], {"XdUrl":"connect/xd_arbiter.php?version=3", "Flash":{"path":"https://s-static.facebook.net/rsrc.php/v1/ys/r/WON-TVLCpDP.swf"}, "useCdn":true});
+		__d("XDConfig", [], {"XdUrl":"connect/xd_arbiter.php?version=4", "Flash":{"path":"https://s-static.ak.fbcdn.net/rsrc.php/v1/ys/r/WON-TVLCpDP.swf"}, "useCdn":true});
 		__d("SDKConfig", [], {"legacy":true})
 	}).call(FB)
 }
