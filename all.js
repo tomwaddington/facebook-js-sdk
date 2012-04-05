@@ -3262,7 +3262,7 @@ if(!FB) {
 			if(!a.logging && window.location.toString().indexOf("fb_debug=1") < 0) {
 				FB._logging = false
 			}
-			FB.XD.init(a.channelUrl);
+			FB.XD.init(a.channelUrl ? FB.URI.resolve(a.channelUrl) : null);
 			if(FB.UA.mobile() && FB.TemplateUI && FB.TemplateData && FB.TemplateData._enabled && a.useCachedDialogs !== false) {
 				FB.TemplateUI.init();
 				FB.Event.subscribe("auth.statusChange", FB.TemplateData.update)
@@ -5482,7 +5482,7 @@ if(!FB) {
 		}});
 		void 0;
 		__d("XDConfig", [], {"XdUrl":"connect/xd_arbiter.php?version=4", "Flash":{"path":"https://s-static.ak.fbcdn.net/rsrc.php/v1/ys/r/WON-TVLCpDP.swf"}, "useCdn":true});
-		__d("SDKConfig", [], {"legacy":true})
+		__d("SDKConfig", [], {"legacy":false})
 	}).call(FB)
 }
 FB.provide("", {"_domain":{"api":"https://api.facebook.com/", "api_read":"https://api-read.facebook.com/", "cdn":"http://static.ak.fbcdn.net/", "cdn_foreign":"http://connect.facebook.net/", "graph":"https://graph.facebook.com/", "https_cdn":"https://s-static.ak.fbcdn.net/", "https_staticfb":"https://s-static.ak.facebook.com/", "https_www":"https://www.facebook.com/", "staticfb":"http://static.ak.facebook.com/", "www":"http://www.facebook.com/", "m":"http://m.facebook.com/", "https_m":"https://m.facebook.com/"}, 
