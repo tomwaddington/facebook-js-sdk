@@ -181,16 +181,93 @@ if(!FB) {
 			}
 			return c
 		}});
+		FB.provide("UA", {ie:function() {
+			return FB.UA._populate() || this._ie
+		}, firefox:function() {
+			return FB.UA._populate() || this._firefox
+		}, opera:function() {
+			return FB.UA._populate() || this._opera
+		}, safari:function() {
+			return FB.UA._populate() || this._safari
+		}, chrome:function() {
+			return FB.UA._populate() || this._chrome
+		}, windows:function() {
+			return FB.UA._populate() || this._windows
+		}, osx:function() {
+			return FB.UA._populate() || this._osx
+		}, linux:function() {
+			return FB.UA._populate() || this._linux
+		}, ios:function() {
+			FB.UA._populate();
+			return FB.UA.mobile() && this._ios
+		}, mobile:function() {
+			FB.UA._populate();
+			return!FB._inCanvas && this._mobile
+		}, nativeApp:function() {
+			return FB.UA.mobile() && navigator.userAgent.match(/FBAN\/\w+;/i)
+		}, android:function() {
+			FB.UA._populate();
+			return FB.UA.mobile() && this._android
+		}, iPad:function() {
+			FB.UA._populate();
+			return FB.UA.mobile() && this._iPad
+		}, _populated:false, _populate:function() {
+			if(FB.UA._populated) {
+				return
+			}
+			FB.UA._populated = true;
+			var a = /(?:MSIE.(\d+\.\d+))|(?:(?:Firefox|GranParadiso|Iceweasel).(\d+\.\d+))|(?:Opera(?:.+Version.|.)(\d+\.\d+))|(?:AppleWebKit.(\d+(?:\.\d+)?))/.exec(navigator.userAgent), b = /(Mac OS X)|(Windows)|(Linux)/.exec(navigator.userAgent), c = /\b(iPhone|iP[ao]d)/.exec(navigator.userAgent);
+			FB.UA._iPad = /\b(iPad)/.exec(navigator.userAgent);
+			FB.UA._android = navigator.userAgent.match(/Android/i);
+			FB.UA._mobile = c || FB.UA._android || navigator.userAgent.match(/Mobile/i);
+			if(a) {
+				FB.UA._ie = a[1] ? parseFloat(a[1]) : NaN;
+				if(FB.UA._ie >= 8 && !window.HTMLCollection) {
+					FB.UA._ie = 7
+				}
+				FB.UA._firefox = a[2] ? parseFloat(a[2]) : NaN;
+				FB.UA._opera = a[3] ? parseFloat(a[3]) : NaN;
+				FB.UA._safari = a[4] ? parseFloat(a[4]) : NaN;
+				if(FB.UA._safari) {
+					a = /(?:Chrome\/(\d+\.\d+))/.exec(navigator.userAgent);
+					FB.UA._chrome = a && a[1] ? parseFloat(a[1]) : NaN
+				}else {
+					FB.UA._chrome = NaN
+				}
+			}else {
+				FB.UA._ie = FB.UA._firefox = FB.UA._opera = FB.UA._chrome = FB.UA._safari = NaN
+			}
+			if(b) {
+				FB.UA._osx = !!b[1];
+				FB.UA._windows = !!b[2];
+				FB.UA._linux = !!b[3]
+			}else {
+				FB.UA._osx = FB.UA._windows = FB.UA._linux = false
+			}
+			FB.UA._ios = c
+		}});
 		FB.provide("Content", {_root:null, _hiddenRoot:null, _callbacks:{}, append:function(a, b) {
 			if(!b) {
 				if(!FB.Content._root) {
 					FB.Content._root = b = FB.$("fb-root");
 					if(!b) {
-						FB.log('The "fb-root" div has not been created.');
-						return
-					}else {
-						b.className += " fb_reset"
+						if(FB.XD.sendToFacebook) {
+							FB.log('The "fb-root" div has not been created, auto-creating');
+							FB.Content._root = b = document.createElement("div");
+							b.id = "fb-root";
+							if(FB.UA.ie() || !document.body) {
+								FB.Dom.ready(function() {
+									document.body.appendChild(b)
+								})
+							}else {
+								document.body.appendChild(b)
+							}
+						}else {
+							FB.log('The "fb-root" div has not been created');
+							return
+						}
 					}
+					b.className += " fb_reset"
 				}else {
 					b = FB.Content._root
 				}
@@ -1664,10 +1741,10 @@ if(!FB) {
 				}
 			}
 			var ba = function() {
-				var ea = document.body.appendChild(document.createElement("form")), fa = ea.appendChild(document.createElement("input")), ga;
+				var ea = document.createElement("form"), fa = ea.appendChild(document.createElement("input")), ga;
 				fa.name = m();
 				ga = fa !== ea.elements[fa.name];
-				document.body.removeChild(ea);
+				ea = fa = null;
 				ba = function() {
 					return ga
 				};
@@ -1741,71 +1818,6 @@ if(!FB) {
 				FB.XD = b("SDK_XD")
 			}
 		}, 3);
-		FB.provide("UA", {ie:function() {
-			return FB.UA._populate() || this._ie
-		}, firefox:function() {
-			return FB.UA._populate() || this._firefox
-		}, opera:function() {
-			return FB.UA._populate() || this._opera
-		}, safari:function() {
-			return FB.UA._populate() || this._safari
-		}, chrome:function() {
-			return FB.UA._populate() || this._chrome
-		}, windows:function() {
-			return FB.UA._populate() || this._windows
-		}, osx:function() {
-			return FB.UA._populate() || this._osx
-		}, linux:function() {
-			return FB.UA._populate() || this._linux
-		}, ios:function() {
-			FB.UA._populate();
-			return FB.UA.mobile() && this._ios
-		}, mobile:function() {
-			FB.UA._populate();
-			return!FB._inCanvas && this._mobile
-		}, nativeApp:function() {
-			return FB.UA.mobile() && navigator.userAgent.match(/FBAN\/\w+;/i)
-		}, android:function() {
-			FB.UA._populate();
-			return FB.UA.mobile() && this._android
-		}, iPad:function() {
-			FB.UA._populate();
-			return FB.UA.mobile() && this._iPad
-		}, _populated:false, _populate:function() {
-			if(FB.UA._populated) {
-				return
-			}
-			FB.UA._populated = true;
-			var a = /(?:MSIE.(\d+\.\d+))|(?:(?:Firefox|GranParadiso|Iceweasel).(\d+\.\d+))|(?:Opera(?:.+Version.|.)(\d+\.\d+))|(?:AppleWebKit.(\d+(?:\.\d+)?))/.exec(navigator.userAgent), b = /(Mac OS X)|(Windows)|(Linux)/.exec(navigator.userAgent), c = /\b(iPhone|iP[ao]d)/.exec(navigator.userAgent);
-			FB.UA._iPad = /\b(iPad)/.exec(navigator.userAgent);
-			FB.UA._android = navigator.userAgent.match(/Android/i);
-			FB.UA._mobile = c || FB.UA._android || navigator.userAgent.match(/Mobile/i);
-			if(a) {
-				FB.UA._ie = a[1] ? parseFloat(a[1]) : NaN;
-				if(FB.UA._ie >= 8 && !window.HTMLCollection) {
-					FB.UA._ie = 7
-				}
-				FB.UA._firefox = a[2] ? parseFloat(a[2]) : NaN;
-				FB.UA._opera = a[3] ? parseFloat(a[3]) : NaN;
-				FB.UA._safari = a[4] ? parseFloat(a[4]) : NaN;
-				if(FB.UA._safari) {
-					a = /(?:Chrome\/(\d+\.\d+))/.exec(navigator.userAgent);
-					FB.UA._chrome = a && a[1] ? parseFloat(a[1]) : NaN
-				}else {
-					FB.UA._chrome = NaN
-				}
-			}else {
-				FB.UA._ie = FB.UA._firefox = FB.UA._opera = FB.UA._chrome = FB.UA._safari = NaN
-			}
-			if(b) {
-				FB.UA._osx = !!b[1];
-				FB.UA._windows = !!b[2];
-				FB.UA._linux = !!b[3]
-			}else {
-				FB.UA._osx = FB.UA._windows = FB.UA._linux = false
-			}
-			FB.UA._ios = c
-		}});
 		FB.provide("Arbiter", {_canvasProxyUrl:"connect/canvas_proxy.php", BEHAVIOR_EVENT:"e", BEHAVIOR_PERSISTENT:"p", BEHAVIOR_STATE:"s", inform:function(a, b, c, d, e) {
 			if(FB.Canvas.isTabIframe() || FB._inPlugin && window.postMessage || !FB._inCanvas && FB.UA.mobile() && window.postMessage) {
 				var f = FB.JSON.stringify({method:a, params:b, behavior:e || FB.Arbiter.BEHAVIOR_PERSISTENT});
@@ -5482,7 +5494,7 @@ if(!FB) {
 		}});
 		void 0;
 		__d("XDConfig", [], {"XdUrl":"connect/xd_arbiter.php?version=4", "Flash":{"path":"https://s-static.ak.fbcdn.net/rsrc.php/v1/ys/r/WON-TVLCpDP.swf"}, "useCdn":true});
-		__d("SDKConfig", [], {"legacy":false})
+		__d("SDKConfig", [], {"legacy":true})
 	}).call(FB)
 }
 FB.provide("", {"_domain":{"api":"https://api.facebook.com/", "api_read":"https://api-read.facebook.com/", "cdn":"http://static.ak.fbcdn.net/", "cdn_foreign":"http://connect.facebook.net/", "graph":"https://graph.facebook.com/", "https_cdn":"https://s-static.ak.fbcdn.net/", "https_staticfb":"https://s-static.ak.facebook.com/", "https_www":"https://www.facebook.com/", "staticfb":"http://static.ak.facebook.com/", "www":"http://www.facebook.com/", "m":"http://m.facebook.com/", "https_m":"https://m.facebook.com/"}, 
