@@ -1001,39 +1001,40 @@ if(!FB) {
 			var b = {}, c = {}, d = {}, e = 0, f = 1, g = 2, h = "special", i = "refcount", j = "exports", k = "dependencies", l = "module", m = "waiting", n = "factory", o = undefined, p = "define", q = "global", r = "require", s = "requireLazy", t = "requireDynamic", u = "context", v = Object.prototype.hasOwnProperty;
 			function w(ha) {
 				if(!b[ha]) {
-					throw new Error('Requiring module "' + ha + '" that has not been loaded yet. ' + "Did you forget to run arc build?");
+					var ia = 'Requiring unknown module "' + ha + '"';
+					throw new Error(ia);
 				}
-				var ia = b[ha], ja, ka, la;
-				if(ia[m] && ia[h] & g) {
+				var ja = b[ha], ka, la, ma;
+				if(ja[m] && ja[h] & g) {
 					z()
 				}
-				if(ia[m]) {
-					la = 'Requiring module "' + ha + '" with unresolved dependencies';
-					throw new Error(la);
+				if(ja[m]) {
+					ma = 'Requiring module "' + ha + '" with unresolved dependencies';
+					throw new Error(ma);
 				}
-				if(!ia[j]) {
-					var ma = ia[j] = {}, na = ia[n];
-					if(Object.prototype.toString.call(na) === "[object Function]") {
-						var oa = [], pa = ia[k], qa = pa.length;
-						if(ia[h] & g) {
-							qa = Math.min(qa, na.length)
+				if(!ja[j]) {
+					var na = ja[j] = {}, oa = ja[n];
+					if(Object.prototype.toString.call(oa) === "[object Function]") {
+						var pa = [], qa = ja[k], ra = qa.length;
+						if(ja[h] & g) {
+							ra = Math.min(ra, oa.length)
 						}
-						for(ka = 0;ka < qa;ka++) {
-							ja = pa[ka];
-							oa.push(ja === l ? ia : ja === j ? ma : w(ja))
+						for(la = 0;la < ra;la++) {
+							ka = qa[la];
+							pa.push(ka === l ? ja : ka === j ? na : w(ka))
 						}
-						var ra = na.apply(ia[u] || a, oa);
-						if(ra) {
-							ia[j] = ra
+						var sa = oa.apply(ja[u] || a, pa);
+						if(sa) {
+							ja[j] = sa
 						}
 					}else {
-						ia[j] = na
+						ja[j] = oa
 					}
 				}
-				if(ia[i]-- === 1) {
+				if(ja[i]-- === 1) {
 					delete b[ha]
 				}
-				return ia[j]
+				return ja[j]
 			}
 			function x(ha, ia, ja, ka, la, ma) {
 				if(ia === o) {
@@ -2580,7 +2581,7 @@ if(!FB) {
 		}});
 		FB.provide("UIServer", {Methods:{}, _loadedNodes:{}, _defaultCb:{}, _resultToken:'"xxRESULTTOKENxx"', _forceHTTPS:false, genericTransform:function(a) {
 			if(a.params.display == "dialog" || a.params.display == "iframe") {
-				FB.copy(a.params, {display:"iframe", channel:FB.UIServer._xdChannelHandler(a.id, "parent.parent"), xd_channel:FB.XD._channel}, true)
+				FB.copy(a.params, {display:"iframe", channel:FB.UIServer._xdChannelHandler(a.id, "parent.parent")}, true)
 			}
 			return a
 		}, prepareCall:function(a, b) {
@@ -2603,7 +2604,7 @@ if(!FB) {
 				g.params.next = FB.UIServer._xdResult(g.cb, g.id, j, true)
 			}
 			if(j === "parent") {
-				FB.copy(g.params, {channel_url:FB.UIServer._xdChannelHandler(e, "parent.parent"), xd_channel:FB.XD._channel}, true)
+				FB.copy(g.params, {channel_url:FB.UIServer._xdChannelHandler(e, "parent.parent")}, true)
 			}
 			g = FB.UIServer.prepareParams(g);
 			return g
