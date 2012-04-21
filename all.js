@@ -11,34 +11,35 @@ if(!FB) {
 		var __e = __d;
 		if(window.FB && !window.FB.copy) {
 			(function() {
-				function a(b, c, d, e) {
-					for(var f in c) {
-						if(d || typeof b[f] === "undefined") {
-							b[f] = e ? e(c[f]) : c[f]
+				var a = /iframe_canvas|app_runner/.test(window.name);
+				function b(c, d, e, f) {
+					for(var g in d) {
+						if(e || typeof c[g] === "undefined") {
+							c[g] = f ? f(d[g]) : d[g]
 						}
 					}
-					return b
+					return c
 				}
-				a(window.FB, {_apiKey:null, _authResponse:null, _userStatus:"unknown", _logging:true, _inCanvas:/iframe_canvas|app_runner/.test(window.name), _https:function() {
-					if(location.protocol == "https:" && window == window.top) {
+				b(window.FB, {_apiKey:null, _authResponse:null, _userStatus:"unknown", _logging:true, _inCanvas:a, _https:function() {
+					if(location.protocol == "https:" && !a) {
 						return true
 					}
-					if(/_fb_https?_/.test(window.name)) {
+					if(/_fb_https?/.test(window.name)) {
 						return window.name.indexOf("_fb_https") != -1
 					}
 				}(), onlyUseHttps:function() {
 					return FB._https === true
 				}, onlyUseHttp:function() {
 					return FB._https === false && location.protocol == "http:"
-				}, _domain:{api:"https://api.facebook.com/", api_read:"https://api-read.facebook.com/", cdn:"http://static.ak.fbcdn.net/", https_cdn:"https://s-static.ak.fbcdn.net/", graph:"https://graph.facebook.com/", staticfb:"http://static.ak.facebook.com/", https_staticfb:"https://s-static.ak.facebook.com/", www:"http://www.facebook.com/", https_www:"https://www.facebook.com/", m:"http://m.facebook.com/", https_m:"https://m.facebook.com/"}, _locale:null, _localeIsRtl:false, getDomain:function(b, c) {
-					var d = !c && (window.location.protocol == "https:" || FB._https);
-					switch(b) {
+				}, _domain:{api:"https://api.facebook.com/", api_read:"https://api-read.facebook.com/", cdn:"http://static.ak.fbcdn.net/", https_cdn:"https://s-static.ak.fbcdn.net/", graph:"https://graph.facebook.com/", staticfb:"http://static.ak.facebook.com/", https_staticfb:"https://s-static.ak.facebook.com/", www:"http://www.facebook.com/", https_www:"https://www.facebook.com/", m:"http://m.facebook.com/", https_m:"https://m.facebook.com/"}, _locale:null, _localeIsRtl:false, getDomain:function(c, d) {
+					var e = !d && (window.location.protocol == "https:" || FB._https);
+					switch(c) {
 						case "api":
 							return FB._domain.api;
 						case "api_read":
 							return FB._domain.api_read;
 						case "cdn":
-							return d ? FB._domain.https_cdn : FB._domain.cdn;
+							return e ? FB._domain.https_cdn : FB._domain.cdn;
 						case "cdn_foreign":
 							return FB._domain.cdn_foreign;
 						case "https_cdn":
@@ -46,48 +47,48 @@ if(!FB) {
 						case "graph":
 							return FB._domain.graph;
 						case "staticfb":
-							return d ? FB._domain.https_staticfb : FB._domain.staticfb;
+							return e ? FB._domain.https_staticfb : FB._domain.staticfb;
 						case "https_staticfb":
 							return FB._domain.https_staticfb;
 						case "www":
-							return d ? FB._domain.https_www : FB._domain.www;
+							return e ? FB._domain.https_www : FB._domain.www;
 						case "https_www":
 							return FB._domain.https_www;
 						case "m":
-							return d ? FB._domain.https_m : FB._domain.m;
+							return e ? FB._domain.https_m : FB._domain.m;
 						case "https_m":
 							return FB._domain.https_m
 					}
-				}, copy:a, create:function(b, c) {
-					var d = window.FB, e = b ? b.split(".") : [], f = e.length;
-					for(var g = 0;g < f;g++) {
-						var h = e[g], i = d[h];
-						if(!i) {
-							i = c && g + 1 == f ? c : {};
-							d[h] = i
+				}, copy:b, create:function(c, d) {
+					var e = window.FB, f = c ? c.split(".") : [], g = f.length;
+					for(var h = 0;h < g;h++) {
+						var i = f[h], j = e[i];
+						if(!j) {
+							j = d && h + 1 == g ? d : {};
+							e[i] = j
 						}
-						d = i
+						e = j
 					}
-					return d
-				}, provide:function(b, c, d) {
-					return FB.copy(typeof b == "string" ? FB.create(b) : b, c, d)
+					return e
+				}, provide:function(c, d, e) {
+					return FB.copy(typeof c == "string" ? FB.create(c) : c, d, e)
 				}, guid:function() {
 					return"f" + (Math.random() * (1 << 30)).toString(16).replace(".", "")
-				}, log:function(b) {
+				}, log:function(c) {
 					if(FB._logging) {
 						if(window.Debug && window.Debug.writeln) {
-							window.Debug.writeln(b)
+							window.Debug.writeln(c)
 						}else {
 							if(window.console) {
-								window.console.log(b)
+								window.console.log(c)
 							}
 						}
 					}
 					if(FB.Event) {
-						FB.Event.fire("fb.log", b)
+						FB.Event.fire("fb.log", c)
 					}
-				}, $:function(b) {
-					return document.getElementById(b)
+				}, $:function(c) {
+					return document.getElementById(c)
 				}})
 			})()
 		}
@@ -436,167 +437,705 @@ if(!FB) {
 				FB.Flash._callbacks.push(a)
 			}
 		}});
-		if(!window.JSON) {
-			window.JSON = {}
-		}
-		(function() {
-			function f(n) {
-				return n < 10 ? "0" + n : n
+		(function(a) {
+			if(a.require) {
+				return
 			}
-			if(typeof Date.prototype.toJSON !== "function") {
-				Date.prototype.toJSON = function(key) {
-					return isFinite(this.valueOf()) ? this.getUTCFullYear() + "-" + f(this.getUTCMonth() + 1) + "-" + f(this.getUTCDate()) + "T" + f(this.getUTCHours()) + ":" + f(this.getUTCMinutes()) + ":" + f(this.getUTCSeconds()) + "Z" : null
-				};
-				String.prototype.toJSON = Number.prototype.toJSON = Boolean.prototype.toJSON = function(key) {
-					return this.valueOf()
+			var b = {}, c = {}, d = {}, e = 0, f = 1, g = 2, h = "special", i = "refcount", j = "exports", k = "dependencies", l = "module", m = "waiting", n = "factory", o = undefined, p = "define", q = "global", r = "require", s = "requireLazy", t = "requireDynamic", u = "context", v = Object.prototype.hasOwnProperty;
+			function w(ha) {
+				if(!b[ha]) {
+					var ia = 'Requiring unknown module "' + ha + '"';
+					throw new Error(ia);
+				}
+				var ja = b[ha], ka, la, ma;
+				if(ja[m] && ja[h] & g) {
+					z()
+				}
+				if(ja[m]) {
+					ma = 'Requiring module "' + ha + '" with unresolved dependencies';
+					throw new Error(ma);
+				}
+				if(!ja[j]) {
+					var na = ja[j] = {}, oa = ja[n];
+					if(Object.prototype.toString.call(oa) === "[object Function]") {
+						var pa = [], qa = ja[k], ra = qa.length;
+						if(ja[h] & g) {
+							ra = Math.min(ra, oa.length)
+						}
+						for(la = 0;la < ra;la++) {
+							ka = qa[la];
+							pa.push(ka === l ? ja : ka === j ? na : w(ka))
+						}
+						var sa = oa.apply(ja[u] || a, pa);
+						if(sa) {
+							ja[j] = sa
+						}
+					}else {
+						ja[j] = oa
+					}
+				}
+				if(ja[i]-- === 1) {
+					delete b[ha]
+				}
+				return ja[j]
+			}
+			function x(ha, ia, ja, ka, la, ma) {
+				if(ia === o) {
+					ia = [];
+					ja = ha;
+					ha = ba()
+				}else {
+					if(ja === o) {
+						ja = ia;
+						ia = ha;
+						ha = ba()
+					}
+				}
+				var na = b[ha];
+				if(na) {
+					if(ma) {
+						na[i] += ma
+					}
+					return
+				}else {
+					if(!ia && !ja && ma) {
+						d[ha] = (d[ha] || 0) + ma;
+						return
+					}else {
+						na = {id:ha};
+						na[i] = (d[ha] || 0) + (ma || 0);
+						delete d[ha]
+					}
+				}
+				na[n] = ja;
+				na[k] = ia;
+				na[u] = la;
+				na[h] = ka;
+				b[ha] = na;
+				ca(ha)
+			}
+			function y(ha, ia, ja) {
+				x(ha, ia, o, f, ja, 1)
+			}
+			function z() {
+				var ha = {}, ia;
+				for(ia in c) {
+					if(v.call(c, ia)) {
+						if(b[ia] && !ha[ia] && b[ia][h] & g) {
+							aa({}, ia, ha)
+						}
+					}
 				}
 			}
-			var cx = /[\u0000\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g, escapable = /[\\\"\x00-\x1f\x7f-\x9f\u00ad\u0600-\u0604\u070f\u17b4\u17b5\u200c-\u200f\u2028-\u202f\u2060-\u206f\ufeff\ufff0-\uffff]/g, gap, indent, meta = {"\u0008":"\\b", "\t":"\\t", "\n":"\\n", "\u000c":"\\f", "\r":"\\r", '"':'\\"', "\\":"\\\\"}, rep;
-			function quote(string) {
-				escapable.lastIndex = 0;
-				return escapable.test(string) ? '"' + string.replace(escapable, function(a) {
-					var c = meta[a];
-					return typeof c === "string" ? c : "\\u" + ("0000" + a.charCodeAt(0).toString(16)).slice(-4)
-				}) + '"' : '"' + string + '"'
+			function aa(ha, ia, ja) {
+				ja[ia] = 1;
+				var ka = c[ia], la;
+				if(!ka) {
+					return
+				}
+				ha[ia] = 1;
+				for(la in ka) {
+					if(v.call(ka, la)) {
+						if(!b[la][h] & g) {
+							continue
+						}
+						if(ha[la]) {
+							delete ka[la];
+							b[la][m]--;
+							if(!b[la][m]) {
+								da(la)
+							}
+						}else {
+							aa(ha, la, ja)
+						}
+					}
+				}
+				ha[ia] = 0
 			}
-			function str(key, holder) {
-				var i, k, v, length, mind = gap, partial, value = holder[key];
-				if(value && typeof value === "object" && typeof value.toJSON === "function") {
-					value = value.toJSON(key)
+			function ba() {
+				return"__mod__" + e++
+			}
+			function ca(ha) {
+				var ia = b[ha], ja = 0;
+				for(var ka = 0;ka < ia[k].length;ka++) {
+					var la = ia[k][ka];
+					if(!b[la] || b[la][m]) {
+						c[la] || (c[la] = {});
+						if(!c[la][ha]) {
+							ja++
+						}
+						c[la][ha] = 1
+					}
 				}
-				if(typeof rep === "function") {
-					value = rep.call(holder, key, value)
+				ia[m] = ja;
+				if(!ja) {
+					da(ha)
 				}
-				switch(typeof value) {
-					case "string":
-						return quote(value);
-					case "number":
-						return isFinite(value) ? String(value) : "null";
-					case "boolean":
-					;
-					case "null":
-						return String(value);
-					case "object":
-						if(!value) {
+			}
+			function da(ha) {
+				var ia = b[ha];
+				if(ia[h] & f) {
+					w(ha)
+				}
+				var ja = c[ha];
+				if(ja) {
+					delete c[ha];
+					for(var ka in ja) {
+						if(v.call(ja, ka)) {
+							if(!--b[ka][m]) {
+								da(ka)
+							}
+						}
+					}
+				}
+			}
+			function ea(ha, ia) {
+				b[ha] = {id:ha};
+				b[ha][j] = ia
+			}
+			ea(l, 0);
+			ea(j, 0);
+			ea(p, x);
+			ea(q, a);
+			ea(r, w);
+			ea(t, w);
+			ea(s, y);
+			x.amd = {};
+			a[p] = x;
+			a[r] = w;
+			a[t] = w;
+			a[s] = y;
+			var fa = false, ga = function(ha, ia, ja, ka) {
+				x(ha, ia, ja, ka || g);
+				if(b[ha][m] && !fa) {
+					fa = setTimeout(function() {
+						z();
+						fa = false
+					}, 9)
+				}
+			};
+			a.__d = function(ha, ia, ja, ka) {
+				ia = [q, r, t, s, l, j].concat(ia);
+				ga(ha, ia, ja, ka)
+			};
+			a.__e = a.__d
+		})(this);
+		__d("JSON3", [], function(a, b, c, d, e, f) {
+			var g = {}.toString, h = {}.hasOwnProperty, i, j, k;
+			j = typeof f.stringify == "function";
+			k = typeof f.parse == "function";
+			(function() {
+				var l = '{"result":[1,true,false,null,"\\u0000\\b\\n\\f\\r\\t"]}', m, n, o;
+				if(j) {
+					m = function q() {
+						return 1
+					};
+					m.toJSON = m;
+					try {
+						switch(false) {
+							case f.stringify(0) === "0":
+							;
+							case f.stringify(new (0).constructor) === "0":
+							;
+							case f.stringify(new "".constructor) == '""':
+							;
+							case f.stringify(g) === void 0:
+							;
+							case f.stringify(void 0) === void 0:
+							;
+							case f.stringify() === void 0:
+							;
+							case f.stringify(m) === "1":
+							;
+							case f.stringify([m]) == "[1]":
+							;
+							case f.stringify([void 0]) == "[null]":
+							;
+							case f.stringify(null) == "null":
+							;
+							case f.stringify([void 0, g, null]) == "[null,null,null]":
+							;
+							case f.stringify({result:[m, true, false, null, "\x00\u0008\n\u000c\r\t"]}) == l:
+							;
+							case f.stringify(null, m) === "1":
+							;
+							case f.stringify([1, 2], null, 1) == "[\n 1,\n 2\n]":
+							;
+							case (m = new Date(-864E13)).getUTCFullYear() != -271821 || f.stringify(m) == '"-271821-04-20T00:00:00.000Z"':
+							;
+							case (m = new Date(864E13)).getUTCFullYear() != 275760 || f.stringify(m) == '"+275760-09-13T00:00:00.000Z"':
+								j = false
+						}
+					}catch(p) {
+						j = false
+					}
+				}
+				if(k) {
+					try {
+						if(f.parse("0") === 0 && !f.parse(false)) {
+							o = f.parse(l);
+							if(k = o.result.length == 5 && o.result[0] == 1) {
+								try {
+									k = !f.parse('"\t"')
+								}catch(p) {
+								}
+								if(k) {
+									try {
+										k = f.parse("+1") != 1 && f.parse("01") != 1
+									}catch(p) {
+									}
+								}
+							}
+						}
+					}catch(p) {
+						k = false
+					}
+				}
+			})();
+			if(typeof h != "function") {
+				h = function() {
+					var l, m = {}, n = m.constructor;
+					if((m.__proto__ = null, m.__proto__ = {toString:1}, m).toString != g) {
+						l = function o(p) {
+							var q = this.__proto__, r = p in (this.__proto__ = null, this);
+							this.__proto__ = q;
+							return r
+						}
+					}else {
+						l = function o(p) {
+							var q = (this.constructor || n).prototype;
+							return p in this && !(p in q && this[p] === q[p])
+						}
+					}
+					m = null;
+					return l
+				}()
+			}
+			i = function() {
+				var l, m, n, o = 0;
+				function p() {
+					this.valueOf = 0
+				}
+				p.prototype.valueOf = 0;
+				l = new p;
+				for(m in l) {
+					if(h.call(l, m)) {
+						o += 1
+					}
+				}
+				l = null;
+				if(!o) {
+					l = ["valueOf", "toString", "toLocaleString", "propertyIsEnumerable", "isPrototypeOf", "hasOwnProperty", "constructor"];
+					n = function q(r, s) {
+						var t = g.call(r) == "[object Function]", u, v;
+						for(u in r) {
+							if(!(t && u == "prototype") && h.call(r, u)) {
+								s(u)
+							}
+						}
+						for(v = l.length;v--;) {
+							u = l[v];
+							if(h.call(r, u)) {
+								s(u)
+							}
+						}
+					}
+				}else {
+					if(o == 2) {
+						n = function q(r, s) {
+							var t = {}, u = g.call(r) == "[object Function]", v;
+							for(v in r) {
+								if(!(u && v == "prototype") && !h.call(t, v) && (t[v] = 1) && h.call(r, v)) {
+									s(v)
+								}
+							}
+						}
+					}else {
+						n = function q(r, s) {
+							var t = g.call(r) == "[object Function]", u, v;
+							for(u in r) {
+								if(!(t && u == "prototype") && h.call(r, u) && !(v = u === "constructor")) {
+									s(u)
+								}
+							}
+							if(v || h.call(r, "constructor")) {
+								s("constructor")
+							}
+						}
+					}
+				}
+				return n
+			}();
+			if(!j) {
+				f.stringify = function() {
+					var l = {"\\":"\\\\", '"':'\\"', "\u0008":"\\b", "\u000c":"\\f", "\n":"\\n", "\r":"\\r", "\t":"\\t"};
+					function m(q, r) {
+						r = "000000" + (r || 0);
+						return r.slice(r.length - q)
+					}
+					function n(q) {
+						var r = '"', s = 0, t;
+						for(;t = q.charAt(s);s += 1) {
+							r += '\\"\u0008\u000c\n\r\t'.indexOf(t) > -1 ? l[t] : t < " " ? "\\u00" + m(2, t.charCodeAt(0).toString(16)) : t
+						}
+						return r + '"'
+					}
+					function o(q, r, s, t, u, v, w) {
+						var x = r[q], y, z, aa, ba, ca, da, ea, fa;
+						if(typeof x == "object" && x) {
+							if(g.call(x) == "[object Date]" && !h.call(x, "toJSON")) {
+								if(x > -1 / 0 && x < 1 / 0) {
+									z = x.getUTCFullYear();
+									x = (z <= 0 || z >= 1E4 ? (z < 0 ? "-" : "+") + m(6, z < 0 ? -z : z) : m(4, z)) + "-" + m(2, x.getUTCMonth() + 1) + "-" + m(2, x.getUTCDate()) + "T" + m(2, x.getUTCHours()) + ":" + m(2, x.getUTCMinutes()) + ":" + m(2, x.getUTCSeconds()) + "." + m(3, x.getUTCMilliseconds()) + "Z"
+								}else {
+									x = null
+								}
+							}else {
+								if(typeof x.toJSON == "function") {
+									x = x.toJSON(q)
+								}
+							}
+						}
+						if(s) {
+							x = s.call(r, q, x)
+						}
+						if(x === null) {
 							return"null"
 						}
-						gap += indent;
-						partial = [];
-						if(Object.prototype.toString.apply(value) === "[object Array]") {
-							length = value.length;
-							for(i = 0;i < length;i += 1) {
-								partial[i] = str(i, value) || "null"
-							}
-							v = partial.length === 0 ? "[]" : gap ? "[\n" + gap + partial.join(",\n" + gap) + "\n" + mind + "]" : "[" + partial.join(",") + "]";
-							gap = mind;
-							return v
+						y = g.call(x);
+						switch(y) {
+							case "[object Boolean]":
+								return"" + x;
+							case "[object Number]":
+								return x > -1 / 0 && x < 1 / 0 ? "" + x : "null";
+							case "[object String]":
+								return n(x)
 						}
-						if(rep && typeof rep === "object") {
-							length = rep.length;
-							for(i = 0;i < length;i += 1) {
-								k = rep[i];
-								if(typeof k === "string") {
-									v = str(k, value);
-									if(v) {
-										partial.push(quote(k) + (gap ? ": " : ":") + v)
+						if(typeof x == "object") {
+							for(da = w.length;da--;) {
+								if(w[da] == x) {
+									throw TypeError("Cyclic structures cannot be serialized.");
+								}
+							}
+							w.push(x);
+							aa = [];
+							ea = v;
+							v += u;
+							if(y == "[object Array]") {
+								for(ca = 0, da = x.length;ca < da;fa || (fa = true), ca++) {
+									ba = o(ca, x, s, t, u, v, w);
+									aa.push(ba === void 0 ? "null" : ba)
+								}
+								return fa ? u ? "[\n" + v + aa.join(",\n" + v) + "\n" + ea + "]" : "[" + aa.join(",") + "]" : "[]"
+							}else {
+								i(t || x, function(ga) {
+									var ha = o(ga, x, s, t, u, v, w);
+									if(ha !== void 0) {
+										aa.push(n(ga) + ":" + (u ? " " : "") + ha)
+									}
+									fa || (fa = true)
+								});
+								return fa ? u ? "{\n" + v + aa.join(",\n" + v) + "\n" + ea + "}" : "{" + aa.join(",") + "}" : "{}"
+							}
+							w.pop()
+						}
+					}
+					function p(q, r, s) {
+						var t = "", u, v, w, x;
+						if(typeof r == "function" || typeof r == "object" && r) {
+							if(g.call(r) == "[object Function]") {
+								u = r
+							}else {
+								if(g.call(r) == "[object Array]") {
+									v = {};
+									for(w = r.length;w--;) {
+										x = r[w];
+										if(x && (g.call(x) == "[object String]" || g.call(x) == "[object Number]")) {
+											v[x] = 1
+										}
 									}
 								}
 							}
-						}else {
-							for(k in value) {
-								if(Object.hasOwnProperty.call(value, k)) {
-									v = str(k, value);
-									if(v) {
-										partial.push(quote(k) + (gap ? ": " : ":") + v)
+						}
+						if(s != null && s !== "") {
+							if(g.call(s) == "[object Number]") {
+								if((s -= s % 1) > 0) {
+									for(t = "", s > 10 && (s = 10);t.length < s;) {
+										t += " "
 									}
+								}
+							}else {
+								if(g.call(s) == "[object String]") {
+									t = s.length <= 10 ? s : s.slice(0, 10)
 								}
 							}
 						}
-						v = partial.length === 0 ? "{}" : gap ? "{\n" + gap + partial.join(",\n" + gap) + "\n" + mind + "}" : "{" + partial.join(",") + "}";
-						gap = mind;
-						return v
-				}
-			}
-			if(typeof JSON.stringify !== "function") {
-				JSON.stringify = function(value, replacer, space) {
-					var i;
-					gap = "";
-					indent = "";
-					if(typeof space === "number") {
-						for(i = 0;i < space;i += 1) {
-							indent += " "
-						}
-					}else {
-						if(typeof space === "string") {
-							indent = space
-						}
+						return o("$", {$:q}, u, v, t, "", [])
 					}
-					rep = replacer;
-					if(replacer && typeof replacer !== "function" && (typeof replacer !== "object" || typeof replacer.length !== "number")) {
-						throw new Error("JSON.stringify");
-					}
-					return str("", {"":value})
-				}
+					return p
+				}()
 			}
-			if(typeof JSON.parse !== "function") {
-				JSON.parse = function(text, reviver) {
-					var j;
-					function walk(holder, key) {
-						var k, v, value = holder[key];
-						if(value && typeof value === "object") {
-							for(k in value) {
-								if(Object.hasOwnProperty.call(value, k)) {
-									v = walk(value, k);
-									if(v !== undefined) {
-										value[k] = v
+			if(!k) {
+				f.parse = function() {
+					var l = {"\\":"\\", '"':'"', "/":"/", b:"\u0008", t:"\t", n:"\n", f:"\u000c", r:"\r"}, m = "".constructor.fromCharCode;
+					function n(s) {
+						this.source = s;
+						this.index = 0
+					}
+					n.prototype.lex = o;
+					function o() {
+						for(var s = this.source, t = this.source.length, u, v, w, x, y;this.index < t;) {
+							u = s.charAt(this.index);
+							switch(u) {
+								case "\t":
+								;
+								case "\r":
+								;
+								case "\n":
+								;
+								case " ":
+									this.index += 1;
+									break;
+								case "{":
+								;
+								case "}":
+								;
+								case "[":
+								;
+								case "]":
+								;
+								case ":":
+								;
+								case ",":
+									this.index += 1;
+									return u;
+								case '"':
+									v = "@";
+									this.index += 1;
+									while(this.index < t) {
+										u = s.charAt(this.index);
+										if(u < " ") {
+											throw SyntaxError("Unescaped control character in string.");
+										}else {
+											if(u == "\\") {
+												this.index += 1;
+												u = s.charAt(this.index);
+												if('\\"/btnfr'.indexOf(u) > -1) {
+													v += l[u];
+													this.index += 1
+												}else {
+													if(u == "u") {
+														w = this.index += 1;
+														for(x = this.index + 4;this.index < x;this.index += 1) {
+															u = s.charAt(this.index);
+															if(!(u >= "0" && u <= "9" || u >= "a" && u <= "f" || u >= "A" && u <= "F")) {
+																throw SyntaxError("Invalid Unicode escape sequence in string.");
+															}
+														}
+														v += m("0x" + s.slice(w, this.index))
+													}else {
+														throw SyntaxError("Invalid escape sequence in string.");
+													}
+												}
+											}else {
+												if(u == '"') {
+													break
+												}
+												v += u;
+												this.index += 1
+											}
+										}
+									}
+									if(s.charAt(this.index) == '"') {
+										this.index += 1;
+										return v
+									}
+									throw SyntaxError("Unterminated string.");;
+								default:
+									w = this.index;
+									if(u == "-") {
+										y = true;
+										u = s.charAt(this.index += 1)
+									}
+									if(u >= "0" && u <= "9") {
+										if(u == "0" && (u = s.charAt(this.index + 1), u >= "0" && u <= "9")) {
+											throw SyntaxError("Illegal octal literal.");
+										}
+										y = false;
+										for(;this.index < t && (u = s.charAt(this.index), u >= "0" && u <= "9");this.index += 1) {
+										}
+										if(s.charAt(this.index) == ".") {
+											x = this.index += 1;
+											for(;x < t && (u = s.charAt(x), u >= "0" && u <= "9");x += 1) {
+											}
+											if(x == this.index) {
+												throw SyntaxError("Illegal trailing decimal.");
+											}
+											this.index = x
+										}
+										u = s.charAt(this.index);
+										if(u == "e" || u == "E") {
+											u = s.charAt(this.index += 1);
+											if(u == "+" || u == "-") {
+												this.index += 1
+											}
+											for(x = this.index;x < t && (u = s.charAt(x), u >= "0" && u <= "9");x += 1) {
+											}
+											if(x == this.index) {
+												throw SyntaxError("Illegal empty exponent.");
+											}
+											this.index = x
+										}
+										return+s.slice(w, this.index)
+									}
+									if(y) {
+										throw SyntaxError("Unexpected `-`.");
+									}
+									if(u == "t" && s.slice(this.index, this.index + 4) == "true") {
+										this.index += 4;
+										return true
 									}else {
-										delete value[k]
+										if(u == "f" && s.slice(this.index, this.index + 5) == "false") {
+											this.index += 5;
+											return false
+										}else {
+											if(u == "n" && s.slice(this.index, this.index + 4) == "null") {
+												this.index += 4;
+												return null
+											}
+										}
 									}
-								}
+									throw SyntaxError("Unrecognized token.");
 							}
 						}
-						return reviver.call(holder, key, value)
+						return"$"
 					}
-					cx.lastIndex = 0;
-					if(cx.test(text)) {
-						text = text.replace(cx, function(a) {
-							return"\\u" + ("0000" + a.charCodeAt(0).toString(16)).slice(-4)
-						})
+					n.prototype.get = p;
+					function p(s) {
+						var t, u, v;
+						if(s == "$") {
+							throw SyntaxError("Unexpected end-of-file.");
+						}
+						if(typeof s == "string") {
+							if(s.charAt(0) == "@") {
+								return s.slice(1)
+							}
+							switch(s) {
+								case "[":
+									t = [];
+									for(;;u || (u = true)) {
+										s = this.lex();
+										if(s == "]") {
+											break
+										}
+										if(u) {
+											if(s == ",") {
+												s = this.lex();
+												if(s == "]") {
+													throw SyntaxError("Unexpected trailing `,` in array literal.");
+												}
+											}else {
+												throw SyntaxError("A comma (`,`) must separate the previous array element from the next.");
+											}
+										}
+										if(s == ",") {
+											throw SyntaxError("Unexpected `,` in array literal.");
+										}
+										t.push(this.get(s))
+									}
+									return t;
+								case "{":
+									t = {};
+									for(;;u || (u = true)) {
+										s = this.lex();
+										if(s == "}") {
+											break
+										}
+										if(u) {
+											if(s == ",") {
+												s = this.lex();
+												if(s == "}") {
+													throw SyntaxError("Unexpected trailing `,`. in object literal.");
+												}
+											}else {
+												throw SyntaxError("A comma (`,`) must separate the previous object member from the next.");
+											}
+										}
+										if(s == ",") {
+											throw SyntaxError("Unexpected `,` in object literal.");
+										}
+										if(typeof s != "string" || s.charAt(0) != "@") {
+											throw SyntaxError("Object property names must be double-quoted strings.");
+										}
+										if(this.lex() != ":") {
+											throw SyntaxError("A single colon (`:`) must separate each object property name from the value.");
+										}
+										t[s.slice(1)] = this.get(this.lex())
+									}
+									return t
+							}
+							throw SyntaxError("Expected `[` or `{`.");
+						}
+						return s
 					}
-					if(/^[\],:{}\s]*$/.test(text.replace(/\\(?:["\\\/bfnrt]|u[0-9a-fA-F]{4})/g, "@").replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?/g, "]").replace(/(?:^|:|,)(?:\s*\[)+/g, ""))) {
-						j = eval("(" + text + ")");
-						return typeof reviver === "function" ? walk({"":j}, "") : j
+					function q(s, t, u) {
+						var v = s[t], w, x;
+						if(typeof v == "object" && v) {
+							if(g.call(v) == "[object Array]") {
+								for(w = v.length;w--;) {
+									x = q(v, w, u);
+									if(x === void 0) {
+										v.splice(w, 1)
+									}else {
+										v[w] = x
+									}
+								}
+							}else {
+								i(v, function(y) {
+									var z = q(v, y, u);
+									if(z === void 0) {
+										delete v[y]
+									}else {
+										v[y] = z
+									}
+								})
+							}
+						}
+						return u.call(s, t, v)
 					}
-					throw new SyntaxError("JSON.parse");
-				}
+					function r(s, t) {
+						var u = new n("" + s), v = u.get(u.lex());
+						if(u.lex() != "$") {
+							throw SyntaxError("Expected end-of-file.");
+						}
+						return t && g.call(t) == "[object Function]" ? q({$:v}, "$", t) : v
+					}
+					return r
+				}()
 			}
-		})();
-		FB.provide("JSON", {stringify:function(a) {
-			if(window.Prototype && Object.toJSON) {
-				return Object.toJSON(a)
-			}else {
-				return JSON.stringify(a)
-			}
-		}, parse:function(a) {
-			return JSON.parse(a)
-		}, flatten:function(a) {
-			var b = {};
-			for(var c in a) {
-				if(a.hasOwnProperty(c)) {
-					var d = a[c];
-					if(null === d || undefined === d) {
-						continue
-					}else {
-						if(typeof d == "string") {
-							b[c] = d
+			e.exports = f
+		});
+		__d("legacy:fb.json", ["JSON3"], function(a, b, c, d) {
+			var e = b("JSON3");
+			FB.provide("JSON", {stringify:e.stringify, parse:e.parse, flatten:function(f) {
+				var g = {};
+				for(var h in f) {
+					if(f.hasOwnProperty(h)) {
+						var i = f[h];
+						if(null === i || undefined === i) {
+							continue
 						}else {
-							b[c] = FB.JSON.stringify(d)
+							if(typeof i == "string") {
+								g[h] = i
+							}else {
+								g[h] = e.stringify(i)
+							}
 						}
 					}
 				}
-			}
-			return b
-		}});
+				return g
+			}})
+		}, 3);
 		FB.provide("", {api:function() {
 			if(typeof arguments[0] === "string") {
 				FB.ApiServer.graph.apply(FB.ApiServer, arguments)
@@ -994,249 +1533,68 @@ if(!FB) {
 			}
 		}}});
 		FB.XD.Fragment.checkAndDispatch();
-		(function(a) {
-			if(a.require) {
-				return
-			}
-			var b = {}, c = {}, d = {}, e = 0, f = 1, g = 2, h = "special", i = "refcount", j = "exports", k = "dependencies", l = "module", m = "waiting", n = "factory", o = undefined, p = "define", q = "global", r = "require", s = "requireLazy", t = "requireDynamic", u = "context", v = Object.prototype.hasOwnProperty;
-			function w(ha) {
-				if(!b[ha]) {
-					var ia = 'Requiring unknown module "' + ha + '"';
-					throw new Error(ia);
-				}
-				var ja = b[ha], ka, la, ma;
-				if(ja[m] && ja[h] & g) {
-					z()
-				}
-				if(ja[m]) {
-					ma = 'Requiring module "' + ha + '" with unresolved dependencies';
-					throw new Error(ma);
-				}
-				if(!ja[j]) {
-					var na = ja[j] = {}, oa = ja[n];
-					if(Object.prototype.toString.call(oa) === "[object Function]") {
-						var pa = [], qa = ja[k], ra = qa.length;
-						if(ja[h] & g) {
-							ra = Math.min(ra, oa.length)
-						}
-						for(la = 0;la < ra;la++) {
-							ka = qa[la];
-							pa.push(ka === l ? ja : ka === j ? na : w(ka))
-						}
-						var sa = oa.apply(ja[u] || a, pa);
-						if(sa) {
-							ja[j] = sa
-						}
-					}else {
-						ja[j] = oa
-					}
-				}
-				if(ja[i]-- === 1) {
-					delete b[ha]
-				}
-				return ja[j]
-			}
-			function x(ha, ia, ja, ka, la, ma) {
-				if(ia === o) {
-					ia = [];
-					ja = ha;
-					ha = ba()
-				}else {
-					if(ja === o) {
-						ja = ia;
-						ia = ha;
-						ha = ba()
-					}
-				}
-				var na = b[ha];
-				if(na) {
-					if(ma) {
-						na[i] += ma
-					}
-					return
-				}else {
-					if(!ia && !ja && ma) {
-						d[ha] = (d[ha] || 0) + ma;
-						return
-					}else {
-						na = {id:ha};
-						na[i] = (d[ha] || 0) + (ma || 0);
-						delete d[ha]
-					}
-				}
-				na[n] = ja;
-				na[k] = ia;
-				na[u] = la;
-				na[h] = ka;
-				b[ha] = na;
-				ca(ha)
-			}
-			function y(ha, ia, ja) {
-				x(ha, ia, o, f, ja, 1)
-			}
-			function z() {
-				var ha = {}, ia;
-				for(ia in c) {
-					if(v.call(c, ia)) {
-						if(b[ia] && !ha[ia] && b[ia][h] & g) {
-							aa({}, ia, ha)
-						}
-					}
-				}
-			}
-			function aa(ha, ia, ja) {
-				ja[ia] = 1;
-				var ka = c[ia], la;
-				if(!ka) {
-					return
-				}
-				ha[ia] = 1;
-				for(la in ka) {
-					if(v.call(ka, la)) {
-						if(!b[la][h] & g) {
-							continue
-						}
-						if(ha[la]) {
-							delete ka[la];
-							b[la][m]--;
-							if(!b[la][m]) {
-								da(la)
-							}
-						}else {
-							aa(ha, la, ja)
-						}
-					}
-				}
-				ha[ia] = 0
-			}
-			function ba() {
-				return"__mod__" + e++
-			}
-			function ca(ha) {
-				var ia = b[ha], ja = 0;
-				for(var ka = 0;ka < ia[k].length;ka++) {
-					var la = ia[k][ka];
-					if(!b[la] || b[la][m]) {
-						c[la] || (c[la] = {});
-						if(!c[la][ha]) {
-							ja++
-						}
-						c[la][ha] = 1
-					}
-				}
-				ia[m] = ja;
-				if(!ja) {
-					da(ha)
-				}
-			}
-			function da(ha) {
-				var ia = b[ha];
-				if(ia[h] & f) {
-					w(ha)
-				}
-				var ja = c[ha];
-				if(ja) {
-					delete c[ha];
-					for(var ka in ja) {
-						if(v.call(ja, ka)) {
-							if(!--b[ka][m]) {
-								da(ka)
-							}
-						}
-					}
-				}
-			}
-			function ea(ha, ia) {
-				b[ha] = {id:ha};
-				b[ha][j] = ia
-			}
-			ea(l, 0);
-			ea(j, 0);
-			ea(p, x);
-			ea(q, a);
-			ea(r, w);
-			ea(t, w);
-			ea(s, y);
-			x.amd = {};
-			a[p] = x;
-			a[r] = w;
-			a[t] = w;
-			a[s] = y;
-			var fa = false, ga = function(ha, ia, ja, ka) {
-				x(ha, ia, ja, ka || g);
-				if(b[ha][m] && !fa) {
-					fa = setTimeout(function() {
-						z();
-						fa = false
-					}, 9)
-				}
-			};
-			a.__d = function(ha, ia, ja, ka) {
-				ia = [q, r, t, s, l, j].concat(ia);
-				ga(ha, ia, ja, ka)
-			};
-			a.__e = a.__d
-		})(this);
 		__d("ua", [], function(a, b, c, d, e, f) {
-			var g = {ie:function() {
-				return g._populate() || this._ie
-			}, ie64:function() {
-				return g.ie() && this._win64
-			}, firefox:function() {
-				return g._populate() || this._firefox
-			}, opera:function() {
-				return g._populate() || this._opera
-			}, safari:function() {
-				return g._populate() || this._safari
-			}, chrome:function() {
-				return g._populate() || this._chrome
-			}, windows:function() {
-				return g._populate() || this._windows
-			}, osx:function() {
-				return g._populate() || this._osx
-			}, linux:function() {
-				return g._populate() || this._linux
-			}, iphone:function() {
-				return g._populate() || this._iphone
-			}, _populated:false, _populate:function() {
-				if(g._populated) {
+			var g = false, h, i, j, k, l, m, n, o, p, q;
+			function r() {
+				if(g) {
 					return
 				}
-				g._populated = true;
-				var h = navigator.userAgent, i = /(?:MSIE.(\d+\.\d+))|(?:(?:Firefox|GranParadiso|Iceweasel).(\d+\.\d+))|(?:Opera(?:.+Version.|.)(\d+\.\d+))|(?:AppleWebKit.(\d+(?:\.\d+)?))/.exec(h), j = /(Mac OS X)|(Windows)|(Linux)/.exec(h), k = /\b(iPhone|iP[ao]d)/.exec(h);
-				g._win64 = !!/Win64/.exec(h);
-				if(i) {
-					g._ie = i[1] ? parseFloat(i[1]) : NaN;
-					if(g._ie && document.documentMode) {
-						g._ie = document.documentMode
+				g = true;
+				var t = navigator.userAgent, u = /(?:MSIE.(\d+\.\d+))|(?:(?:Firefox|GranParadiso|Iceweasel).(\d+\.\d+))|(?:Opera(?:.+Version.|.)(\d+\.\d+))|(?:AppleWebKit.(\d+(?:\.\d+)?))/.exec(t), v = /(Mac OS X)|(Windows)|(Linux)/.exec(t), w = /\b(iPhone|iP[ao]d)/.exec(t);
+				p = !!/Win64/.exec(t);
+				if(u) {
+					h = u[1] ? parseFloat(u[1]) : NaN;
+					if(h && document.documentMode) {
+						h = document.documentMode
 					}
-					g._firefox = i[2] ? parseFloat(i[2]) : NaN;
-					g._opera = i[3] ? parseFloat(i[3]) : NaN;
-					g._safari = i[4] ? parseFloat(i[4]) : NaN;
-					if(g._safari) {
-						i = /(?:Chrome\/(\d+\.\d+))/.exec(h);
-						g._chrome = i && i[1] ? parseFloat(i[1]) : NaN
+					i = u[2] ? parseFloat(u[2]) : NaN;
+					j = u[3] ? parseFloat(u[3]) : NaN;
+					k = u[4] ? parseFloat(u[4]) : NaN;
+					if(k) {
+						u = /(?:Chrome\/(\d+\.\d+))/.exec(t);
+						l = u && u[1] ? parseFloat(u[1]) : NaN
 					}else {
-						g._chrome = NaN
+						l = NaN
 					}
 				}else {
-					g._ie = g._firefox = g._opera = g._chrome = g._safari = NaN
+					h = i = j = l = k = NaN
 				}
-				if(j) {
-					if(j[1]) {
-						var l = /(?:Mac OS X (\d+(?:[._]\d+)?))/.exec(h);
-						g._osx = l ? parseFloat(l[1].replace("_", ".")) : true
+				if(v) {
+					if(v[1]) {
+						var x = /(?:Mac OS X (\d+(?:[._]\d+)?))/.exec(t);
+						m = x ? parseFloat(x[1].replace("_", ".")) : true
 					}else {
-						g._osx = false
+						m = false
 					}
-					g._windows = !!j[2];
-					g._linux = !!j[3]
+					n = !!v[2];
+					o = !!v[3]
 				}else {
-					g._osx = g._windows = g._linux = false
+					m = n = o = false
 				}
-				g._iphone = k
+				q = w
+			}
+			var s = {ie:function() {
+				return r() || h
+			}, ie64:function() {
+				return s.ie() && p
+			}, firefox:function() {
+				return r() || i
+			}, opera:function() {
+				return r() || j
+			}, safari:function() {
+				return r() || k
+			}, chrome:function() {
+				return r() || l
+			}, windows:function() {
+				return r() || n
+			}, osx:function() {
+				return r() || m
+			}, linux:function() {
+				return r() || o
+			}, iphone:function() {
+				return r() || q
 			}};
-			a.ua = e.exports = g
+			a.ua = e.exports = s
 		}, 3);
 		__d("copyProperties", [], function(a, b, c, d, e, f) {
 			function g(h, i) {
@@ -1765,10 +2123,7 @@ if(!FB) {
 				}
 				var fa = ea ? /\/\/.*?(\/[^#]*)/.exec(ea)[1] : location.pathname + location.search;
 				fa += (~fa.indexOf("?") ? "&" : "?") + "fb_xd_fragment#?=&xd_sig=" + s + "&";
-				var ga = FB.Content.append(document.createElement("div"));
-				ga.style.position = "absolute";
-				ga.style.top = "-2000px";
-				var ha = h.create({root:ga, channel:t, channelPath:"/" + g.XdUrl + "#", flashUrl:g.Flash.path, whenReady:function(ma) {
+				var ga = FB.Content.appendHidden(document.createElement("div")), ha = h.create({root:ga, channel:t, channelPath:"/" + g.XdUrl + "#", flashUrl:g.Flash.path, whenReady:function(ma) {
 					v = ma
 				}, onMessage:aa}), ia = {channel:t, origin:location.protocol + "//" + location.host, channel_path:fa, transport:ha}, ja = g.XdUrl + "#" + j.encode(ia), ka = g.useCdn ? FB._domain.staticfb : "http://www.facebook.com/", la = g.useCdn ? FB._domain.https_staticfb : "https://www.facebook.com/";
 				if(!FB.onlyUseHttps()) {
@@ -2290,9 +2645,7 @@ if(!FB) {
 			}
 			FB.Dialog._dialogs[a] = this
 		}, {});
-		FB.provide("Dialog", {_dialogs:null, _lastYOffset:0, _loaderEl:null, _overlayEl:null, _stack:[], _active:null, _popStateListenerOn:false, _hideOnPopState:function(a) {
-			FB.Dialog.hide(FB.Dialog._stack.pop())
-		}, get:function(a) {
+		FB.provide("Dialog", {_dialogs:null, _lastYOffset:0, _loaderEl:null, _overlayEl:null, _stack:[], _active:null, get:function(a) {
 			return FB.Dialog._dialogs[a]
 		}, _findRoot:function(a) {
 			while(a) {
@@ -2495,10 +2848,6 @@ if(!FB) {
 				if("fbCallID" in a) {
 					FB.Dialog.get(a.fbCallID).fire("iframe_show")
 				}
-				if(!FB.Event._popStateListenerOn) {
-					FB.Event.listen(window, "popstate", FB.Dialog._hideOnPopState);
-					FB.Event._popStateListenerOn = true
-				}
 			}
 		}, hide:function(a) {
 			var b = FB.Dialog._findRoot(a);
@@ -2508,10 +2857,6 @@ if(!FB) {
 				FB.Dialog._hideIPadOverlay();
 				if("fbCallID" in a) {
 					FB.Dialog.get(a.fbCallID).fire("iframe_hide")
-				}
-				if(FB.Event._popStateListenerOn) {
-					FB.Event.unlisten(window, "popstate", FB.Dialog._hideOnPopState);
-					FB.Event._popStateListenerOn = false
 				}
 			}
 		}, remove:function(a) {
@@ -2548,14 +2893,15 @@ if(!FB) {
 				return null
 			}
 			if((a.method == "permissions.request" || a.method == "permissions.oauth") && (a.display == "iframe" || a.display == "dialog")) {
-				var c, d;
-				c = a.scope;
-				d = c.split(/\s|,/g);
-				for(var e = 0;e < d.length;e++) {
-					var f = FB.String.trim(d[e]);
-					if(f && !FB.initSitevars.iframePermissions[f]) {
-						a.display = "popup";
-						break
+				var c = "scope" in a ? a.scope : FB._scope;
+				if(c) {
+					var d = c.split(/\s|,/g);
+					for(var e = 0;e < d.length;e++) {
+						var f = FB.String.trim(d[e]);
+						if(f && !FB.initSitevars.iframePermissions[f]) {
+							a.display = "popup";
+							break
+						}
 					}
 				}
 			}
@@ -2581,7 +2927,7 @@ if(!FB) {
 		}});
 		FB.provide("UIServer", {Methods:{}, _loadedNodes:{}, _defaultCb:{}, _resultToken:'"xxRESULTTOKENxx"', _forceHTTPS:false, genericTransform:function(a) {
 			if(a.params.display == "dialog" || a.params.display == "iframe") {
-				FB.copy(a.params, {display:"iframe", channel:FB.UIServer._xdChannelHandler(a.id, "parent.parent"), xd_channel:FB.XD._channel}, true)
+				FB.copy(a.params, {display:"iframe", channel:FB.UIServer._xdChannelHandler(a.id, "parent.parent")}, true)
 			}
 			return a
 		}, prepareCall:function(a, b) {
@@ -2604,7 +2950,7 @@ if(!FB) {
 				g.params.next = FB.UIServer._xdResult(g.cb, g.id, j, true)
 			}
 			if(j === "parent") {
-				FB.copy(g.params, {channel_url:FB.UIServer._xdChannelHandler(e, "parent.parent"), xd_channel:FB.XD._channel}, true)
+				FB.copy(g.params, {channel_url:FB.UIServer._xdChannelHandler(e, "parent.parent")}, true)
 			}
 			g = FB.UIServer.prepareParams(g);
 			return g
@@ -3031,7 +3377,7 @@ if(!FB) {
 							if(d.error && d.error === "not_authorized") {
 								h = "not_authorized"
 							}else {
-								h = "unknown"
+								h = FB._userStatus
 							}
 							FB.Auth.setAuthResponse(null, h);
 							if(FB.Cookie.getEnabled()) {
@@ -3220,6 +3566,110 @@ if(!FB) {
 			}, false);
 			return b && c
 		}});
+		__d("URL", ["copyProperties", "QueryString", "Log"], function(a, b, c, d, e, f) {
+			var g = b("copyProperties"), h = b("QueryString"), i = b("Log"), j = new RegExp("(" + "(((\\w+):)?//)" + "(.*?@)?" + "([^~/?#:]+)" + "(:(\\d+))?" + ")?" + "([^\\?$#]+)?" + "(\\?([^$#]+))?" + "(#([^$]+))?"), k = /[^\w\-\.,;\/\?:@=&%#$~+!*'\[\]()]/, l = /^[a-z0-9.][a-z0-9\-\.]+[a-z0-9.]$/, m = /\.facebook\.com$/;
+			function n(o) {
+				if(typeof o != "string") {
+					throw new TypeError("The passed argument was of invalid type.");
+				}
+				if(k.test(o)) {
+					throw new URIError("The passed argument could not be parsed as a url.");
+				}
+				if(this instanceof n === false) {
+					return new n(o)
+				}
+				var p = o.match(j);
+				if(!o || !p) {
+					throw new URIError("The passed argument could not be parsed as a url.");
+				}
+				this._protocol = p[4] || location.protocol.replace(/:/, "");
+				this._domain = p[6] || location.hostname;
+				this._port = p[8] || (p[6] ? this._protocol == "http" ? "80" : "443" : location.port);
+				this._path = p[9] || "/";
+				this._search = p[11] || "";
+				this._fragment = p[13] || "";
+				if(!l.test(decodeURIComponent(this._domain.toLowerCase()))) {
+					i.error("Invalid characters found in domain name: %s", this._domain);
+					throw new URIError("Domain contained invalid characters.");
+				}
+			}
+			g(n.prototype, {constructor:n, getProtocol:function() {
+				return this._protocol
+			}, setProtocol:function(o) {
+				this._protocol = o;
+				return this
+			}, getDomain:function() {
+				return this._domain
+			}, setDomain:function(o) {
+				this._domain = o;
+				return this
+			}, getPort:function() {
+				return this._port
+			}, setPort:function(o) {
+				this._port = o;
+				return this
+			}, getPath:function() {
+				return this._path
+			}, setPath:function(o) {
+				this._path = o;
+				return this
+			}, getSearch:function() {
+				return this._search
+			}, setSearch:function(o) {
+				this._search = o;
+				return this
+			}, getFragment:function() {
+				return this._fragment
+			}, setFragment:function(o) {
+				this._fragment = o;
+				return this
+			}, getParsedSearch:function() {
+				return h.decode(this._search)
+			}, getParsedFragment:function() {
+				return h.decode(this._fragment)
+			}, isFacebookURL:function() {
+				return m.test(this._domain)
+			}, toString:function() {
+				return this._protocol + "://" + this._domain + (/http80|https443/.test(this._protocol + this._port) ? "" : ":" + this._port) + this._path + (this._search ? "?" + this._search : "") + (this._fragment ? "#" + this._fragment : "")
+			}, valueOf:function() {
+				return this.toString()
+			}});
+			g(n, {getCurrent:function() {
+				return new n(location.href)
+			}, getReferrer:function() {
+				return document.referrer ? new n(document.referrer) : null
+			}});
+			e.exports = n
+		});
+		__d("Upsell", ["URL"], function(a, b, c, d, e, f) {
+			var g = b("URL"), h = false, i = {init:function(j) {
+				if(h) {
+					return
+				}
+				h = true;
+				var k, l;
+				try {
+					k = g.getReferrer()
+				}catch(m) {
+					j.Insights.impression({lid:113, name:"url_parse_error", payload:document.referrer});
+					return
+				}
+				try {
+					l = g.getCurrent()
+				}catch(n) {
+					j.Insights.impression({lid:113, name:"url_parse_error", payload:location.href});
+					return
+				}
+				if(k && k.isFacebookURL() && l.getParsedSearch().fb_upsell) {
+					j.getLoginStatus(function(o) {
+						if(o.status == "not_authorized") {
+							j.ui({display:"iframe", method:"permissions.oauth", auth_referral:true})
+						}
+					})
+				}
+			}};
+			e.exports = i
+		});
 		FB.provide("Canvas.Prefetcher", {_sampleRate:0, _appIdsBlacklist:[], _links:[], COLLECT_AUTOMATIC:0, COLLECT_MANUAL:1, _collectionMode:0, addStaticResource:function(a) {
 			if(!FB._inCanvas || !FB._apiKey) {
 				return
@@ -3272,6 +3722,7 @@ if(!FB) {
 			a = FB.copy(a || {}, {logging:true, status:true});
 			FB._userID = 0;
 			FB._apiKey = a.appId || a.apiKey;
+			FB._scope = a.scope;
 			if(!a.logging && window.location.toString().indexOf("fb_debug=1") < 0) {
 				FB._logging = false
 			}
@@ -3299,6 +3750,7 @@ if(!FB) {
 					FB.getLoginStatus()
 				}
 			}
+			FB.require("Upsell").init(FB);
 			if(FB._inCanvas) {
 				FB.Canvas._setHideFlashCallback(a.hideFlashCallback);
 				FB.Canvas.init()
@@ -3503,9 +3955,9 @@ if(!FB) {
 				}
 			}
 		}, _tagInfos:[{localName:"activity", className:"FB.XFBML.Activity"}, {localName:"add-profile-tab", className:"FB.XFBML.AddProfileTab"}, {localName:"add-to-timeline", className:"FB.XFBML.AddToTimeline"}, {localName:"bookmark", className:"FB.XFBML.Bookmark"}, {localName:"comments", className:"FB.XFBML.Comments"}, {localName:"comments-count", className:"FB.XFBML.CommentsCount"}, {localName:"connect-bar", className:"FB.XFBML.ConnectBar"}, {localName:"fan", className:"FB.XFBML.Fan"}, {localName:"like", 
-		className:"FB.XFBML.Like", supportsWidgetPipe:true}, {localName:"like-box", className:"FB.XFBML.LikeBox"}, {localName:"live-stream", className:"FB.XFBML.LiveStream"}, {localName:"login", className:"FB.XFBML.Login"}, {localName:"login-button", className:"FB.XFBML.LoginButton"}, {localName:"facepile", className:"FB.XFBML.Facepile"}, {localName:"friendpile", className:"FB.XFBML.Friendpile"}, {localName:"name", className:"FB.XFBML.Name"}, {localName:"profile-pic", className:"FB.XFBML.ProfilePic"}, 
-		{localName:"question", className:"FB.XFBML.Question"}, {localName:"recommendations", className:"FB.XFBML.Recommendations"}, {localName:"recommendations-bar", className:"FB.XFBML.RecommendationsBar"}, {localName:"registration", className:"FB.XFBML.Registration"}, {localName:"send", className:"FB.XFBML.Send"}, {localName:"serverfbml", className:"FB.XFBML.ServerFbml"}, {localName:"share-button", className:"FB.XFBML.ShareButton"}, {localName:"social-context", className:"FB.XFBML.SocialContext"}, 
-		{localName:"subscribe", className:"FB.XFBML.Subscribe"}], _widgetPipeEnabledTagCount:0, _widgetPipeIsEnabled:function() {
+		className:"FB.XFBML.Like", supportsWidgetPipe:true}, {localName:"like-box", className:"FB.XFBML.LikeBox"}, {localName:"live-stream", className:"FB.XFBML.LiveStream"}, {localName:"login", className:"FB.XFBML.Login"}, {localName:"login-button", className:"FB.XFBML.LoginButton"}, {localName:"facepile", className:"FB.XFBML.Facepile"}, {localName:"friendpile", className:"FB.XFBML.Friendpile"}, {localName:"name", className:"FB.XFBML.Name"}, {localName:"privacy-selector", className:"FB.XFBML.PrivacySelector"}, 
+		{localName:"profile-pic", className:"FB.XFBML.ProfilePic"}, {localName:"question", className:"FB.XFBML.Question"}, {localName:"recommendations", className:"FB.XFBML.Recommendations"}, {localName:"recommendations-bar", className:"FB.XFBML.RecommendationsBar"}, {localName:"registration", className:"FB.XFBML.Registration"}, {localName:"send", className:"FB.XFBML.Send"}, {localName:"serverfbml", className:"FB.XFBML.ServerFbml"}, {localName:"share-button", className:"FB.XFBML.ShareButton"}, {localName:"social-context", 
+		className:"FB.XFBML.SocialContext"}, {localName:"subscribe", className:"FB.XFBML.Subscribe"}], _widgetPipeEnabledTagCount:0, _widgetPipeIsEnabled:function() {
 			return FB.widgetPipeEnabledApps && FB.widgetPipeEnabledApps[FB._apiKey] !== undefined
 		}});
 		(function() {
@@ -4062,6 +4514,7 @@ if(!FB) {
 				FB.Dom.addCss(this.dom, "fb_iframe_widget_fluid")
 			}
 			FB.Content.insertIframe({url:c, root:this.dom.appendChild(document.createElement("span")), name:this.getIframeName(), title:this.getIframeTitle(), className:FB._localeIsRtl ? "fb_rtl" : "fb_ltr", height:b.height, width:b.width, onload:FB.bind(this.fire, this, "iframe.onload")});
+			this._resizeFlow(b);
 			this.loaded = false;
 			this.subscribe("iframe.onload", FB.bind(function() {
 				this.loaded = true
@@ -4091,6 +4544,9 @@ if(!FB) {
 		}, _oneTimeSetup:function() {
 			this.subscribe("xd.resize", FB.bind(this._handleResizeMsg, this));
 			this.subscribe("xd.resize", FB.bind(this._bubbleResizeEvent, this));
+			this.subscribe("xd.resize.iframe", FB.bind(this._resizeIframe, this));
+			this.subscribe("xd.resize.flow", FB.bind(this._resizeFlow, this));
+			this.subscribe("xd.resize.flow", FB.bind(this._bubbleResizeEvent, this));
 			if(FB.getLoginStatus) {
 				this.subscribe("xd.refreshLoginStatus", FB.bind(FB.getLoginStatus, FB, function() {
 				}, true));
@@ -4103,6 +4559,9 @@ if(!FB) {
 			if(this._visibleAfter == "load") {
 				this.subscribe("iframe.onload", FB.bind(this._makeVisible, this))
 			}
+			this.subscribe("xd.verify", FB.bind(function(a) {
+				this.arbiterInform("xd/verify", a.token)
+			}, this));
 			this.oneTimeSetup()
 		}, _makeVisible:function() {
 			this._removeLoader();
@@ -4125,16 +4584,21 @@ if(!FB) {
 			if(!this.isValid()) {
 				return
 			}
-			var b = this.getIframeNode();
-			b.style.height = a.height + "px";
-			if(a.width) {
-				b.style.width = a.width + "px"
-			}
-			b.style.border = "none";
+			this._resizeIframe(a);
+			this._resizeFlow(a);
+			this.getIframeNode().style.border = "none";
 			this._makeVisible()
 		}, _bubbleResizeEvent:function(a) {
 			var b = {height:a.height, width:a.width, pluginId:this.getAttribute("plugin-id")};
 			FB.Event.fire("xfbml.resize", b)
+		}, _resizeIframe:function(a) {
+			var b = this.getIframeNode();
+			a.height && (b.style.height = a.height + "px");
+			a.width && (b.style.width = a.width + "px")
+		}, _resizeFlow:function(a) {
+			var b = this.dom.getElementsByTagName("span")[0];
+			a.height && (b.style.height = a.height + "px");
+			a.width && (b.style.width = a.width + "px")
 		}, _addLoader:function() {
 			if(!this._loaderDiv) {
 				FB.Dom.addCss(this.dom, "fb_iframe_widget_loader");
@@ -5103,6 +5567,15 @@ if(!FB) {
 			}
 			this.dom.innerHTML = c
 		}});
+		FB.subclass("XFBML.PrivacySelector", "XFBML.IframeWidget", null, {getUrlBits:function() {
+			return{name:"privacy_selector", params:this._attr}
+		}, setupAndValidate:function() {
+			this._attr = {channel:this.getChannelUrl(), api_key:FB._apiKey, font:this.getAttribute("font")};
+			this._showLoader = false;
+			return true
+		}, getSize:function() {
+			return{width:99, height:22}
+		}});
 		FB.subclass("XFBML.ProfilePic", "XFBML.Element", null, {process:function() {
 			var a = this.getAttribute("size", "thumb"), b = FB.XFBML.ProfilePic._sizeToPicFieldMap[a], c = this._getPxAttribute("width"), d = this._getPxAttribute("height"), e = this.dom.style, f = this.getAttribute("uid");
 			if(this._getBoolAttribute("facebook-logo")) {
@@ -5470,7 +5943,7 @@ if(!FB) {
 		}});
 		FB.subclass("XFBML.SocialContext", "XFBML.IframeWidget", null, {setupAndValidate:function() {
 			var a = this.getAttribute("size", "small");
-			this._attr = {channel:this.getChannelUrl(), width:this._getPxAttribute("width", 400), height:this._getPxAttribute("height", 100), ref:this.getAttribute("ref"), size:this.getAttribute("size"), keywords:this.getAttribute("keywords"), urls:this.getAttribute("urls")};
+			this._attr = {channel:this.getChannelUrl(), width:this._getPxAttribute("width", 400), height:this._getPxAttribute("height", 100), ref:this.getAttribute("ref"), size:this.getAttribute("size"), keywords:this.getAttribute("keywords"), urls:this.getAttribute("urls"), object_id:this.getAttribute("object_id")};
 			return true
 		}, getSize:function() {
 			return{width:this._attr.width, height:this._attr.height}
@@ -5494,8 +5967,8 @@ if(!FB) {
 			return d
 		}});
 		void 0;
-		__d("XDConfig", [], {"XdUrl":"connect/xd_arbiter.php?version=4", "Flash":{"path":"https://s-static.ak.fbcdn.net/rsrc.php/v1/ys/r/WON-TVLCpDP.swf"}, "useCdn":true});
-		__d("SDKConfig", [], {"legacy":true})
+		__d("XDConfig", [], {"XdUrl":"connect/xd_arbiter.php?version=5", "Flash":{"path":"https://s-static.ak.fbcdn.net/rsrc.php/v1/ys/r/WON-TVLCpDP.swf"}, "useCdn":true});
+		__d("SDKConfig", [], {"legacy":false})
 	}).call(FB)
 }
 FB.provide("", {"_domain":{"api":"https://api.facebook.com/", "api_read":"https://api-read.facebook.com/", "cdn":"http://static.ak.fbcdn.net/", "cdn_foreign":"http://connect.facebook.net/", "graph":"https://graph.facebook.com/", "https_cdn":"https://s-static.ak.fbcdn.net/", "https_staticfb":"https://s-static.ak.facebook.com/", "https_www":"https://www.facebook.com/", "staticfb":"http://static.ak.facebook.com/", "www":"http://www.facebook.com/", "m":"http://m.facebook.com/", "https_m":"https://m.facebook.com/"}, 
@@ -5514,7 +5987,7 @@ FB.provide("TemplateUI", {"_version":19}, true);
 FB.provide("XFBML.ConnectBar", {"imgs":{"buttonUrl":"rsrc.php/v1/yY/r/h_Y6u1wrZPW.png", "missingProfileUrl":"rsrc.php/v1/yo/r/UlIqmHJn-SK.gif"}}, true);
 FB.provide("XFBML.ProfilePic", {"_defPicMap":{"pic":"rsrc.php/v1/yh/r/C5yt7Cqf3zU.jpg", "pic_big":"rsrc.php/v1/yL/r/HsTZSDw4avx.gif", "pic_big_with_logo":"rsrc.php/v1/y5/r/SRDCaeCL7hM.gif", "pic_small":"rsrc.php/v1/yi/r/odA9sNLrE86.jpg", "pic_small_with_logo":"rsrc.php/v1/yD/r/k1xiRXKnlGd.gif", "pic_square":"rsrc.php/v1/yo/r/UlIqmHJn-SK.gif", "pic_square_with_logo":"rsrc.php/v1/yX/r/9dYJBPDHXwZ.gif", "pic_with_logo":"rsrc.php/v1/yu/r/fPPR9f2FJ3t.gif"}}, true);
 if(FB.Dom && FB.Dom.addCssRules) {
-	FB.Dom.addCssRules('.fb_hidden{position:absolute;top:-10000px;z-index:10001}\n.fb_invisible{display:none}\n.fb_reset{background:none;border-spacing:0;border:0;color:#000;cursor:auto;direction:ltr;font-family:"lucida grande", tahoma, verdana, arial, sans-serif;font-size: 11px;font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:1;margin:0;overflow:visible;padding:0;text-align:left;text-decoration:none;text-indent:0;text-shadow:none;text-transform:none;visibility:visible;white-space:normal;word-spacing:normal}\n.fb_link img{border:none}\n.fb_dialog{background:rgba(82, 82, 82, .7);position:absolute;top:-10000px;z-index:10001}\n.fb_dialog_advanced{padding:10px;-moz-border-radius:8px;-webkit-border-radius:8px}\n.fb_dialog_content{background:#fff;color:#333}\n.fb_dialog_close_icon{background:url(http://static.ak.fbcdn.net/rsrc.php/v1/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 0 transparent;_background-image:url(http://static.ak.fbcdn.net/rsrc.php/v1/yL/r/s816eWC-2sl.gif);cursor:pointer;display:block;height:15px;position:absolute;right:18px;top:17px;width:15px;top:8px\\9;right:7px\\9}\n.fb_dialog_mobile .fb_dialog_close_icon{top:5px;left:5px;right:auto}\n.fb_dialog_padding{background-color:transparent;position:absolute;width:1px;z-index:-1}\n.fb_dialog_close_icon:hover{background:url(http://static.ak.fbcdn.net/rsrc.php/v1/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -15px transparent;_background-image:url(http://static.ak.fbcdn.net/rsrc.php/v1/yL/r/s816eWC-2sl.gif)}\n.fb_dialog_close_icon:active{background:url(http://static.ak.fbcdn.net/rsrc.php/v1/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -30px transparent;_background-image:url(http://static.ak.fbcdn.net/rsrc.php/v1/yL/r/s816eWC-2sl.gif)}\n.fb_dialog_loader{background-color:#f2f2f2;border:1px solid #606060;font-size: 24px;padding:20px}\n.fb_dialog_top_left,\n.fb_dialog_top_right,\n.fb_dialog_bottom_left,\n.fb_dialog_bottom_right{height:10px;width:10px;overflow:hidden;position:absolute}\n.fb_dialog_top_left{background:url(http://static.ak.fbcdn.net/rsrc.php/v1/ye/r/8YeTNIlTZjm.png) no-repeat 0 0;left:-10px;top:-10px}\n.fb_dialog_top_right{background:url(http://static.ak.fbcdn.net/rsrc.php/v1/ye/r/8YeTNIlTZjm.png) no-repeat 0 -10px;right:-10px;top:-10px}\n.fb_dialog_bottom_left{background:url(http://static.ak.fbcdn.net/rsrc.php/v1/ye/r/8YeTNIlTZjm.png) no-repeat 0 -20px;bottom:-10px;left:-10px}\n.fb_dialog_bottom_right{background:url(http://static.ak.fbcdn.net/rsrc.php/v1/ye/r/8YeTNIlTZjm.png) no-repeat 0 -30px;right:-10px;bottom:-10px}\n.fb_dialog_vert_left,\n.fb_dialog_vert_right,\n.fb_dialog_horiz_top,\n.fb_dialog_horiz_bottom{position:absolute;background:#525252;filter:alpha(opacity=70);opacity:.7}\n.fb_dialog_vert_left,\n.fb_dialog_vert_right{width:10px;height:100%}\n.fb_dialog_vert_left{margin-left:-10px}\n.fb_dialog_vert_right{right:0;margin-right:-10px}\n.fb_dialog_horiz_top,\n.fb_dialog_horiz_bottom{width:100%;height:10px}\n.fb_dialog_horiz_top{margin-top:-10px}\n.fb_dialog_horiz_bottom{bottom:0;margin-bottom:-10px}\n.fb_dialog_iframe{line-height:0}\n.fb_dialog_content .dialog_title{background:#6d84b4;border:1px solid #3b5998;color:#fff;font-size: 14px;font-weight:bold;margin:0}\n.fb_dialog_content .dialog_title > span{background:url(http://static.ak.fbcdn.net/rsrc.php/v1/yd/r/Cou7n-nqK52.gif)\nno-repeat 5px 50%;float:left;padding:5px 0 7px 26px}\nbody.fb_hidden{-webkit-transform:none;height:100%;margin:0;left:-10000px;overflow:visible;position:absolute;top:-10000px;width:100%\n}\n.fb_dialog.fb_dialog_mobile.loading{background:url(http://static.ak.fbcdn.net/rsrc.php/v1/yO/r/_j03izEX40U.gif)\nwhite no-repeat 50% 50%;min-height:100%;min-width:100%;overflow:hidden;position:absolute;top:0;z-index:10001}\n.fb_dialog.fb_dialog_mobile.loading.centered{max-height:590px;min-height:590px;max-width:500px;min-width:500px}\n#fb-root #fb_dialog_ipad_overlay{background:rgba(0, 0, 0, .45);position:absolute;left:0;top:0;width:100%;min-height:100%;z-index:10000}\n#fb-root #fb_dialog_ipad_overlay.hidden{display:none}\n.fb_dialog.fb_dialog_mobile.loading iframe{visibility:hidden}\n.fb_dialog_content .dialog_header{-webkit-box-shadow:white 0 1px 1px -1px inset;background:-webkit-gradient(linear, 0 0, 0 100%, from(#738ABA), to(#2C4987));border-bottom:1px solid;border-color:#1d4088;color:#fff;font:14px Helvetica, sans-serif;font-weight:bold;text-overflow:ellipsis;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0;vertical-align:middle;white-space:nowrap}\n.fb_dialog_content .dialog_header table{-webkit-font-smoothing:subpixel-antialiased;height:43px;width:100%\n}\n.fb_dialog_content .dialog_header td.header_left{font-size: 12px;padding-left:5px;vertical-align:middle;width:60px\n}\n.fb_dialog_content .dialog_header td.header_right{font-size: 12px;padding-right:5px;vertical-align:middle;width:60px\n}\n.fb_dialog_content .touchable_button{background:-webkit-gradient(linear, 0 0, 0 100%, from(#4966A6),\ncolor-stop(0.5, #355492), to(#2A4887));border:1px solid #29447e;-webkit-background-clip:padding-box;-webkit-border-radius:3px;-webkit-box-shadow:rgba(0, 0, 0, .117188) 0 1px 1px inset,\nrgba(255, 255, 255, .167969) 0 1px 0;display:inline-block;margin-top:3px;max-width:85px;line-height:18px;padding:4px 12px;position:relative}\n.fb_dialog_content .dialog_header .touchable_button input{border:none;background:none;color:#fff;font:12px Helvetica, sans-serif;font-weight:bold;margin:2px -12px;padding:2px 6px 3px 6px;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}\n.fb_dialog_content .dialog_header .header_center{color:#fff;font-size: 16px;font-weight:bold;line-height:18px;text-align:center;vertical-align:middle}\n.fb_dialog_content .dialog_content{background:url(http://static.ak.fbcdn.net/rsrc.php/v1/y9/r/jKEcVPZFk-2.gif) no-repeat 50% 50%;border:1px solid #555;border-bottom:0;border-top:0;height:150px}\n.fb_dialog_content .dialog_footer{background:#f2f2f2;border:1px solid #555;border-top-color:#ccc;height:40px}\n#fb_dialog_loader_close{float:left}\n.fb_dialog.fb_dialog_mobile .fb_dialog_close_button{text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}\n.fb_dialog.fb_dialog_mobile .fb_dialog_close_icon{visibility:hidden}\n.fb_iframe_widget{position:relative;display:-moz-inline-block;display:inline-block}\n.fb_iframe_widget iframe{position:relative;vertical-align:text-bottom}\n.fb_iframe_widget span{position:relative}\n.fb_hide_iframes iframe{position:relative;left:-10000px}\n.fb_iframe_widget_loader{position:relative;display:inline-block}\n.fb_iframe_widget_fluid{display:inline}\n.fb_iframe_widget_loader iframe{min-height:32px;z-index:2;zoom:1}\n.fb_iframe_widget_loader .FB_Loader{background:url(http://static.ak.fbcdn.net/rsrc.php/v1/y9/r/jKEcVPZFk-2.gif) no-repeat;height:32px;width:32px;margin-left:-16px;position:absolute;left:50%;z-index:4}\n.fb_button_simple,\n.fb_button_simple_rtl{background-image:url(http://static.ak.fbcdn.net/rsrc.php/v1/yH/r/eIpbnVKI9lR.png);background-repeat:no-repeat;cursor:pointer;outline:none;text-decoration:none}\n.fb_button_simple_rtl{background-position:right 0}\n.fb_button_simple .fb_button_text{margin:0 0 0 20px;padding-bottom:1px}\n.fb_button_simple_rtl .fb_button_text{margin:0 10px 0 0}\na.fb_button_simple:hover .fb_button_text,\na.fb_button_simple_rtl:hover .fb_button_text,\n.fb_button_simple:hover .fb_button_text,\n.fb_button_simple_rtl:hover .fb_button_text{text-decoration:underline}\n.fb_button,\n.fb_button_rtl{background:#29447e url(http://static.ak.fbcdn.net/rsrc.php/v1/yL/r/FGFbc80dUKj.png);background-repeat:no-repeat;cursor:pointer;display:inline-block;padding:0 0 0 1px;text-decoration:none;outline:none}\n.fb_button .fb_button_text,\n.fb_button_rtl .fb_button_text{background:#5f78ab url(http://static.ak.fbcdn.net/rsrc.php/v1/yL/r/FGFbc80dUKj.png);border-top:solid 1px #879ac0;border-bottom:solid 1px #1a356e;color:#fff;display:block;font-family:"lucida grande",tahoma,verdana,arial,sans-serif;font-weight:bold;padding:2px 6px 3px 6px;margin:1px 1px 0 21px;text-shadow:none}\na.fb_button,\na.fb_button_rtl,\n.fb_button,\n.fb_button_rtl{text-decoration:none}\na.fb_button:active .fb_button_text,\na.fb_button_rtl:active .fb_button_text,\n.fb_button:active .fb_button_text,\n.fb_button_rtl:active .fb_button_text{border-bottom:solid 1px #29447e;border-top:solid 1px #45619d;background:#4f6aa3;text-shadow:none}\n.fb_button_xlarge,\n.fb_button_xlarge_rtl{background-position:left -60px;font-size: 24px;line-height:30px}\n.fb_button_xlarge .fb_button_text{padding:3px 8px 3px 12px;margin-left:38px}\na.fb_button_xlarge:active{background-position:left -99px}\n.fb_button_xlarge_rtl{background-position:right -268px}\n.fb_button_xlarge_rtl .fb_button_text{padding:3px 8px 3px 12px;margin-right:39px}\na.fb_button_xlarge_rtl:active{background-position:right -307px}\n.fb_button_large,\n.fb_button_large_rtl{background-position:left -138px;font-size: 13px;line-height:16px}\n.fb_button_large .fb_button_text{margin-left:24px;padding:2px 6px 4px 6px}\na.fb_button_large:active{background-position:left -163px}\n.fb_button_large_rtl{background-position:right -346px}\n.fb_button_large_rtl .fb_button_text{margin-right:25px}\na.fb_button_large_rtl:active{background-position:right -371px}\n.fb_button_medium,\n.fb_button_medium_rtl{background-position:left -188px;font-size: 11px;line-height:14px}\na.fb_button_medium:active{background-position:left -210px}\n.fb_button_medium_rtl{background-position:right -396px}\n.fb_button_text_rtl,\n.fb_button_medium_rtl .fb_button_text{padding:2px 6px 3px 6px;margin-right:22px}\na.fb_button_medium_rtl:active{background-position:right -418px}\n.fb_button_small,\n.fb_button_small_rtl{background-position:left -232px;font-size: 10px;line-height:10px}\n.fb_button_small .fb_button_text{padding:2px 6px 3px;margin-left:17px}\na.fb_button_small:active,\n.fb_button_small:active{background-position:left -250px}\n.fb_button_small_rtl{background-position:right -440px}\n.fb_button_small_rtl .fb_button_text{padding:2px 6px;margin-right:18px}\na.fb_button_small_rtl:active{background-position:right -458px}\n.fb_share_count_wrapper{position:relative;float:left}\n.fb_share_count{background:#b0b9ec none repeat scroll 0 0;color:#333;font-family:"lucida grande", tahoma, verdana, arial, sans-serif;text-align:center}\n.fb_share_count_inner{background:#e8ebf2;display:block}\n.fb_share_count_right{margin-left:-1px;display:inline-block}\n.fb_share_count_right .fb_share_count_inner{border-top:solid 1px #e8ebf2;border-bottom:solid 1px #b0b9ec;margin:1px 1px 0 1px;font-size: 10px;line-height:10px;padding:2px 6px 3px;font-weight:bold}\n.fb_share_count_top{display:block;letter-spacing:-1px;line-height:34px;margin-bottom:7px;font-size: 22px;border:solid 1px #b0b9ec}\n.fb_share_count_nub_top{border:none;display:block;position:absolute;left:7px;top:35px;margin:0;padding:0;width:6px;height:7px;background-repeat:no-repeat;background-image:url(http://static.ak.fbcdn.net/rsrc.php/v1/yU/r/bSOHtKbCGYI.png)}\n.fb_share_count_nub_right{border:none;display:inline-block;padding:0;width:5px;height:10px;background-repeat:no-repeat;background-image:url(http://static.ak.fbcdn.net/rsrc.php/v1/yX/r/i_oIVTKMYsL.png);vertical-align:top;background-position:right 5px;z-index:10;left:2px;margin:0 2px 0 0;position:relative}\n.fb_share_no_count{display:none}\n.fb_share_size_Small .fb_share_count_right .fb_share_count_inner{font-size: 10px}\n.fb_share_size_Medium .fb_share_count_right .fb_share_count_inner{font-size: 11px;padding:2px 6px 3px;letter-spacing:-1px;line-height:14px}\n.fb_share_size_Large .fb_share_count_right .fb_share_count_inner{font-size: 13px;line-height:16px;padding:2px 6px 4px;font-weight:normal;letter-spacing:-1px}\n.fb_share_count_hidden .fb_share_count_nub_top,\n.fb_share_count_hidden .fb_share_count_top,\n.fb_share_count_hidden .fb_share_count_nub_right,\n.fb_share_count_hidden .fb_share_count_right{visibility:hidden}\n.fb_connect_bar_container div,\n.fb_connect_bar_container span,\n.fb_connect_bar_container a,\n.fb_connect_bar_container img,\n.fb_connect_bar_container strong{background:none;border-spacing:0;border:0;direction:ltr;font-style:normal;font-variant:normal;letter-spacing:normal;line-height:1;margin:0;overflow:visible;padding:0;text-align:left;text-decoration:none;text-indent:0;text-shadow:none;text-transform:none;visibility:visible;white-space:normal;word-spacing:normal;vertical-align:baseline}\n.fb_connect_bar_container{position:fixed;left:0 !important;right:0 !important;height:42px !important;padding:0 25px !important;margin:0 !important;vertical-align:middle !important;border-bottom:1px solid #333 !important;background:#3b5998 !important;z-index:99999999 !important;overflow:hidden !important}\n.fb_connect_bar_container_ie6{position:absolute;top:expression(document.compatMode=="CSS1Compat"? document.documentElement.scrollTop+"px":body.scrollTop+"px")}\n.fb_connect_bar{position:relative;margin:auto;height:100%;width:100%;padding:6px 0 0 0 !important;background:none;color:#fff !important;font-family:"lucida grande", tahoma, verdana, arial, sans-serif !important;font-size: 13px !important;font-style:normal !important;font-variant:normal !important;font-weight:normal !important;letter-spacing:normal !important;line-height:1 !important;text-decoration:none !important;text-indent:0 !important;text-shadow:none !important;text-transform:none !important;white-space:normal !important;word-spacing:normal !important}\n.fb_connect_bar a:hover{color:#fff}\n.fb_connect_bar .fb_profile img{height:30px;width:30px;vertical-align:middle;margin:0 6px 5px 0}\n.fb_connect_bar div a,\n.fb_connect_bar span,\n.fb_connect_bar span a{color:#bac6da;font-size: 11px;text-decoration:none}\n.fb_connect_bar .fb_buttons{float:right;margin-top:7px}\n.fb_edge_widget_with_comment{position:relative;*z-index:1000}\n.fb_edge_widget_with_comment span.fb_edge_comment_widget{position:absolute}\n.fb_edge_widget_with_comment span.fb_send_button_form_widget{z-index:1}\n.fb_edge_widget_with_comment span.fb_send_button_form_widget .FB_Loader{left:0;top:1px;margin-top:6px;margin-left:0;background-position:50% 50%;background-color:#fff;height:150px;width:394px;border:1px #666 solid;border-bottom:2px solid #283e6c;z-index:1}\n.fb_edge_widget_with_comment span.fb_send_button_form_widget.dark .FB_Loader{background-color:#000;border-bottom:2px solid #ccc}\n.fb_edge_widget_with_comment span.fb_send_button_form_widget.siderender\n.FB_Loader{margin-top:0}\n.fbpluginrecommendationsbarleft,\n.fbpluginrecommendationsbarright{position:fixed !important;bottom:0;z-index:999}\n/* @noflip */\n.fbpluginrecommendationsbarleft{left:10px}\n/* @noflip */\n.fbpluginrecommendationsbarright{right:10px}\n', 
+	FB.Dom.addCssRules('.fb_hidden{position:absolute;top:-10000px;z-index:10001}\n.fb_invisible{display:none}\n.fb_reset{background:none;border-spacing:0;border:0;color:#000;cursor:auto;direction:ltr;font-family:"lucida grande", tahoma, verdana, arial, sans-serif;font-size: 11px;font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:1;margin:0;overflow:visible;padding:0;text-align:left;text-decoration:none;text-indent:0;text-shadow:none;text-transform:none;visibility:visible;white-space:normal;word-spacing:normal}\n.fb_link img{border:none}\n.fb_dialog{background:rgba(82, 82, 82, .7);position:absolute;top:-10000px;z-index:10001}\n.fb_dialog_advanced{padding:10px;-moz-border-radius:8px;-webkit-border-radius:8px}\n.fb_dialog_content{background:#fff;color:#333}\n.fb_dialog_close_icon{background:url(http://static.ak.fbcdn.net/rsrc.php/v1/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 0 transparent;_background-image:url(http://static.ak.fbcdn.net/rsrc.php/v1/yL/r/s816eWC-2sl.gif);cursor:pointer;display:block;height:15px;position:absolute;right:18px;top:17px;width:15px;top:8px\\9;right:7px\\9}\n.fb_dialog_mobile .fb_dialog_close_icon{top:5px;left:5px;right:auto}\n.fb_dialog_padding{background-color:transparent;position:absolute;width:1px;z-index:-1}\n.fb_dialog_close_icon:hover{background:url(http://static.ak.fbcdn.net/rsrc.php/v1/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -15px transparent;_background-image:url(http://static.ak.fbcdn.net/rsrc.php/v1/yL/r/s816eWC-2sl.gif)}\n.fb_dialog_close_icon:active{background:url(http://static.ak.fbcdn.net/rsrc.php/v1/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -30px transparent;_background-image:url(http://static.ak.fbcdn.net/rsrc.php/v1/yL/r/s816eWC-2sl.gif)}\n.fb_dialog_loader{background-color:#f2f2f2;border:1px solid #606060;font-size: 24px;padding:20px}\n.fb_dialog_top_left,\n.fb_dialog_top_right,\n.fb_dialog_bottom_left,\n.fb_dialog_bottom_right{height:10px;width:10px;overflow:hidden;position:absolute}\n.fb_dialog_top_left{background:url(http://static.ak.fbcdn.net/rsrc.php/v1/ye/r/8YeTNIlTZjm.png) no-repeat 0 0;left:-10px;top:-10px}\n.fb_dialog_top_right{background:url(http://static.ak.fbcdn.net/rsrc.php/v1/ye/r/8YeTNIlTZjm.png) no-repeat 0 -10px;right:-10px;top:-10px}\n.fb_dialog_bottom_left{background:url(http://static.ak.fbcdn.net/rsrc.php/v1/ye/r/8YeTNIlTZjm.png) no-repeat 0 -20px;bottom:-10px;left:-10px}\n.fb_dialog_bottom_right{background:url(http://static.ak.fbcdn.net/rsrc.php/v1/ye/r/8YeTNIlTZjm.png) no-repeat 0 -30px;right:-10px;bottom:-10px}\n.fb_dialog_vert_left,\n.fb_dialog_vert_right,\n.fb_dialog_horiz_top,\n.fb_dialog_horiz_bottom{position:absolute;background:#525252;filter:alpha(opacity=70);opacity:.7}\n.fb_dialog_vert_left,\n.fb_dialog_vert_right{width:10px;height:100%}\n.fb_dialog_vert_left{margin-left:-10px}\n.fb_dialog_vert_right{right:0;margin-right:-10px}\n.fb_dialog_horiz_top,\n.fb_dialog_horiz_bottom{width:100%;height:10px}\n.fb_dialog_horiz_top{margin-top:-10px}\n.fb_dialog_horiz_bottom{bottom:0;margin-bottom:-10px}\n.fb_dialog_iframe{line-height:0}\n.fb_dialog_content .dialog_title{background:#6d84b4;border:1px solid #3b5998;color:#fff;font-size: 14px;font-weight:bold;margin:0}\n.fb_dialog_content .dialog_title > span{background:url(http://static.ak.fbcdn.net/rsrc.php/v1/yd/r/Cou7n-nqK52.gif)\nno-repeat 5px 50%;float:left;padding:5px 0 7px 26px}\nbody.fb_hidden{-webkit-transform:none;height:100%;margin:0;left:-10000px;overflow:visible;position:absolute;top:-10000px;width:100%\n}\n.fb_dialog.fb_dialog_mobile.loading{background:url(http://static.ak.fbcdn.net/rsrc.php/v1/yO/r/_j03izEX40U.gif)\nwhite no-repeat 50% 50%;min-height:100%;min-width:100%;overflow:hidden;position:absolute;top:0;z-index:10001}\n.fb_dialog.fb_dialog_mobile.loading.centered{max-height:590px;min-height:590px;max-width:500px;min-width:500px}\n#fb-root #fb_dialog_ipad_overlay{background:rgba(0, 0, 0, .45);position:absolute;left:0;top:0;width:100%;min-height:100%;z-index:10000}\n#fb-root #fb_dialog_ipad_overlay.hidden{display:none}\n.fb_dialog.fb_dialog_mobile.loading iframe{visibility:hidden}\n.fb_dialog_content .dialog_header{-webkit-box-shadow:white 0 1px 1px -1px inset;background:-webkit-gradient(linear, 0 0, 0 100%, from(#738ABA), to(#2C4987));border-bottom:1px solid;border-color:#1d4088;color:#fff;font:14px Helvetica, sans-serif;font-weight:bold;text-overflow:ellipsis;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0;vertical-align:middle;white-space:nowrap}\n.fb_dialog_content .dialog_header table{-webkit-font-smoothing:subpixel-antialiased;height:43px;width:100%\n}\n.fb_dialog_content .dialog_header td.header_left{font-size: 12px;padding-left:5px;vertical-align:middle;width:60px\n}\n.fb_dialog_content .dialog_header td.header_right{font-size: 12px;padding-right:5px;vertical-align:middle;width:60px\n}\n.fb_dialog_content .touchable_button{background:-webkit-gradient(linear, 0 0, 0 100%, from(#4966A6),\ncolor-stop(0.5, #355492), to(#2A4887));border:1px solid #29447e;-webkit-background-clip:padding-box;-webkit-border-radius:3px;-webkit-box-shadow:rgba(0, 0, 0, .117188) 0 1px 1px inset,\nrgba(255, 255, 255, .167969) 0 1px 0;display:inline-block;margin-top:3px;max-width:85px;line-height:18px;padding:4px 12px;position:relative}\n.fb_dialog_content .dialog_header .touchable_button input{border:none;background:none;color:#fff;font:12px Helvetica, sans-serif;font-weight:bold;margin:2px -12px;padding:2px 6px 3px 6px;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}\n.fb_dialog_content .dialog_header .header_center{color:#fff;font-size: 16px;font-weight:bold;line-height:18px;text-align:center;vertical-align:middle}\n.fb_dialog_content .dialog_content{background:url(http://static.ak.fbcdn.net/rsrc.php/v1/y9/r/jKEcVPZFk-2.gif) no-repeat 50% 50%;border:1px solid #555;border-bottom:0;border-top:0;height:150px}\n.fb_dialog_content .dialog_footer{background:#f2f2f2;border:1px solid #555;border-top-color:#ccc;height:40px}\n#fb_dialog_loader_close{float:left}\n.fb_dialog.fb_dialog_mobile .fb_dialog_close_button{text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}\n.fb_dialog.fb_dialog_mobile .fb_dialog_close_icon{visibility:hidden}\n.fb_iframe_widget{position:relative;display:-moz-inline-block;display:inline-block}\n.fb_iframe_widget iframe{position:absolute;z-index:1}\n.fb_iframe_widget span{position:relative;display:inline-block;vertical-align:text-bottom;text-align:justify}\n.fb_hide_iframes iframe{position:relative;left:-10000px}\n.fb_iframe_widget_loader{position:relative;display:inline-block}\n.fb_iframe_widget_fluid{display:inline}\n.fb_iframe_widget_loader iframe{min-height:32px;z-index:2;zoom:1}\n.fb_iframe_widget_loader .FB_Loader{background:url(http://static.ak.fbcdn.net/rsrc.php/v1/y9/r/jKEcVPZFk-2.gif) no-repeat;height:32px;width:32px;margin-left:-16px;position:absolute;left:50%;z-index:4}\n.fb_button_simple,\n.fb_button_simple_rtl{background-image:url(http://static.ak.fbcdn.net/rsrc.php/v1/yH/r/eIpbnVKI9lR.png);background-repeat:no-repeat;cursor:pointer;outline:none;text-decoration:none}\n.fb_button_simple_rtl{background-position:right 0}\n.fb_button_simple .fb_button_text{margin:0 0 0 20px;padding-bottom:1px}\n.fb_button_simple_rtl .fb_button_text{margin:0 10px 0 0}\na.fb_button_simple:hover .fb_button_text,\na.fb_button_simple_rtl:hover .fb_button_text,\n.fb_button_simple:hover .fb_button_text,\n.fb_button_simple_rtl:hover .fb_button_text{text-decoration:underline}\n.fb_button,\n.fb_button_rtl{background:#29447e url(http://static.ak.fbcdn.net/rsrc.php/v1/yL/r/FGFbc80dUKj.png);background-repeat:no-repeat;cursor:pointer;display:inline-block;padding:0 0 0 1px;text-decoration:none;outline:none}\n.fb_button .fb_button_text,\n.fb_button_rtl .fb_button_text{background:#5f78ab url(http://static.ak.fbcdn.net/rsrc.php/v1/yL/r/FGFbc80dUKj.png);border-top:solid 1px #879ac0;border-bottom:solid 1px #1a356e;color:#fff;display:block;font-family:"lucida grande",tahoma,verdana,arial,sans-serif;font-weight:bold;padding:2px 6px 3px 6px;margin:1px 1px 0 21px;text-shadow:none}\na.fb_button,\na.fb_button_rtl,\n.fb_button,\n.fb_button_rtl{text-decoration:none}\na.fb_button:active .fb_button_text,\na.fb_button_rtl:active .fb_button_text,\n.fb_button:active .fb_button_text,\n.fb_button_rtl:active .fb_button_text{border-bottom:solid 1px #29447e;border-top:solid 1px #45619d;background:#4f6aa3;text-shadow:none}\n.fb_button_xlarge,\n.fb_button_xlarge_rtl{background-position:left -60px;font-size: 24px;line-height:30px}\n.fb_button_xlarge .fb_button_text{padding:3px 8px 3px 12px;margin-left:38px}\na.fb_button_xlarge:active{background-position:left -99px}\n.fb_button_xlarge_rtl{background-position:right -268px}\n.fb_button_xlarge_rtl .fb_button_text{padding:3px 8px 3px 12px;margin-right:39px}\na.fb_button_xlarge_rtl:active{background-position:right -307px}\n.fb_button_large,\n.fb_button_large_rtl{background-position:left -138px;font-size: 13px;line-height:16px}\n.fb_button_large .fb_button_text{margin-left:24px;padding:2px 6px 4px 6px}\na.fb_button_large:active{background-position:left -163px}\n.fb_button_large_rtl{background-position:right -346px}\n.fb_button_large_rtl .fb_button_text{margin-right:25px}\na.fb_button_large_rtl:active{background-position:right -371px}\n.fb_button_medium,\n.fb_button_medium_rtl{background-position:left -188px;font-size: 11px;line-height:14px}\na.fb_button_medium:active{background-position:left -210px}\n.fb_button_medium_rtl{background-position:right -396px}\n.fb_button_text_rtl,\n.fb_button_medium_rtl .fb_button_text{padding:2px 6px 3px 6px;margin-right:22px}\na.fb_button_medium_rtl:active{background-position:right -418px}\n.fb_button_small,\n.fb_button_small_rtl{background-position:left -232px;font-size: 10px;line-height:10px}\n.fb_button_small .fb_button_text{padding:2px 6px 3px;margin-left:17px}\na.fb_button_small:active,\n.fb_button_small:active{background-position:left -250px}\n.fb_button_small_rtl{background-position:right -440px}\n.fb_button_small_rtl .fb_button_text{padding:2px 6px;margin-right:18px}\na.fb_button_small_rtl:active{background-position:right -458px}\n.fb_share_count_wrapper{position:relative;float:left}\n.fb_share_count{background:#b0b9ec none repeat scroll 0 0;color:#333;font-family:"lucida grande", tahoma, verdana, arial, sans-serif;text-align:center}\n.fb_share_count_inner{background:#e8ebf2;display:block}\n.fb_share_count_right{margin-left:-1px;display:inline-block}\n.fb_share_count_right .fb_share_count_inner{border-top:solid 1px #e8ebf2;border-bottom:solid 1px #b0b9ec;margin:1px 1px 0 1px;font-size: 10px;line-height:10px;padding:2px 6px 3px;font-weight:bold}\n.fb_share_count_top{display:block;letter-spacing:-1px;line-height:34px;margin-bottom:7px;font-size: 22px;border:solid 1px #b0b9ec}\n.fb_share_count_nub_top{border:none;display:block;position:absolute;left:7px;top:35px;margin:0;padding:0;width:6px;height:7px;background-repeat:no-repeat;background-image:url(http://static.ak.fbcdn.net/rsrc.php/v1/yU/r/bSOHtKbCGYI.png)}\n.fb_share_count_nub_right{border:none;display:inline-block;padding:0;width:5px;height:10px;background-repeat:no-repeat;background-image:url(http://static.ak.fbcdn.net/rsrc.php/v1/yX/r/i_oIVTKMYsL.png);vertical-align:top;background-position:right 5px;z-index:10;left:2px;margin:0 2px 0 0;position:relative}\n.fb_share_no_count{display:none}\n.fb_share_size_Small .fb_share_count_right .fb_share_count_inner{font-size: 10px}\n.fb_share_size_Medium .fb_share_count_right .fb_share_count_inner{font-size: 11px;padding:2px 6px 3px;letter-spacing:-1px;line-height:14px}\n.fb_share_size_Large .fb_share_count_right .fb_share_count_inner{font-size: 13px;line-height:16px;padding:2px 6px 4px;font-weight:normal;letter-spacing:-1px}\n.fb_share_count_hidden .fb_share_count_nub_top,\n.fb_share_count_hidden .fb_share_count_top,\n.fb_share_count_hidden .fb_share_count_nub_right,\n.fb_share_count_hidden .fb_share_count_right{visibility:hidden}\n.fb_connect_bar_container div,\n.fb_connect_bar_container span,\n.fb_connect_bar_container a,\n.fb_connect_bar_container img,\n.fb_connect_bar_container strong{background:none;border-spacing:0;border:0;direction:ltr;font-style:normal;font-variant:normal;letter-spacing:normal;line-height:1;margin:0;overflow:visible;padding:0;text-align:left;text-decoration:none;text-indent:0;text-shadow:none;text-transform:none;visibility:visible;white-space:normal;word-spacing:normal;vertical-align:baseline}\n.fb_connect_bar_container{position:fixed;left:0 !important;right:0 !important;height:42px !important;padding:0 25px !important;margin:0 !important;vertical-align:middle !important;border-bottom:1px solid #333 !important;background:#3b5998 !important;z-index:99999999 !important;overflow:hidden !important}\n.fb_connect_bar_container_ie6{position:absolute;top:expression(document.compatMode=="CSS1Compat"? document.documentElement.scrollTop+"px":body.scrollTop+"px")}\n.fb_connect_bar{position:relative;margin:auto;height:100%;width:100%;padding:6px 0 0 0 !important;background:none;color:#fff !important;font-family:"lucida grande", tahoma, verdana, arial, sans-serif !important;font-size: 13px !important;font-style:normal !important;font-variant:normal !important;font-weight:normal !important;letter-spacing:normal !important;line-height:1 !important;text-decoration:none !important;text-indent:0 !important;text-shadow:none !important;text-transform:none !important;white-space:normal !important;word-spacing:normal !important}\n.fb_connect_bar a:hover{color:#fff}\n.fb_connect_bar .fb_profile img{height:30px;width:30px;vertical-align:middle;margin:0 6px 5px 0}\n.fb_connect_bar div a,\n.fb_connect_bar span,\n.fb_connect_bar span a{color:#bac6da;font-size: 11px;text-decoration:none}\n.fb_connect_bar .fb_buttons{float:right;margin-top:7px}\n.fb_edge_widget_with_comment{position:relative;*z-index:1000}\n.fb_edge_widget_with_comment span.fb_edge_comment_widget{position:absolute}\n.fb_edge_widget_with_comment span.fb_send_button_form_widget{z-index:1}\n.fb_edge_widget_with_comment span.fb_send_button_form_widget .FB_Loader{left:0;top:1px;margin-top:6px;margin-left:0;background-position:50% 50%;background-color:#fff;height:150px;width:394px;border:1px #666 solid;border-bottom:2px solid #283e6c;z-index:1}\n.fb_edge_widget_with_comment span.fb_send_button_form_widget.dark .FB_Loader{background-color:#000;border-bottom:2px solid #ccc}\n.fb_edge_widget_with_comment span.fb_send_button_form_widget.siderender\n.FB_Loader{margin-top:0}\n.fbpluginrecommendationsbarleft,\n.fbpluginrecommendationsbarright{position:fixed !important;bottom:0;z-index:999}\n/* @noflip */\n.fbpluginrecommendationsbarleft{left:10px}\n/* @noflip */\n.fbpluginrecommendationsbarright{right:10px}\n', 
 	["fb.css.base", "fb.css.dialog", "fb.css.iframewidget", "fb.css.button", "fb.css.sharebutton", "fb.css.connectbarwidget", "fb.css.edgecommentwidget", "fb.css.sendbuttonformwidget", "fb.css.plugin.recommendationsbar"])
 }
 ;
