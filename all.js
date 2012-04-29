@@ -3651,13 +3651,13 @@ if(!FB) {
 				try {
 					k = g.getReferrer()
 				}catch(m) {
-					j.Insights.impression({lid:113, name:"url_parse_error", payload:document.referrer});
+					j.Insights.impression({lid:113, name:"url_parse_error", payload:{url:document.referrer}});
 					return
 				}
 				try {
 					l = g.getCurrent()
 				}catch(n) {
-					j.Insights.impression({lid:113, name:"url_parse_error", payload:location.href});
+					j.Insights.impression({lid:113, name:"url_parse_error", payload:{url:location.href}});
 					return
 				}
 				if(k && k.isFacebookURL() && l.getParsedSearch().fb_upsell) {
@@ -4874,10 +4874,11 @@ if(!FB) {
 			return b
 		}});
 		FB.provide("Insights", {impression:function(a, b) {
-			var c = FB.guid(), d = "//ah8.facebook.com/impression.php/" + c + "/", e = new Image(1, 1), f = [];
+			var c = FB.guid(), d = FB.getDomain(location.protocol == "https:" ? "https_www" : "www") + "impression.php/" + c + "/", e = new Image(1, 1), f = [];
 			if(!a.api_key && FB._apiKey) {
 				a.api_key = FB._apiKey
 			}
+			a = FB.JSON.flatten(a);
 			for(var g in a) {
 				f.push(encodeURIComponent(g) + "=" + encodeURIComponent(a[g]))
 			}
