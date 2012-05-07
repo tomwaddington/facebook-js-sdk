@@ -2982,9 +2982,6 @@ if(!FB) {
 				delete a.params.method
 			}
 			if(FB.TemplateUI && FB.TemplateUI.supportsTemplate(b, a)) {
-				if(FB.reportTemplates) {
-					console.log("Using template for " + b + ".")
-				}
 				FB.TemplateUI.useCachedUI(b, a)
 			}else {
 				a.params = FB.JSON.flatten(a.params);
@@ -3757,12 +3754,9 @@ if(!FB) {
 					FB.TemplateUI.init();
 					FB.Event.subscribe("auth.statusChange", FB.TemplateData.update)
 				}
-				if(a.reportTemplates) {
-					FB.reportTemplates = true
-				}
-				if(a.frictionlessRequests) {
-					FB.Frictionless.init()
-				}
+			}
+			if(a.frictionlessRequests) {
+				FB.Frictionless.init()
 			}
 			if(FB._apiKey) {
 				FB.Cookie.setEnabled(a.cookie);
@@ -3778,35 +3772,35 @@ if(!FB) {
 				}
 			}
 			if(!FB._initialized) {
-				FB.require("Upsell").init(FB);
-				if(FB._inCanvas) {
-					FB.Canvas._setHideFlashCallback(a.hideFlashCallback);
-					FB.Canvas.init()
-				}
-				if(FB.XFBML && a.xfbml) {
-					if(FB.XFBML.IframeWidget) {
-						FB.Event.subscribe("xfbml.parse", function() {
-							FB.XFBML.IframeWidget.batchWidgetPipeRequests()
-						})
-					}
-					window.setTimeout(function() {
-						if(FB.initSitevars.parseXFBMLBeforeDomReady) {
-							FB.XFBML.parse();
-							var d = window.setInterval(function() {
-								FB.XFBML.parse()
-							}, 100);
-							FB.Dom.ready(function() {
-								window.clearInterval(d);
-								FB.XFBML.parse()
-							})
-						}else {
-							FB.Dom.ready(FB.XFBML.parse)
-						}
-					}, 0)
-				}
-				if(FB.Canvas && FB.Canvas.Prefetcher) {
+				FB.require("Upsell").init(FB)
+			}
+			if(FB.Canvas && FB._inCanvas) {
+				FB.Canvas._setHideFlashCallback(a.hideFlashCallback);
+				FB.Canvas.init();
+				if(FB.Canvas.Prefetcher) {
 					FB.Canvas.Prefetcher._maybeSample()
 				}
+			}
+			if(FB.XFBML && a.xfbml) {
+				if(FB.XFBML.IframeWidget) {
+					FB.Event.subscribe("xfbml.parse", function() {
+						FB.XFBML.IframeWidget.batchWidgetPipeRequests()
+					})
+				}
+				window.setTimeout(function() {
+					if(FB.initSitevars.parseXFBMLBeforeDomReady) {
+						FB.XFBML.parse();
+						var d = window.setInterval(function() {
+							FB.XFBML.parse()
+						}, 100);
+						FB.Dom.ready(function() {
+							window.clearInterval(d);
+							FB.XFBML.parse()
+						})
+					}else {
+						FB.Dom.ready(FB.XFBML.parse)
+					}
+				}, 0)
 			}
 			FB._initialized = true
 		}});
@@ -4178,7 +4172,6 @@ if(!FB) {
 								d[f] = 0
 							}
 						});
-						d.oauth = true;
 						FB.init(d)
 					}
 				}
