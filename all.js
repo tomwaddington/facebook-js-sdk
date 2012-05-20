@@ -6287,7 +6287,7 @@ if(!FB) {
 		void 0;
 		__d("UrlMapConfig", [], {"www":"www.facebook.com", "m":"m.facebook.com", "connect":"connect.facebook.net", "api_https":"api.facebook.com", "api_read_https":"api-read.facebook.com", "graph_https":"graph.facebook.com", "fbcdn_http":"static.ak.fbcdn.net", "fbcdn_https":"s-static.ak.fbcdn.net", "cdn_http":"static.ak.facebook.com", "cdn_https":"s-static.ak.facebook.com"});
 		__d("ApiClientConfig", [], {"FlashRequest":{"swfUrl":"https://s-static.ak.fbcdn.net/rsrc.php/v1/y5/r/SrnvQJBTxo-.swf"}});
-		__d("SDKConfig", [], {"migrate":1});
+		__d("SDKConfig", [], {"migrate":0});
 		__d("XDConfig", [], {"XdUrl":"connect/xd_arbiter.php?version=6", "Flash":{"path":"https://s-static.ak.fbcdn.net/rsrc.php/v1/ys/r/WON-TVLCpDP.swf"}, "useCdn":true})
 	}).call(FB)
 }
