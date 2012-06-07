@@ -29,6 +29,7 @@ require 'grit'
   
   
   repo.add('all.js')
+  `git diff`
   repo.commit_index('Revision '+revision.to_s)
   `git push`
 end
