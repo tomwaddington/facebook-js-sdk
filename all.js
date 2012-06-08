@@ -686,7 +686,7 @@ window.FB || function() {
 	function __c() {
 		__d("UrlMapConfig", [], {"www":"www.facebook.com", "m":"m.facebook.com", "connect":"connect.facebook.net", "api_https":"api.facebook.com", "api_read_https":"api-read.facebook.com", "graph_https":"graph.facebook.com", "fbcdn_http":"static.ak.fbcdn.net", "fbcdn_https":"s-static.ak.fbcdn.net", "cdn_http":"static.ak.facebook.com", "cdn_https":"s-static.ak.facebook.com"});
 		__d("ApiClientConfig", [], {"FlashRequest":{"swfUrl":"https://s-static.ak.fbcdn.net/rsrc.php/v1/y5/r/SrnvQJBTxo-.swf"}});
-		__d("SDKConfig", [], {"migrate":true, "seal":false, "errorHandling":{"rate":0.01}});
+		__d("SDKConfig", [], {"seal":false, "errorHandling":{"rate":0}});
 		__d("XDConfig", [], {"XdUrl":"connect/xd_arbiter.php?version=6", "Flash":{"path":"https://s-static.ak.fbcdn.net/rsrc.php/v1/ys/r/WON-TVLCpDP.swf"}, "useCdn":true})
 	}
 	function __d() {
@@ -1656,66 +1656,66 @@ window.FB || function() {
 			m.setPrefix("FB._callbacks");
 			var r = g.errorHandling.rate;
 			if(r && Math.floor(Math.random() * 100) + 1 < r) {
-				h.setErrorHandler(function(w) {
-					var x = n.appendToUrl(o.resolve("www", true) + "/common/scribe_endpoint.php", {c:"jssdk_error", d:ES5("JSON", "stringify", false, {error:w.name || w.message, extra:w})});
-					(new Image).src = x;
-					throw w;
+				h.setErrorHandler(function(x) {
+					var y = n.appendToUrl(o.resolve("www", true) + "/common/scribe_endpoint.php", {c:"jssdk_error", d:ES5("JSON", "stringify", false, {error:x.name || x.message, extra:x})});
+					(new Image).src = y;
+					throw x;
 				})
 			}
-			function s(w, x) {
-				var y = w ? j(p, w, true) : p;
+			function s(x, y) {
+				var z = x ? j(p, x, true) : p;
 				if(g.seal) {
-					var z = w ? j(q, w, true) : q
+					var aa = x ? j(q, x, true) : q
 				}
-				ES5(ES5("Object", "keys", false, x), "forEach", true, function(aa) {
-					var ba = x[aa];
-					y[aa] = ba;
+				ES5(ES5("Object", "keys", false, y), "forEach", true, function(ba) {
+					var ca = y[ba];
+					z[ba] = ca;
 					if(g.seal) {
-						if(typeof ba === "function" && !/^_/.test(aa)) {
-							z[aa] = function() {
-								var ca = ES5(Array.prototype.slice.call(arguments), "map", true, function(da) {
-									return typeof da === "function" ? function() {
-										var ea = arguments;
+						if(typeof ca === "function" && !/^_/.test(ba)) {
+							aa[ba] = function() {
+								var da = ES5(Array.prototype.slice.call(arguments), "map", true, function(ea) {
+									return typeof ea === "function" ? function() {
+										var fa = arguments;
 										setTimeout(function() {
-											da.apply(null, ea)
+											ea.apply(null, fa)
 										}, 0)
-									} : da
+									} : ea
 								});
-								return h(ba, y, ca)
+								return h(ca, z, da)
 							}
 						}
 					}
 				})
 			}
-			var t = /iframe_canvas|app_runner|dialog/.test(window.name), u = function() {
-				if(location.protocol == "https:" && (window == top || !t)) {
+			var t = /iframe_canvas|app_runner/.test(window.name), u = /dialog/.test(window.name), v = function() {
+				if(location.protocol == "https:" && (window == top || !t || !u)) {
 					return true
 				}
 				if(/_fb_https?/.test(window.name)) {
 					return ES5(window.name, "indexOf", true, "_fb_https") != -1
 				}
 			}();
-			function v(w, x, y, z) {
-				for(var aa in x) {
-					if(y || typeof w[aa] === "undefined") {
-						w[aa] = z ? z(x[aa]) : x[aa]
+			function w(x, y, z, aa) {
+				for(var ba in y) {
+					if(z || typeof x[ba] === "undefined") {
+						x[ba] = aa ? aa(y[ba]) : y[ba]
 					}
 				}
-				return w
+				return x
 			}
-			k(p, {_apiKey:null, _authResponse:null, _userStatus:"unknown", _logging:true, _inCanvas:t, _https:u, onlyUseHttps:function() {
+			k(p, {_apiKey:null, _authResponse:null, _userStatus:"unknown", _logging:true, _inCanvas:t, _https:v, onlyUseHttps:function() {
 				return p._https === true
 			}, onlyUseHttp:function() {
 				return p._https === false && location.protocol == "http:"
-			}, _locale:null, _localeIsRtl:false, getDomain:function(w, x) {
-				var y = !x && (window.location.protocol == "https:" || p._https);
-				switch(w) {
+			}, _locale:null, _localeIsRtl:false, getDomain:function(x, y) {
+				var z = !y && (window.location.protocol == "https:" || p._https);
+				switch(x) {
 					case "api":
 						return p._domain.api;
 					case "api_read":
 						return p._domain.api_read;
 					case "cdn":
-						return y ? p._domain.https_cdn : p._domain.cdn;
+						return z ? p._domain.https_cdn : p._domain.cdn;
 					case "cdn_foreign":
 						return p._domain.cdn_foreign;
 					case "https_cdn":
@@ -1723,38 +1723,38 @@ window.FB || function() {
 					case "graph":
 						return p._domain.graph;
 					case "staticfb":
-						return y ? p._domain.https_staticfb : p._domain.staticfb;
+						return z ? p._domain.https_staticfb : p._domain.staticfb;
 					case "https_staticfb":
 						return p._domain.https_staticfb;
 					case "www":
-						return y ? p._domain.https_www : p._domain.www;
+						return z ? p._domain.https_www : p._domain.www;
 					case "https_www":
 						return p._domain.https_www;
 					case "m":
-						return y ? p._domain.https_m : p._domain.m;
+						return z ? p._domain.https_m : p._domain.m;
 					case "https_m":
 						return p._domain.https_m
 				}
-			}, copy:v, create:function(w, x) {
-				var y = w.split(".");
-				w = y.pop();
-				var z = y.length ? j(p, y.join("."), true) : p;
-				return w in z ? z[w] : z[w] = x || {}
-			}, provide:s, guid:i, log:function(w) {
+			}, copy:w, create:function(x, y) {
+				var z = x.split(".");
+				x = z.pop();
+				var aa = z.length ? j(p, z.join("."), true) : p;
+				return x in aa ? aa[x] : aa[x] = y || {}
+			}, provide:s, guid:i, log:function(x) {
 				if(p._logging) {
 					if(window.Debug && window.Debug.writeln) {
-						window.Debug.writeln(w)
+						window.Debug.writeln(x)
 					}else {
 						if(window.console) {
-							window.console.log(w)
+							window.console.log(x)
 						}
 					}
 				}
 				if(p.Event) {
-					p.Event.fire("fb.log", w)
+					p.Event.fire("fb.log", x)
 				}
-			}, $:function(w) {
-				return document.getElementById(w)
+			}, $:function(x) {
+				return document.getElementById(x)
 			}, dotAccess:j, applyWithGuard:h, safeEval:l});
 			if(q) {
 				k(q, {provide:s})
@@ -4223,7 +4223,9 @@ window.FB || function() {
 			return e
 		}, _waitToProcess:function() {
 			if(FB.Data.timer < 0) {
-				FB.Data.timer = setTimeout(FB.Data._process, 10)
+				FB.Data.timer = setTimeout(function() {
+					FB.Data._process()
+				}, 10)
 			}
 		}, _process:function(a) {
 			FB.Data.timer = -1;
