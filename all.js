@@ -686,7 +686,7 @@ window.FB || function() {
 	function __c() {
 		__d("UrlMapConfig", [], {"www":"www.facebook.com", "m":"m.facebook.com", "connect":"connect.facebook.net", "api_https":"api.facebook.com", "api_read_https":"api-read.facebook.com", "graph_https":"graph.facebook.com", "fbcdn_http":"static.ak.fbcdn.net", "fbcdn_https":"s-static.ak.fbcdn.net", "cdn_http":"static.ak.facebook.com", "cdn_https":"s-static.ak.facebook.com"});
 		__d("ApiClientConfig", [], {"FlashRequest":{"swfUrl":"https://s-static.ak.fbcdn.net/rsrc.php/v1/y5/r/SrnvQJBTxo-.swf"}});
-		__d("SDKConfig", [], {"seal":false, "errorHandling":{"rate":1}});
+		__d("SDKConfig", [], {"seal":true, "errorHandling":{"rate":1}});
 		__d("XDConfig", [], {"XdUrl":"connect/xd_arbiter.php?version=8", "Flash":{"path":"https://s-static.ak.fbcdn.net/rsrc.php/v1/ys/r/WON-TVLCpDP.swf"}, "useCdn":true})
 	}
 	function __d() {
@@ -1677,7 +1677,7 @@ window.FB || function() {
 						if(typeof ca === "function" && !/^_/.test(ba)) {
 							aa[ba] = function() {
 								var da = ES5(Array.prototype.slice.call(arguments), "map", true, function(ea) {
-									return typeof ea === "function" ? function() {
+									return typeof ea === "function" && /^function/.test(ea.toString()) ? function() {
 										var fa = arguments;
 										setTimeout(function() {
 											ea.apply(null, fa)
