@@ -2227,13 +2227,14 @@ window.FB || function() {
 				}
 				var ja = ha ? /\/\/.*?(\/[^#]*)/.exec(ha)[1] : location.pathname + location.search;
 				ja += (~ES5(ja, "indexOf", true, "?") ? "&" : "?") + "fb_xd_fragment#xd_sig=" + v + "&";
-				var ka = k.Content.appendHidden(document.createElement("div")), la = l.create({root:ka, channel:w, channelPath:"/" + g.XdUrl + "#", flashUrl:g.Flash.path, whenReady:function(qa) {
-					y = qa
-				}, onMessage:da}), ma = {channel:w, origin:location.protocol + "//" + location.host, channel_path:ja, transport:la, xd_name:ia}, na = g.XdUrl + "#" + n.encode(ma), oa = g.useCdn ? k._domain.staticfb : "http://www.facebook.com/", pa = g.useCdn ? k._domain.https_staticfb : "https://www.facebook.com/";
-				if(!k.onlyUseHttps()) {
-					t = fa({url:oa + na, name:"fb_xdm_frame_http", root:ka})
-				}
-				u = fa({url:pa + na, name:"fb_xdm_frame_https", root:ka});
+				var ka = k.Content.appendHidden(document.createElement("div")), la = l.create({root:ka, channel:w, channelPath:"/" + g.XdUrl + "#", flashUrl:g.Flash.path, whenReady:function(ma) {
+					y = ma;
+					var na = {channel:w, origin:location.protocol + "//" + location.host, channel_path:ja, transport:la, xd_name:ia}, oa = g.XdUrl + "#" + n.encode(na), pa = g.useCdn ? k._domain.staticfb : "http://www.facebook.com/", qa = g.useCdn ? k._domain.https_staticfb : "https://www.facebook.com/";
+					if(!k.onlyUseHttps()) {
+						t = fa({url:pa + oa, name:"fb_xdm_frame_http", root:ka})
+					}
+					u = fa({url:qa + oa, name:"fb_xdm_frame_https", root:ka})
+				}, onMessage:da});
 				z = true
 			}, sendToFacebook:function(ha, ia) {
 				if(ha == "facebook") {
