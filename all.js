@@ -716,18 +716,22 @@ window.FB || function() {
 				}
 				if(!u.exports) {
 					var y = u.exports = {}, z = u.factory;
+					if(typeof z === "string") {
+						var aa = "(" + z + ")";
+						z = eval(aa)
+					}
 					if(Object.prototype.toString.call(z) === "[object Function]") {
-						var aa = [], ba = u.dependencies, ca = ba.length;
+						var ba = [], ca = u.dependencies, da = ca.length;
 						if(u.special & g) {
-							ca = Math.min(ca, z.length)
+							da = Math.min(da, z.length)
 						}
-						for(w = 0;w < ca;w++) {
-							v = ba[w];
-							aa.push(v === "module" ? u : v === "exports" ? y : i(v))
+						for(w = 0;w < da;w++) {
+							v = ca[w];
+							ba.push(v === "module" ? u : v === "exports" ? y : i(v))
 						}
-						var da = z.apply(u.context || a, aa);
-						if(da) {
-							u.exports = da
+						var ea = z.apply(u.context || a, ba);
+						if(ea) {
+							u.exports = ea
 						}
 					}else {
 						u.exports = z
@@ -2099,12 +2103,8 @@ window.FB || function() {
 							return
 						}
 						l.debug("received message %s from %s", w, x);
-						if(x != "native") {
-							if(w.substring(0, u.length) == u) {
-								w = w.substring(u.length)
-							}else {
-								return
-							}
+						if(w.substring(0, u.length) == u) {
+							w = w.substring(u.length)
 						}
 						t.onMessage(w, x)
 					});
@@ -2712,7 +2712,7 @@ window.FB || function() {
 					document.attachEvent("onreadystatechange", a)
 				}
 			}
-			if(FB.UA.ie() && window === top) {
+			if(FB.UA.ie() && window == window.top) {
 				(function() {
 					try {
 						document.documentElement.doScroll("left")
@@ -3517,7 +3517,7 @@ window.FB || function() {
 					}
 				}
 			}
-			var e = !FB._userID && a, f = FB._userID && !a, g = a && FB._userID != c, h = e || f || g, i = b != FB._userStatus, j = {authResponse:a, status:b};
+			var e = !FB._userID && a, f = FB._userID && !a, g = a && FB._userID != c, h = a != FB._authResponse, i = b != FB._userStatus, j = {authResponse:a, status:b};
 			FB._authResponse = a;
 			FB._userID = c;
 			FB._userStatus = b;
@@ -4096,10 +4096,10 @@ window.FB || function() {
 					return a.getElementsByTagName(d)
 				}
 			}
-		}, _tagInfos:[{localName:"activity", className:"FB.XFBML.Activity"}, {localName:"add-profile-tab", className:"FB.XFBML.AddProfileTab"}, {localName:"add-to-timeline", className:"FB.XFBML.AddToTimeline"}, {localName:"bookmark", className:"FB.XFBML.Bookmark"}, {localName:"comments", className:"FB.XFBML.Comments"}, {localName:"comments-count", className:"FB.XFBML.CommentsCount"}, {localName:"connect-bar", className:"FB.XFBML.ConnectBar"}, {localName:"fan", className:"FB.XFBML.Fan"}, {localName:"like", 
-		className:"FB.XFBML.Like", supportsWidgetPipe:true}, {localName:"like-box", className:"FB.XFBML.LikeBox"}, {localName:"live-stream", className:"FB.XFBML.LiveStream"}, {localName:"login", className:"FB.XFBML.Login"}, {localName:"login-button", className:"FB.XFBML.LoginButton"}, {localName:"facepile", className:"FB.XFBML.Facepile"}, {localName:"friendpile", className:"FB.XFBML.Friendpile"}, {localName:"name", className:"FB.XFBML.Name"}, {localName:"privacy-selector", className:"FB.XFBML.PrivacySelector"}, 
-		{localName:"profile-pic", className:"FB.XFBML.ProfilePic"}, {localName:"question", className:"FB.XFBML.Question"}, {localName:"recommendations", className:"FB.XFBML.Recommendations"}, {localName:"recommendations-bar", className:"FB.XFBML.RecommendationsBar"}, {localName:"registration", className:"FB.XFBML.Registration"}, {localName:"send", className:"FB.XFBML.Send"}, {localName:"serverfbml", className:"FB.XFBML.ServerFbml"}, {localName:"share-button", className:"FB.XFBML.ShareButton"}, {localName:"social-context", 
-		className:"FB.XFBML.SocialContext"}, {localName:"subscribe", className:"FB.XFBML.Subscribe"}], _widgetPipeEnabledTagCount:0, _widgetPipeIsEnabled:function() {
+		}, _tagInfos:[{localName:"activity", className:"FB.XFBML.Activity"}, {localName:"add-profile-tab", className:"FB.XFBML.AddProfileTab"}, {localName:"add-to-timeline", className:"FB.XFBML.AddToTimeline"}, {localName:"bookmark", className:"FB.XFBML.Bookmark"}, {localName:"comments", className:"FB.XFBML.Comments"}, {localName:"comments-count", className:"FB.XFBML.CommentsCount"}, {localName:"connect-bar", className:"FB.XFBML.ConnectBar"}, {localName:"degrees", className:"FB.XFBML.Degrees"}, {localName:"fan", 
+		className:"FB.XFBML.Fan"}, {localName:"like", className:"FB.XFBML.Like", supportsWidgetPipe:true}, {localName:"like-box", className:"FB.XFBML.LikeBox"}, {localName:"live-stream", className:"FB.XFBML.LiveStream"}, {localName:"login", className:"FB.XFBML.Login"}, {localName:"login-button", className:"FB.XFBML.LoginButton"}, {localName:"facepile", className:"FB.XFBML.Facepile"}, {localName:"friendpile", className:"FB.XFBML.Friendpile"}, {localName:"name", className:"FB.XFBML.Name"}, {localName:"page-events", 
+		className:"FB.XFBML.PageEvents"}, {localName:"privacy-selector", className:"FB.XFBML.PrivacySelector"}, {localName:"profile-pic", className:"FB.XFBML.ProfilePic"}, {localName:"question", className:"FB.XFBML.Question"}, {localName:"recommendations", className:"FB.XFBML.Recommendations"}, {localName:"recommendations-bar", className:"FB.XFBML.RecommendationsBar"}, {localName:"registration", className:"FB.XFBML.Registration"}, {localName:"send", className:"FB.XFBML.Send"}, {localName:"serverfbml", 
+		className:"FB.XFBML.ServerFbml"}, {localName:"share-button", className:"FB.XFBML.ShareButton"}, {localName:"social-context", className:"FB.XFBML.SocialContext"}, {localName:"subscribe", className:"FB.XFBML.Subscribe"}, {localName:"typeahead", className:"FB.XFBML.Typeahead"}, {localName:"want", className:"FB.XFBML.Want"}], _widgetPipeEnabledTagCount:0, _widgetPipeIsEnabled:function() {
 			return FB.widgetPipeEnabledApps && FB.widgetPipeEnabledApps[FB._apiKey] !== undefined
 		}});
 		(function() {
@@ -5182,6 +5182,14 @@ window.FB || function() {
 			FB.Helper.invokeHandler(this.getAttribute("on-close"), this)
 		}});
 		FB.provide("XFBML.ConnectBar", {imgs:{buttonUrl:"images/facebook-widgets/close_btn.png", missingProfileUrl:"pics/q_silhouette.gif"}});
+		FB.subclass("XFBML.Degrees", "XFBML.IframeWidget", null, {_showLoader:false, setupAndValidate:function() {
+			this._attr = {api_key:FB._apiKey, channel_url:this.getChannelUrl(), font:this.getAttribute("font"), href:this.getAttribute("href"), colorscheme:this.getAttribute("color-scheme")};
+			return true
+		}, getSize:function() {
+			return{width:500, height:25}
+		}, getUrlBits:function() {
+			return{name:"degrees", params:this._attr}
+		}});
 		FB.subclass("XFBML.Fan", "XFBML.IframeWidget", null, {_visibleAfter:"load", setupAndValidate:function() {
 			this._attr = {api_key:FB._apiKey, connections:this.getAttribute("connections", "10"), css:this.getAttribute("css"), height:this._getPxAttribute("height"), id:this.getAttribute("profile-id"), logobar:this._getBoolAttribute("logo-bar"), name:this.getAttribute("name"), stream:this._getBoolAttribute("stream", true), width:this._getPxAttribute("width", 300)};
 			if(!this._attr.id && !this._attr.name) {
@@ -5730,6 +5738,12 @@ window.FB || function() {
 			}
 			this.dom.innerHTML = c
 		}});
+		FB.subclass("XFBML.PageEvents", "XFBML.IframeWidget", null, {setupAndValidate:function() {
+			this._attr = {channel:this.getChannelUrl(), api_key:FB._apiKey, font:this.getAttribute("font"), colorscheme:this.getAttribute("colorscheme"), href:this.getAttribute("href")};
+			return true
+		}, getUrlBits:function() {
+			return{name:"page_events", params:this._attr}
+		}});
 		FB.subclass("XFBML.PrivacySelector", "XFBML.IframeWidget", null, {getUrlBits:function() {
 			return{name:"privacy_selector", params:this._attr}
 		}, setupAndValidate:function() {
@@ -6005,73 +6019,13 @@ window.FB || function() {
 		}, getUrlBits:function() {
 			return{name:"serverfbml", params:this._attr}
 		}});
-		FB.subclass("XFBML.ShareButton", "XFBML.Element", null, {process:function() {
-			this._href = this.getAttribute("href", window.location.href);
-			this._type = this.getAttribute("type", "icon_link");
-			FB.Dom.addCss(this.dom, "fb_share_count_hidden");
-			this._renderButton(true)
-		}, _renderButton:function(a) {
-			if(!this.isValid()) {
-				this.fire("render");
-				return
-			}
-			var b = "", c = "", d = "", e = "", f = FB.Intl.tx._("Share"), g = "";
-			switch(this._type) {
-				case "icon":
-				;
-				case "icon_link":
-					e = "fb_button_simple";
-					b = '<span class="fb_button_text">' + (this._type == "icon_link" ? f : "&nbsp;") + "</span>";
-					a = false;
-					break;
-				case "link":
-					b = FB.Intl.tx._("Share on Facebook");
-					a = false;
-					break;
-				case "button":
-					b = '<span class="fb_button_text">' + f + "</span>";
-					e = "fb_button fb_button_small";
-					a = false;
-					break;
-				case "button_count":
-					b = '<span class="fb_button_text">' + f + "</span>";
-					c = '<span class="fb_share_count_nub_right">&nbsp;</span>' + '<span class="fb_share_count fb_share_count_right">' + this._getCounterMarkup() + "</span>";
-					e = "fb_button fb_button_small";
-					break;
-				default:
-					b = '<span class="fb_button_text">' + f + "</span>";
-					d = '<span class="fb_share_count_nub_top">&nbsp;</span>' + '<span class="fb_share_count fb_share_count_top">' + this._getCounterMarkup() + "</span>";
-					e = "fb_button fb_button_small";
-					g = "fb_share_count_wrapper"
-			}
-			var h = FB.guid();
-			this.dom.innerHTML = FB.String.format('<span class="{0}">{4}<a id="{1}" class="{2}" ' + 'target="_blank">{3}</a>{5}</span>', g, h, e, b, d, c);
-			var i = document.getElementById(h);
-			i.href = this._href;
-			i.onclick = function() {
-				FB.ui({method:"stream.share", u:this.href});
-				return false
-			};
-			if(!a) {
-				this.fire("render")
-			}
-		}, _getCounterMarkup:function() {
-			if(!this._count) {
-				this._count = FB.Data._selectByIndex(["total_count"], "link_stat", "url", this._href)
-			}
-			var a = "0";
-			if(this._count.value !== undefined) {
-				if(this._count.value.length > 0) {
-					var b = this._count.value[0].total_count;
-					if(b > 3) {
-						FB.Dom.removeCss(this.dom, "fb_share_count_hidden");
-						a = b >= 1E7 ? Math.round(b / 1E6) + "M" : b >= 1E4 ? Math.round(b / 1E3) + "K" : b
-					}
-				}
-			}else {
-				this._count.wait(ES5(this._renderButton, "bind", true, this, false))
-			}
-			return'<span class="fb_share_count_inner">' + a + "</span>"
+		FB.subclass("XFBML.ShareButton", "XFBML.IframeWidget", null, {setupAndValidate:function() {
+			this._attr = {channel:this.getChannelUrl(), href:FB.URI.resolve(this.getAttribute("href")), type:this.getAttribute("type")};
+			return true
+		}, getUrlBits:function() {
+			return{name:"share_button", params:this._attr}
+		}, getSize:function() {
+			return{height:60, width:200}
 		}});
 		FB.subclass("XFBML.SocialContext", "XFBML.IframeWidget", null, {setupAndValidate:function() {
 			var a = this.getAttribute("size", "small");
@@ -6101,6 +6055,25 @@ window.FB || function() {
 				}
 			}
 			return d
+		}});
+		FB.subclass("XFBML.Typeahead", "XFBML.IframeWidget", null, {getUrlBits:function() {
+			return{name:"typeahead", params:this._attr}
+		}, setupAndValidate:function() {
+			this._attr = {channel:this.getChannelUrl(), api_key:FB._apiKey, font:this.getAttribute("font"), width:this.getAttribute("width")};
+			this._showLoader = false;
+			return true
+		}, getSize:function() {
+			return{width:this._attr.width || 300, height:22}
+		}});
+		FB.subclass("XFBML.Want", "XFBML.IframeWidget", null, {_showLoader:false, setupAndValidate:function() {
+			this._attr = {api_key:FB._apiKey, channel_url:this.getChannelUrl(), font:this.getAttribute("font"), href:FB.URI.resolve(this.getAttribute("href", window.location.href)), colorscheme:this.getAttribute("color-scheme"), show_faces:this._getBoolAttribute("show-faces", true), width:this._getWidgetWidth()};
+			return true
+		}, getSize:function() {
+			return{width:this._getWidgetWidth(), height:this._getBoolAttribute("show-faces", true) ? 80 : 35}
+		}, _getWidgetWidth:function() {
+			return Math.min(Math.max(this._getPxAttribute("width", 450), 225), 900)
+		}, getUrlBits:function() {
+			return{name:"want", params:this._attr}
 		}});
 		void 0
 	}).call(FB)
