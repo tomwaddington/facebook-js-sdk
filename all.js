@@ -4125,10 +4125,10 @@ window.FB || function() {
 					return a.getElementsByTagName(d)
 				}
 			}
-		}, _tagInfos:[{localName:"activity", className:"FB.XFBML.Activity"}, {localName:"add-profile-tab", className:"FB.XFBML.AddProfileTab"}, {localName:"add-to-timeline", className:"FB.XFBML.AddToTimeline"}, {localName:"bookmark", className:"FB.XFBML.Bookmark"}, {localName:"comments", className:"FB.XFBML.Comments"}, {localName:"comments-count", className:"FB.XFBML.CommentsCount"}, {localName:"connect-bar", className:"FB.XFBML.ConnectBar"}, {localName:"degrees", className:"FB.XFBML.Degrees"}, {localName:"fan", 
-		className:"FB.XFBML.Fan"}, {localName:"like", className:"FB.XFBML.Like", supportsWidgetPipe:true}, {localName:"like-box", className:"FB.XFBML.LikeBox"}, {localName:"live-stream", className:"FB.XFBML.LiveStream"}, {localName:"login", className:"FB.XFBML.Login"}, {localName:"login-button", className:"FB.XFBML.LoginButton"}, {localName:"facepile", className:"FB.XFBML.Facepile"}, {localName:"friendpile", className:"FB.XFBML.Friendpile"}, {localName:"name", className:"FB.XFBML.Name"}, {localName:"page-events", 
-		className:"FB.XFBML.PageEvents"}, {localName:"privacy-selector", className:"FB.XFBML.PrivacySelector"}, {localName:"profile-pic", className:"FB.XFBML.ProfilePic"}, {localName:"question", className:"FB.XFBML.Question"}, {localName:"recommendations", className:"FB.XFBML.Recommendations"}, {localName:"recommendations-bar", className:"FB.XFBML.RecommendationsBar"}, {localName:"registration", className:"FB.XFBML.Registration"}, {localName:"send", className:"FB.XFBML.Send"}, {localName:"serverfbml", 
-		className:"FB.XFBML.ServerFbml"}, {localName:"share-button", className:"FB.XFBML.ShareButton"}, {localName:"social-context", className:"FB.XFBML.SocialContext"}, {localName:"subscribe", className:"FB.XFBML.Subscribe"}, {localName:"typeahead", className:"FB.XFBML.Typeahead"}, {localName:"want", className:"FB.XFBML.Want"}], _widgetPipeEnabledTagCount:0, _widgetPipeIsEnabled:function() {
+		}, _tagInfos:[{localName:"activity", className:"FB.XFBML.Activity"}, {localName:"add-profile-tab", className:"FB.XFBML.AddProfileTab"}, {localName:"add-to-timeline", className:"FB.XFBML.AddToTimeline"}, {localName:"bookmark", className:"FB.XFBML.Bookmark"}, {localName:"comments", className:"FB.XFBML.Comments"}, {localName:"comments-count", className:"FB.XFBML.CommentsCount"}, {localName:"connect-bar", className:"FB.XFBML.ConnectBar"}, {localName:"fan", className:"FB.XFBML.Fan"}, {localName:"like", 
+		className:"FB.XFBML.Like", supportsWidgetPipe:true}, {localName:"like-box", className:"FB.XFBML.LikeBox"}, {localName:"live-stream", className:"FB.XFBML.LiveStream"}, {localName:"login", className:"FB.XFBML.Login"}, {localName:"login-button", className:"FB.XFBML.LoginButton"}, {localName:"facepile", className:"FB.XFBML.Facepile"}, {localName:"friendpile", className:"FB.XFBML.Friendpile"}, {localName:"name", className:"FB.XFBML.Name"}, {localName:"page-events", className:"FB.XFBML.PageEvents"}, 
+		{localName:"privacy-selector", className:"FB.XFBML.PrivacySelector"}, {localName:"profile-pic", className:"FB.XFBML.ProfilePic"}, {localName:"recommendations", className:"FB.XFBML.Recommendations"}, {localName:"recommendations-bar", className:"FB.XFBML.RecommendationsBar"}, {localName:"registration", className:"FB.XFBML.Registration"}, {localName:"send", className:"FB.XFBML.Send"}, {localName:"serverfbml", className:"FB.XFBML.ServerFbml"}, {localName:"share-button", className:"FB.XFBML.ShareButton"}, 
+		{localName:"social-context", className:"FB.XFBML.SocialContext"}, {localName:"subscribe", className:"FB.XFBML.Subscribe"}], _widgetPipeEnabledTagCount:0, _widgetPipeIsEnabled:function() {
 			return FB.widgetPipeEnabledApps && FB.widgetPipeEnabledApps[FB._apiKey] !== undefined
 		}});
 		(function() {
@@ -5211,14 +5211,6 @@ window.FB || function() {
 			FB.Helper.invokeHandler(this.getAttribute("on-close"), this)
 		}});
 		FB.provide("XFBML.ConnectBar", {imgs:{buttonUrl:"images/facebook-widgets/close_btn.png", missingProfileUrl:"pics/q_silhouette.gif"}});
-		FB.subclass("XFBML.Degrees", "XFBML.IframeWidget", null, {_showLoader:false, setupAndValidate:function() {
-			this._attr = {api_key:FB._apiKey, channel_url:this.getChannelUrl(), font:this.getAttribute("font"), href:this.getAttribute("href"), colorscheme:this.getAttribute("color-scheme")};
-			return true
-		}, getSize:function() {
-			return{width:500, height:25}
-		}, getUrlBits:function() {
-			return{name:"degrees", params:this._attr}
-		}});
 		FB.subclass("XFBML.Fan", "XFBML.IframeWidget", null, {_visibleAfter:"load", setupAndValidate:function() {
 			this._attr = {api_key:FB._apiKey, connections:this.getAttribute("connections", "10"), css:this.getAttribute("css"), height:this._getPxAttribute("height"), id:this.getAttribute("profile-id"), logobar:this._getBoolAttribute("logo-bar"), name:this.getAttribute("name"), stream:this._getBoolAttribute("stream", true), width:this._getPxAttribute("width", 300)};
 			if(!this._attr.id && !this._attr.name) {
@@ -5824,20 +5816,6 @@ window.FB || function() {
 			}))
 		}});
 		FB.provide("XFBML.ProfilePic", {_defPicMap:{pic:"pics/s_silhouette.jpg", pic_big:"pics/d_silhouette.gif", pic_big_with_logo:"pics/d_silhouette_logo.gif", pic_small:"pics/t_silhouette.jpg", pic_small_with_logo:"pics/t_silhouette_logo.gif", pic_square:"pics/q_silhouette.gif", pic_square_with_logo:"pics/q_silhouette_logo.gif", pic_with_logo:"pics/s_silhouette_logo.gif"}, _sizeToPicFieldMap:{n:"pic_big", normal:"pic_big", q:"pic_square", s:"pic", small:"pic", square:"pic_square", t:"pic_small", thumb:"pic_small"}});
-		FB.subclass("XFBML.Question", "XFBML.IframeWidget", null, {_visibleAfter:"load", setupAndValidate:function() {
-			this._attr = {channel:this.getChannelUrl(), api_key:FB._apiKey, permalink:this.getAttribute("permalink"), id:this.getAttribute("id"), width:this._getPxAttribute("width", 400), height:0, questiontext:this.getAttribute("questiontext"), options:this.getAttribute("options")};
-			this.subscribe("xd.firstVote", ES5(this._onInitialVote, "bind", true, this));
-			this.subscribe("xd.vote", ES5(this._onChangedVote, "bind", true, this));
-			return true
-		}, getSize:function() {
-			return{width:this._attr.width, height:this._attr.height}
-		}, getUrlBits:function() {
-			return{name:"question", params:this._attr}
-		}, _onInitialVote:function(a) {
-			FB.Event.fire("question.firstVote", this._attr.permalink, a.vote)
-		}, _onChangedVote:function(a) {
-			FB.Event.fire("question.vote", this._attr.permalink, a.vote)
-		}});
 		FB.subclass("XFBML.Recommendations", "XFBML.IframeWidget", null, {_visibleAfter:"load", _refreshOnAuthChange:true, setupAndValidate:function() {
 			this._attr = {border_color:this.getAttribute("border-color"), colorscheme:this.getAttribute("color-scheme"), filter:this.getAttribute("filter"), font:this.getAttribute("font"), action:this.getAttribute("action"), linktarget:this.getAttribute("linktarget", "_blank"), max_age:this.getAttribute("max_age"), header:this._getBoolAttribute("header"), height:this._getPxAttribute("height", 300), site:this.getAttribute("site", location.hostname), width:this._getPxAttribute("width", 300)};
 			return true
@@ -6084,25 +6062,6 @@ window.FB || function() {
 				}
 			}
 			return d
-		}});
-		FB.subclass("XFBML.Typeahead", "XFBML.IframeWidget", null, {getUrlBits:function() {
-			return{name:"typeahead", params:this._attr}
-		}, setupAndValidate:function() {
-			this._attr = {channel:this.getChannelUrl(), api_key:FB._apiKey, font:this.getAttribute("font"), width:this.getAttribute("width")};
-			this._showLoader = false;
-			return true
-		}, getSize:function() {
-			return{width:this._attr.width || 300, height:22}
-		}});
-		FB.subclass("XFBML.Want", "XFBML.IframeWidget", null, {_showLoader:false, setupAndValidate:function() {
-			this._attr = {api_key:FB._apiKey, channel_url:this.getChannelUrl(), font:this.getAttribute("font"), href:FB.URI.resolve(this.getAttribute("href", window.location.href)), colorscheme:this.getAttribute("color-scheme"), show_faces:this._getBoolAttribute("show-faces", true), width:this._getWidgetWidth()};
-			return true
-		}, getSize:function() {
-			return{width:this._getWidgetWidth(), height:this._getBoolAttribute("show-faces", true) ? 80 : 35}
-		}, _getWidgetWidth:function() {
-			return Math.min(Math.max(this._getPxAttribute("width", 450), 225), 900)
-		}, getUrlBits:function() {
-			return{name:"want", params:this._attr}
 		}});
 		void 0
 	}).call(FB)
