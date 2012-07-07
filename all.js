@@ -4709,7 +4709,7 @@ window.FB || function() {
 		}, clear:function() {
 			this.dom.innerHTML = ""
 		}}, FB.EventProvider));
-		FB.subclass("XFBML.IframeWidget", "XFBML.Element", null, {_iframeName:null, _showLoader:true, _refreshOnAuthChange:false, _allowReProcess:false, _fetchPreCachedLoader:false, _visibleAfter:"load", _widgetPipeEnabled:false, getUrlBits:function() {
+		FB.subclass("XFBML.IframeWidget", "XFBML.Element", null, {_iframeName:null, _showLoader:true, _refreshOnAuthChange:false, _allowReProcess:false, _fetchPreCachedLoader:false, _visibleAfter:"load", _widgetPipeEnabled:false, _borderReset:false, getUrlBits:function() {
 			throw new Error("Inheriting class needs to implement getUrlBits().");
 		}, setupAndValidate:function() {
 			return true
@@ -4845,7 +4845,10 @@ window.FB || function() {
 			}
 			this._resizeIframe(a);
 			this._resizeFlow(a);
-			this.getIframeNode().style.border = "none";
+			if(!this._borderReset) {
+				this.getIframeNode().style.border = "none";
+				this._borderReset = true
+			}
 			this._makeVisible()
 		}, _bubbleResizeEvent:function(a) {
 			var b = {height:a.height, width:a.width, pluginID:this.getAttribute("plugin-id")};
