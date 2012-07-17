@@ -686,8 +686,8 @@ window.FB || function() {
 	function __c() {
 		__d("UrlMapConfig", [], {"www":"www.facebook.com", "m":"m.facebook.com", "connect":"connect.facebook.net", "api_https":"api.facebook.com", "api_read_https":"api-read.facebook.com", "graph_https":"graph.facebook.com", "fbcdn_http":"static.ak.fbcdn.net", "fbcdn_https":"s-static.ak.fbcdn.net", "cdn_http":"static.ak.facebook.com", "cdn_https":"s-static.ak.facebook.com"});
 		__d("ApiClientConfig", [], {"FlashRequest":{"swfUrl":"https://connect.facebook.net/rsrc.php/v1/y5/r/SrnvQJBTxo-.swf"}});
-		__d("SDKConfig", [], {"errorHandling":{"rate":2}, "api":{"mode":"warn", "whitelist":["api", "init", "ui", "getAccessToken", "getAuthResponse", "getLoginStatus", "getUserID", "login", "logout", "Event", "Event.subscribe", "Event.unsubscribe", "XFBML", "XFBML.parse", "Canvas", "Canvas.Prefetcher.addStaticResource", "Canvas.Prefetcher.setCollectionMode", "Canvas.getPageInfo", "Canvas.hideFlashElement", "Canvas.showFlashElement", "Canvas.scrollTo", "Canvas.setAutoGrow", "Canvas.setAutoResize", "Canvas.setDoneLoading", 
-		"Canvas.setSize", "Canvas.setUrlHandler", "Canvas.startTimer", "Canvas.stopTimer", "Insights.impression", "Dom", "Dom.addCssRules", "Arbiter", "Arbiter.inform", "JSON", "JSON.parse", "JSON.stringify", "XD", "XD.onMessage", "Music", "Music.send", "Payment", "Payment.setSize", "CanvasInsights", "CanvasInsights.setDoneLoading", "Payment.init", "Music.init", "Music.flashCallback", "Data", "Data.waitOn", "Data.query", "UA", "UA.nativeApp"]}});
+		__d("SDKConfig", [], {"xfbmlUseLegacy":true, "errorHandling":{"rate":2}, "api":{"mode":"warn", "whitelist":["api", "init", "ui", "getAccessToken", "getAuthResponse", "getLoginStatus", "getUserID", "login", "logout", "Event", "Event.subscribe", "Event.unsubscribe", "XFBML", "XFBML.parse", "Canvas", "Canvas.Prefetcher.addStaticResource", "Canvas.Prefetcher.setCollectionMode", "Canvas.getPageInfo", "Canvas.hideFlashElement", "Canvas.showFlashElement", "Canvas.scrollTo", "Canvas.setAutoGrow", "Canvas.setAutoResize", 
+		"Canvas.setDoneLoading", "Canvas.setSize", "Canvas.setUrlHandler", "Canvas.startTimer", "Canvas.stopTimer", "Insights.impression", "Dom", "Dom.addCssRules", "Arbiter", "Arbiter.inform", "JSON", "JSON.parse", "JSON.stringify", "XD", "XD.onMessage", "Music", "Music.send", "Payment", "Payment.setSize", "UA", "UA.nativeApp", "Payment.init", "Music.init", "Music.flashCallback", "Data", "Data.waitOn", "Data.query"]}});
 		__d("XDConfig", [], {"XdUrl":"connect/xd_arbiter.php?version=9", "Flash":{"path":"https://connect.facebook.net/rsrc.php/v1/ys/r/WON-TVLCpDP.swf"}, "useCdn":true})
 	}
 	function __d() {
@@ -3979,6 +3979,10 @@ window.FB || function() {
 		FB.provide("", {initSitevars:{}, init:function(a) {
 			if(FB._initialized) {
 				FB.log("FB.init has already been called - this could indicate a problem")
+			}
+			if(typeof a === "string") {
+				FB.log("FB.init called with invalid parameters");
+				a = {apiKey:a}
 			}
 			a = FB.copy(a || {}, {logging:true, status:true});
 			FB._userID = 0;
