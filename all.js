@@ -5585,14 +5585,15 @@ window.FB || function() {
 			return{name:a, params:this._attr}
 		}});
 		FB.subclass("XFBML.LoginButton", "XFBML.IframeWidget", null, {_showLoader:false, setupAndValidate:function() {
-			this._attr = {channel:this.getChannelUrl(), colorscheme:this.getAttribute("colorscheme"), max_rows:this.getAttribute("max-rows"), width:this._getPxAttribute("width"), show_faces:this._getBoolAttribute("show-faces"), show_login_face:this._getBoolAttribute("show-login-face"), size:this.getAttribute("size"), login_text:this.dom.textContent || this.dom.innerText, registration_url:FB.URI.resolve(this.getAttribute("registration-url")), one_click:this.getAttribute("one-click"), scope:this.getAttribute("scope") || 
-			this.getAttribute("perms"), auto_logout_link:this._getBoolAttribute("auto-logout-link")};
+			var a = this.getAttribute("registration-url");
+			this._attr = {channel:this.getChannelUrl(), colorscheme:this.getAttribute("colorscheme"), max_rows:this.getAttribute("max-rows"), width:this._getPxAttribute("width"), show_faces:this._getBoolAttribute("show-faces"), show_login_face:this._getBoolAttribute("show-login-face"), size:this.getAttribute("size"), login_text:this.dom.textContent || this.dom.innerText, registration_url:a ? FB.URI.resolve(a) : null, one_click:this.getAttribute("one-click"), scope:this.getAttribute("scope") || this.getAttribute("perms"), 
+			auto_logout_link:this._getBoolAttribute("auto-logout-link")};
 			this.clear();
-			var a = this.getAttribute("on-login");
-			if(a) {
+			var b = this.getAttribute("on-login");
+			if(b) {
 				this.subscribe("xd.refreshLoginStatus", ES5(function() {
-					FB.getLoginStatus(ES5(function(b) {
-						FB.Helper.invokeHandler(a, this, [b])
+					FB.getLoginStatus(ES5(function(c) {
+						FB.Helper.invokeHandler(b, this, [c])
 					}, "bind", true, this))
 				}, "bind", true, this))
 			}
