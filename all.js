@@ -2443,7 +2443,7 @@ window.FB || function() {
 			var b = window.document.getElementsByTagName("object");
 			for(var c = 0;c < b.length;c++) {
 				var d = b[c];
-				if(d.type.toLowerCase() != "application/x-shockwave-flash" && d.classid.toUpperCase() != FB.Canvas._flashClassID) {
+				if(d.type.toLowerCase() != "application/x-shockwave-flash" && (!d.classid || d.classid.toUpperCase() != FB.Canvas._flashClassID)) {
 					continue
 				}
 				var e = false;
