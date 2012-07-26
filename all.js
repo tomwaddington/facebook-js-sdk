@@ -1671,7 +1671,7 @@ window.FB || function() {
 		});
 		__d("sdk.Insights", ["UrlMap", "QueryString"], function(a, b, c, d, e, f) {
 			var g = b("UrlMap"), h = b("QueryString"), i = {TYPE:{NOTICE:"notice", WARNING:"warn", ERROR:"error"}, CATEGORY:{DEPRECATED:"deprecated", APIERROR:"apierror"}, log:function(j, k, l, m) {
-				(new Image).src = h.appendToUrl(g.resolve("www", true) + "/impression.php", {appId:j, eventaction:"platform_app_issue", source:"jssdk", type:k, category:l, payload:m})
+				(new Image).src = h.appendToUrl(g.resolve("www", true) + "/impression.php", {lid:113, api_key:j, payload:ES5("JSON", "stringify", false, {source:"jssdk", type:k, category:l, payload:m})})
 			}};
 			e.exports = i
 		});
