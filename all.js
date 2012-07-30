@@ -841,16 +841,19 @@ window.FB || function() {
 				if(u.special & f) {
 					i(t)
 				}
-				var v = c[t];
+				var v = c[t], w = [];
 				if(v) {
 					delete c[t];
-					for(var w in v) {
-						if(h.call(v, w)) {
-							if(!--b[w].waiting) {
-								p(w)
+					for(var x in v) {
+						if(h.call(v, x)) {
+							if(!--b[x].waiting) {
+								w.push(x)
 							}
 						}
 					}
+				}
+				for(var y = 0;y < w.length;y++) {
+					p(w[y])
 				}
 			}
 			function q(t, u) {
@@ -1732,6 +1735,7 @@ window.FB || function() {
 									o.warn("The method FB.%s is not officially supported by " + "Facebook and access to it will soon be removed.", ia);
 									if(!w.hasOwnProperty(ia)) {
 										n.log(s._apiKey, n.TYPE.WARNING, n.CATEGORY.DEPRECATED, "FB." + ia);
+										p.log("jssdk_error", {appId:s._apiKey, error:"Private method used", extra:{args:ia}});
 										w[ia] = true
 									}
 								}
@@ -1821,7 +1825,7 @@ window.FB || function() {
 				return document.getElementById(da)
 			}, dotAccess:j, applyWithGuard:h, safeEval:l});
 			if(t) {
-				k(t, {provide:y, Insights:n})
+				k(t, {provide:y})
 			}
 			e.exports = s
 		});
